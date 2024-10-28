@@ -1,0 +1,12 @@
+/*
+Theme Name: 20-24-Child Theme
+Theme URI: http://ptp.local/
+Description: Child theme for the website
+Author: WebExpert
+Author URI: http://ptp.local/
+Template: twentytwentyfour
+Version: 1.0
+*/
+
+/* Import parent theme styles */
+@import url("../twentytwentyfour/style.css");
