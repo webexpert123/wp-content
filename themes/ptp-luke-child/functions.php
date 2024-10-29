@@ -21,4 +21,4 @@ function custom_page_templates($template) {
     }
     return $template;
 }
-add_filter('page_template', 'custom_page_templates');
+//add_filter('page_template', 'custom_page_templates');
