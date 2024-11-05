@@ -2,6 +2,8 @@
 /* Template Name: Home */
 
 require locate_template('layouts/header.php') ;
+$current_page_id = get_queried_object_id();
+
 ?>
         <div id="frontend-main">
             <!-- /Hero Section start-->
@@ -67,11 +69,11 @@ require locate_template('layouts/header.php') ;
                                                     </g>
                                                 </svg>
                                             </li>
-                                            <li><span>Loved by 100+ Clients</span></li>
+                                            <li><span><?php echo get_post_meta($current_page_id, "top_video_sub_title", true); ?></span></li>
                                         </ul>
                                     </div>
-                                    <h1>The Easy Way to Learn to Play</h1>
-                                    <p>Discover your ideal coach with our personalized coach finder tool, designed to match you with the perfect expert for your goals.</p>
+                                    <h1><?php echo get_post_meta($current_page_id, "top_video_title", true); ?></h1>
+                                    <p><?php echo get_post_meta($current_page_id, "logos_below_video", true); ?></p>
                                     <div class="filter-form">
                                         <div class="input-group">
                                             <input type="text" class="form-control" placeholder="Enter Your Sports" aria-label="" aria-describedby="basic-addon1">
@@ -90,12 +92,11 @@ require locate_template('layouts/header.php') ;
              <section id="client-logos">
                 <div class="container">
                     <div class="row align-items-center">
-                        <div class="col-md-2 text-center"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/client-logo/gramin.svg" alt="gramin" /></div>
-                        <div class="col-md-2 text-center"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/client-logo/polar.svg" alt="polar" /></div>
-                        <div class="col-md-2 text-center"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/client-logo/rouvy.svg" alt="rouvy" /></div>
-                        <div class="col-md-2 text-center"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/client-logo/strava.svg" alt="strava" /></div>
-                        <div class="col-md-2 text-center"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/client-logo/stryd.svg" alt="stryd" /></div>
-                        <div class="col-md-2 text-center"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/client-logo/wahoo.svg" alt="wahoo" /></div>
+                        <?php $logos = get_field('logos_below_video', $current_page_id);
+                        foreach ($logos as $logo) {
+                          $logo_link = $logo['video_bottom_select_logo']; ?>
+                          <div class="col-md-2 text-center"><img src="<?php echo $logo_link; ?>" alt="" /></div>
+                        <?php } ?>
                     </div>
                 </div>
              </section>
@@ -107,29 +108,28 @@ require locate_template('layouts/header.php') ;
                         <div class="col-md-6 col-lg-5">
                             <div class="about-image">
                                 <div class="about-box-image">
-                                    <img class="img-fluid" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/star_of_the_month.png" alt="Start of the Month" />
+                                    <img class="img-fluid" src="<?php echo get_field('trainer_of_the_month_image', $current_page_id); ?>" alt="Start of the Month" />
                                 </div>
                                 <div class="star_box d-flex align-items-center gap-2">
                                     <div class="star_icon d-flex align-items-center justify-content-center">
                                         <i class="fa-solid fa-star"></i>
                                     </div>
                                     <div class="star_content">
-                                        <h5>Trainer of the Month</h5>
-                                        <p>Sarah Fox <span>(Football Coach)</span></p>
+                                        <h5><?php echo get_field('trainer_of_the_month_title', $current_page_id); ?></h5>
+                                        <p><?php echo get_field('trainer_of_the_month_sub_title', $current_page_id); ?></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 col-lg-7 about-content">
                             <div class="about-inner">
-                                <div class="sub-title mb-2">Star of the Month</div>
-                                <h2>Spotlight on Our Trainer of the 
-                                    Month</h2>
+                                <div class="sub-title mb-2"><?php echo get_field('sub_title_of_box_trainer_right', $current_page_id); ?></div>
+                                <h2><?php echo get_field('title_of_box_trainer_right', $current_page_id); ?></h2>
                                 <div class="quote-text mt-4">
-                                    <p>We are thrilled to recognize Sarah as our Star of the Month! Their outstanding dedication, positive attitude, and exceptional contributions have truly made a difference in our team. Thank you for your hard work and inspiring everyone around you. Keep shining bright!</p>
+                                    <p><?php echo get_field('text_of_box_trainer_right', $current_page_id); ?></p>
                                 </div>
                                 <div class="custom-button mt-4">
-                                    <button type="button" class="btn btn-round btn-fill">View More</button>
+                                    <button type="button" class="btn btn-round btn-fill"><?php echo get_field('button_text_of_box_trainer_right', $current_page_id); ?></button>
                                 </div>
                             </div>
                         </div>
@@ -141,8 +141,8 @@ require locate_template('layouts/header.php') ;
              <section id="why-section" class="section-spacing pt-0" data-aos="fade-right" data-aos-duration="1500">
                 <div class="container">
                     <div class="section-title mb-5">
-                        <h2>Why everyone loves <span>PTP?</span> </h2>
-                        <p>Is expertly designed to offer flexible approaches to:</p>
+                        <h2><?php echo get_field('everyone_love_section_title', $current_page_id); ?></h2>
+                        <p><?php echo get_field('everyone_love_section_text', $current_page_id); ?></p>
                     </div>
                     <div class="row align-items-center">
                         <div class="col-md-12">
@@ -156,15 +156,17 @@ require locate_template('layouts/header.php') ;
                                                     <path d="M109.375 84.9937C107.3 84.707 105.216 84.5006 103.125 84.375C98.1522 84.375 93.3831 86.3504 89.8667 89.8667C86.3504 93.383 84.375 98.1522 84.375 103.125V109.375H113.606C114.877 109.374 116.13 109.081 117.269 108.518C118.407 107.954 119.401 107.136 120.172 106.126C120.944 105.117 121.472 103.943 121.716 102.697C121.961 101.45 121.914 100.163 121.581 98.9375L112.5 65.225M43.75 128.125H150M43.75 146.875C37.5 146.875 32.8125 137.5 32.8125 137.5C28.125 128.125 28.125 121.875 28.125 112.5V106.25L3.125 85.9375V84.375L14.3063 53.0687C15.6068 49.4271 18.0016 46.2766 21.1624 44.0489C24.3232 41.8212 28.0955 40.6253 31.9625 40.625H40.625V62.1625C40.6245 63.8967 41.0883 65.5994 41.9683 67.0938C42.8483 68.5881 44.1124 69.8196 45.6292 70.6603C47.146 71.501 48.8602 71.9202 50.5938 71.8744C52.3274 71.8286 54.0172 71.3195 55.4875 70.4L78.125 56.25M3.125 148.437C3.125 148.437 12.5 131.25 12.5 109.375M149.063 89.8875C141.533 89.0071 134.008 88.0925 126.488 87.1437L149.063 89.8875ZM71.875 99.375C71.875 99.375 65.625 109.375 57.8125 109.375C54.9117 109.375 52.1297 108.223 50.0785 106.171C48.0273 104.12 46.875 101.338 46.875 98.4375C46.875 92.4 51.7687 87.525 57.8125 87.525C65.625 87.525 71.875 97.5 71.875 97.5V99.375ZM109.375 65.625C106.06 65.625 102.88 64.308 100.536 61.9638C98.192 59.6196 96.875 56.4402 96.875 53.125C96.875 49.8098 98.192 46.6304 100.536 44.2862C102.88 41.942 106.06 40.625 109.375 40.625C112.69 40.625 115.87 41.942 118.214 44.2862C120.558 46.6304 121.875 49.8098 121.875 53.125C121.875 56.4402 120.558 59.6196 118.214 61.9638C115.87 64.308 112.69 65.625 109.375 65.625ZM44.375 28.125C44.375 28.125 34.375 21.875 34.375 14.0625C34.375 11.165 35.526 8.38619 37.5749 6.33735C39.6237 4.28852 42.4025 3.1375 45.3 3.1375C48.1975 3.1375 50.9763 4.28852 53.0251 6.33735C55.074 8.38619 56.225 11.165 56.225 14.0625C56.225 21.875 46.25 28.125 46.25 28.125H44.375Z" stroke="black" stroke-width="4"/>
                                                 </svg>
                                             </div>
-                                            <h4>Individual Sessions</h4>
+                                            <h4><?php echo get_field('box_1', $current_page_id)["box_1_title"]; ?></h4>
                                         </div>
                                         <ul class="ordered-list">
-                                            <li><p>Dynamic</p></li>
-                                            <li><p>Collaborative</p></li>
-                                            <li><p>Personalized</p></li>
+                                            <?php
+                                            $features1 = get_field('box_1', $current_page_id)["features_box_1"];
+                                            foreach($features1 as $feature1){ ?>
+                                              <li><p><?php echo $feature1["features_of_box1"] ; ?></p></li>
+                                            <?php } ?>
                                         </ul>
                                         <div class="custom-button mt-2">
-                                            <button type="button" class="btn btn-round btn-outliner">Read More</button>
+                                            <button type="button" class="btn btn-round btn-outliner"><?php echo get_field('box_1', $current_page_id)["button_text_box_1"]; ?></button>
                                         </div>
                                    </div>
                                 </div>
@@ -184,15 +186,17 @@ require locate_template('layouts/header.php') ;
                                                     </defs>
                                                 </svg>                                                    
                                              </div>
-                                             <h4>Double Sessions</h4>
+                                             <h4><?php echo get_field('box_2', $current_page_id)["box_2_title"]; ?></h4>
                                          </div>
                                          <ul class="ordered-list">
-                                             <li><p>Game-Like</p></li>
-                                             <li><p>Intensive</p></li>
-                                             <li><p>Personalized</p></li>
+                                            <?php
+                                            $features2 = get_field('box_2', $current_page_id)["features_box_2"];
+                                            foreach($features2 as $feature2){ ?>
+                                              <li><p><?php echo $feature2["features_of_box2"] ; ?></p></li>
+                                            <?php } ?>
                                          </ul>
                                          <div class="custom-button mt-2">
-                                             <button type="button" class="btn btn-round btn-outliner">Read More</button>
+                                             <button type="button" class="btn btn-round btn-outliner"><?php echo get_field('box_2', $current_page_id)["button_text_box_2"]; ?></button>
                                          </div>
                                     </div>
                                  </div>
@@ -205,15 +209,17 @@ require locate_template('layouts/header.php') ;
                                                      <path d="M109.375 84.9937C107.3 84.707 105.216 84.5006 103.125 84.375C98.1522 84.375 93.3831 86.3504 89.8667 89.8667C86.3504 93.383 84.375 98.1522 84.375 103.125V109.375H113.606C114.877 109.374 116.13 109.081 117.269 108.518C118.407 107.954 119.401 107.136 120.172 106.126C120.944 105.117 121.472 103.943 121.716 102.697C121.961 101.45 121.914 100.163 121.581 98.9375L112.5 65.225M43.75 128.125H150M43.75 146.875C37.5 146.875 32.8125 137.5 32.8125 137.5C28.125 128.125 28.125 121.875 28.125 112.5V106.25L3.125 85.9375V84.375L14.3063 53.0687C15.6068 49.4271 18.0016 46.2766 21.1624 44.0489C24.3232 41.8212 28.0955 40.6253 31.9625 40.625H40.625V62.1625C40.6245 63.8967 41.0883 65.5994 41.9683 67.0938C42.8483 68.5881 44.1124 69.8196 45.6292 70.6603C47.146 71.501 48.8602 71.9202 50.5938 71.8744C52.3274 71.8286 54.0172 71.3195 55.4875 70.4L78.125 56.25M3.125 148.437C3.125 148.437 12.5 131.25 12.5 109.375M149.063 89.8875C141.533 89.0071 134.008 88.0925 126.488 87.1437L149.063 89.8875ZM71.875 99.375C71.875 99.375 65.625 109.375 57.8125 109.375C54.9117 109.375 52.1297 108.223 50.0785 106.171C48.0273 104.12 46.875 101.338 46.875 98.4375C46.875 92.4 51.7687 87.525 57.8125 87.525C65.625 87.525 71.875 97.5 71.875 97.5V99.375ZM109.375 65.625C106.06 65.625 102.88 64.308 100.536 61.9638C98.192 59.6196 96.875 56.4402 96.875 53.125C96.875 49.8098 98.192 46.6304 100.536 44.2862C102.88 41.942 106.06 40.625 109.375 40.625C112.69 40.625 115.87 41.942 118.214 44.2862C120.558 46.6304 121.875 49.8098 121.875 53.125C121.875 56.4402 120.558 59.6196 118.214 61.9638C115.87 64.308 112.69 65.625 109.375 65.625ZM44.375 28.125C44.375 28.125 34.375 21.875 34.375 14.0625C34.375 11.165 35.526 8.38619 37.5749 6.33735C39.6237 4.28852 42.4025 3.1375 45.3 3.1375C48.1975 3.1375 50.9763 4.28852 53.0251 6.33735C55.074 8.38619 56.225 11.165 56.225 14.0625C56.225 21.875 46.25 28.125 46.25 28.125H44.375Z" stroke="black" stroke-width="4"/>
                                                  </svg>
                                              </div>
-                                             <h4>Group   Sessions</h4>
+                                             <h4><?php echo get_field('box_3', $current_page_id)["box_3_title"]; ?></h4>
                                          </div>
                                          <ul class="ordered-list">
-                                             <li><p>1 on 1 Sessions</p></li>
-                                             <li><p>Completely Customized</p></li>
-                                             <li><p>Confidence Building</p></li>
+                                            <?php
+                                            $features3 = get_field('box_3', $current_page_id)["features_box_3"];
+                                            foreach($features3 as $feature3){ ?>
+                                              <li><p><?php echo $feature3["features_of_box3"] ; ?></p></li>
+                                            <?php } ?>
                                          </ul>
                                          <div class="custom-button mt-2">
-                                             <button type="button" class="btn btn-round btn-outliner">Read More</button>
+                                             <button type="button" class="btn btn-round btn-outliner"><?php echo get_field('box_3', $current_page_id)["button_text_box_3"]; ?></button>
                                          </div>
                                     </div>
                                  </div>
@@ -413,29 +419,29 @@ require locate_template('layouts/header.php') ;
               <!--Reward Section Start-->
               <section id="reward-block" class="section-spacing">
                 <div class="container">
-                    <div class="reward-main">
+                    <div class="reward-main" style="background: url('<?php echo get_field('refer_section_bg_img', $current_page_id); ?>') no-repeat center center;">
                         <div class="reward-inner">
                             <div class="reward-top-title">
-                                <h2>Unlock Rewards: Discover Our Simple Referral Process to Share the Opportunity!</h2>
-                                <p>Refer a friend and both of you can enjoy exclusive benefits! Follow these easy steps to start sharing and earning today.</p>
+                                <h2><?php echo get_field('refer_section_title', $current_page_id); ?></h2>
+                                <p><?php echo get_field('refer_section_sub_title', $current_page_id); ?></p>
                             </div>
                             <div class="reward-step row">
                                 <div class="col-md-4 col-lg-4">
                                     <div class="reward-box">
-                                        <h3>Step 1 <br>Refer a Friend</h3>
-                                        <p>Share your unique referral link with friends, family, or colleagues who might benefit from our services.</p>
+                                        <h3><?php echo get_field('box1_refer', $current_page_id)["refer_box_1_title"]; ?></h3>
+                                        <p><?php echo get_field('box1_refer', $current_page_id)["refer_box_1_txt"]; ?></p>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-4">
                                     <div class="reward-box">
-                                        <h3>Step 2 <br>They Sign Up</h3>
-                                        <p>When your referral signs up and meets the eligibility criteria, they’ll need to use your link to complete their registration.</p>
+                                        <h3><?php echo get_field('box2_refer', $current_page_id)["refer_box_2_title"]; ?></h3>
+                                        <p><?php echo get_field('box2_refer', $current_page_id)["refer_box_2_txt"]; ?></p>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-4">
                                     <div class="reward-box">
-                                        <h3>Step 3 <br>Earn Rewards</h3>
-                                        <p>Once your referral successfully complete 6 month, you will receive your rewards! It’s that easy to spread the word and benefit together.</p>
+                                        <h3><?php echo get_field('box3_refer_copy', $current_page_id)["refer_box_3_title"]; ?></h3>
+                                        <p><?php echo get_field('box3_refer_copy', $current_page_id)["refer_box_3_txt"]; ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -603,19 +609,13 @@ require locate_template('layouts/header.php') ;
                             <div class="row">
                                 <div class="col-md-6 col-lg-5">
                                     <div class="risk-image">
-                                        <img class="img-fluid" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/risk_image.png" alt="risk image" />
+                                        <img class="img-fluid" src="<?php echo get_field('risk_free_sess_img', $current_page_id); ?>" alt="risk image" />
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-lg-7">
                                     <div class="risk-content">
-                                    <h2>Experience Our Risk-Free Session</h2>
-                                    <p>At PTP, we believe in the power of firsthand experience. That’s why we offer a risk-free session designed for you to explore our services without any commitment.</p>
-                                    <p>During this session, you will:</p>
-                                    <ul>
-                                        <li><strong>Discover</strong> our unique approach tailored to meet your needs.</li>
-                                        <li><strong>Interact</strong> with our experienced team who will guide you every step of the way.</li>
-                                        <li><strong>Evaluate</strong> the benefits of our program in a supportive environment.</li>
-                                    </ul>
+                                      <h2><?php echo get_field('risk_free_sess_title', $current_page_id); ?></h2>
+                                      <p><?php echo get_field('risk_free_sess_text', $current_page_id); ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -626,97 +626,34 @@ require locate_template('layouts/header.php') ;
                 <section id="testimonial-block" class="section-spacing">
                     <div class="container" data-aos="fade-left" data-aos-duration="1500">
                         <div class="section-title mb-5">
-                            <div class="sub-heading black">Testimonial</div>
-                            <h1>Testimonials from Our Community</h1>
+                            <div class="sub-heading black"><?php echo get_field('testimonial_subtitle', $current_page_id); ?></div>
+                            <h1><?php echo get_field('testimonial_title', $current_page_id); ?></h1>
                         </div>
                         <div id="testimonial-slider" class="owl-carousel">
                             <!-- testimonial item -->
-                            <div class="testimonial-item">
-                                <div class="row align-items-center">
-                                    <div class="col-md-5 col-lg-4">
-                                        <div class="testimonial-image">
-                                            <img class="img-fluid" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/about/about-two.jpg" alt="testimonial-image" />
+                             <?php $testimonials = get_field('add_testimonials', $current_page_id);
+                             foreach ($testimonials as $testimonial) { ?>
+                                <div class="testimonial-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-5 col-lg-4">
+                                            <div class="testimonial-image">
+                                                <img class="img-fluid" src="<?php echo $testimonial["testimonial_image"]; ?>" />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-7 col-lg-8">
-                                        <div class="testimonial-content">
-                                            <div class="testimonial-quote">
-                                                <p>What I appreciate most is the focus on mental resilience. The guidance I've received has not only improved my on-field performance but also my confidence. I’ve seen incredible progress in my game, and I can’t thank Williamson enough for believing in me and helping me achieve my goals.</p>
-                                                <div class="author-info mt-4">
-                                                    <h3>Serena Gomes</h3>
-                                                    <span>Football Player</span>
+                                        <div class="col-md-7 col-lg-8">
+                                            <div class="testimonial-content">
+                                                <div class="testimonial-quote">
+                                                    <p><?php echo $testimonial["testimonial_content"]; ?></p>
+                                                    <div class="author-info mt-4">
+                                                        <h3><?php echo $testimonial["testimonial_title"]; ?></h3>
+                                                        <span><?php echo $testimonial["testimonial_designation"]; ?></span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- testimonial item End-->
-                             <!-- testimonial item -->
-                            <div class="testimonial-item">
-                                <div class="row align-items-center">
-                                    <div class="col-md-5 col-lg-4">
-                                        <div class="testimonial-image">
-                                            <img class="img-fluid" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/about/about-two.jpg" alt="testimonial-image" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-7 col-lg-8">
-                                        <div class="testimonial-content">
-                                            <div class="testimonial-quote">
-                                                <p>What I appreciate most is the focus on mental resilience. The guidance I've received has not only improved my on-field performance but also my confidence. I’ve seen incredible progress in my game, and I can’t thank Williamson enough for believing in me and helping me achieve my goals.</p>
-                                                <div class="author-info mt-4">
-                                                    <h3>Serena Gomes</h3>
-                                                    <span>Football Player</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- testimonial item End-->
-                             <!-- testimonial item -->
-                            <div class="testimonial-item">
-                                <div class="row align-items-center">
-                                    <div class="col-md-5 col-lg-4">
-                                        <div class="testimonial-image">
-                                            <img class="img-fluid" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/about/about-two.jpg" alt="testimonial-image" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-7 col-lg-8">
-                                        <div class="testimonial-content">
-                                            <div class="testimonial-quote">
-                                                <p>What I appreciate most is the focus on mental resilience. The guidance I've received has not only improved my on-field performance but also my confidence. I’ve seen incredible progress in my game, and I can’t thank Williamson enough for believing in me and helping me achieve my goals.</p>
-                                                <div class="author-info mt-4">
-                                                    <h3>Serena Gomes</h3>
-                                                    <span>Football Player</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- testimonial item End-->
-                             <!-- testimonial item -->
-                            <div class="testimonial-item">
-                                <div class="row align-items-center">
-                                    <div class="col-md-5 col-lg-4">
-                                        <div class="testimonial-image">
-                                            <img class="img-fluid" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/about/about-two.jpg" alt="testimonial-image" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-7 col-lg-8">
-                                        <div class="testimonial-content">
-                                            <div class="testimonial-quote">
-                                                <p>What I appreciate most is the focus on mental resilience. The guidance I've received has not only improved my on-field performance but also my confidence. I’ve seen incredible progress in my game, and I can’t thank Williamson enough for believing in me and helping me achieve my goals.</p>
-                                                <div class="author-info mt-4">
-                                                    <h3>Serena Gomes</h3>
-                                                    <span>Football Player</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php } ?>
                             <!-- testimonial item End-->
                         </div>
                     </div>
@@ -730,7 +667,7 @@ require locate_template('layouts/header.php') ;
                                     <div class="col-md-6 col-lg-8" data-aos="fade-left" data-aos-duration="1500">
                                         <div class="steps-content-inner">
                                             <div class="section-title mb-5">
-                                                <h1>Benefits of Joining Our<br> <span>Community</span></h1>
+                                                <h1><?php echo get_field('Benefits_of_Joining_Our_Community_Title', $current_page_id); ?></h1>
                                             </div>
                                             <div class="step-list">
                                                 <ul>
@@ -738,8 +675,8 @@ require locate_template('layouts/header.php') ;
                                                         <div class="d-flex step-item">
                                                             <i class="fa-solid fa-person-chalkboard"></i>
                                                             <div class="s-list-content">
-                                                                <h2>Proof of quality</h2>
-                                                                <p>Check any pro’s work samples, client reviews, and identity verification.</p>
+                                                                <h2><?php echo get_field('Row1_Content', $current_page_id)["community_row_1_title"]; ?></h2>
+                                                                <p><?php echo get_field('Row1_Content', $current_page_id)["community_row_1_subtitle"]; ?></p>
                                                             </div>
                                                         </div>
                                                     </li>
@@ -747,8 +684,8 @@ require locate_template('layouts/header.php') ;
                                                         <div class="d-flex step-item">
                                                             <i class="fa-solid fa-sack-dollar"></i>
                                                             <div class="s-list-content">
-                                                                <h2>No cost until you hire</h2>
-                                                                <p>Interview potential fits for your job, negotiate rates, and only pay for work you approve.</p>
+                                                                <h2><?php echo get_field('Row2_Content', $current_page_id)["community_row_2_title"]; ?></h2>
+                                                                <p><?php echo get_field('Row2_Content', $current_page_id)["community_row_2_subtitle"]; ?></p>
                                                             </div>
                                                         </div>
                                                     </li>
@@ -756,8 +693,8 @@ require locate_template('layouts/header.php') ;
                                                         <div class="d-flex step-item">
                                                             <i class="fa-solid fa-user-shield"></i>
                                                             <div class="s-list-content">
-                                                                <h2>Safe and secure</h2>
-                                                                <p>Focus on your work knowing we help protect your data and privacy. We’re here with 24/7 support if you need it.</p>
+                                                                <h2><?php echo get_field('Row3_Content', $current_page_id)["community_row_3_title"]; ?></h2>
+                                                                <p><?php echo get_field('Row3_Content', $current_page_id)["community_row_3_subtitle"]; ?></p>
                                                             </div>
                                                         </div>
                                                     </li>
@@ -767,7 +704,7 @@ require locate_template('layouts/header.php') ;
                                     </div>
                                     <div class="col-md-6 col-lg-4" data-aos="fade-right" data-aos-duration="2500">
                                         <div class="steps-image">
-                                            <img class="img-fluid" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/hero/video_img.jpg" alt="" />
+                                            <img class="img-fluid" src="<?php echo get_field('community_right_sec_img', $current_page_id); ?>" alt="" />
                                         </div>
                                     </div>
                                 </div>
