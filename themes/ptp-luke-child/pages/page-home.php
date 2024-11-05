@@ -73,7 +73,7 @@ $current_page_id = get_queried_object_id();
                                         </ul>
                                     </div>
                                     <h1><?php echo get_post_meta($current_page_id, "top_video_title", true); ?></h1>
-                                    <p><?php echo get_post_meta($current_page_id, "logos_below_video", true); ?></p>
+                                    <p><?php echo get_post_meta($current_page_id, "top_video_text", true); ?></p>
                                     <div class="filter-form">
                                         <div class="input-group">
                                             <input type="text" class="form-control" placeholder="Enter Your Sports" aria-label="" aria-describedby="basic-addon1">
