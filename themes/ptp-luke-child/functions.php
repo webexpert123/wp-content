@@ -56,160 +56,103 @@ function add_sport_menu() {
 add_action( 'admin_menu', 'add_sport_menu' );
 
 function sports_menu_page() {
-    global $wpdb;
-    $table_name = $wpdb->prefix . 'sports';
-    $message="";
-    if(isset($_POST['add_sport'])){
-        require_once(ABSPATH . 'wp-admin/includes/image.php');
-        require_once(ABSPATH . 'wp-admin/includes/file.php');
-        require_once(ABSPATH . 'wp-admin/includes/media.php');
-
-        $attachment_id = media_handle_upload('upload_image', 0);
-
-        if (is_wp_error($attachment_id)) {
-            $error_message = $attachment_id->get_error_message();
-            $message = "Error uploading image: $error_message";
-        }else{
-            $query = $wpdb->prepare( "INSERT INTO $table_name (`sport_name`,`image`) VALUES ('$_POST[sport_name]','$attachment_id')" );
-            $wpdb->query($query);
-
-            if ($wpdb->last_error) {
-               $message = "<p style='color:red;'>There was an error inserting the data.</p>";
-            } 
-            else {
-               $message = "<p style='color:green;'>Added successfully!</p>";
-            }
-        }
-        
-    }
-
-    if(isset($_POST['edit_sport'])){
-        if($_FILES['upload_image']['name'] != ''){
-           require_once(ABSPATH . 'wp-admin/includes/image.php');
-           require_once(ABSPATH . 'wp-admin/includes/file.php');
-           require_once(ABSPATH . 'wp-admin/includes/media.php');
-           $attachment_id = media_handle_upload('upload_image', 0);
-           if (is_wp_error($attachment_id)) {
-              $error_message = $attachment_id->get_error_message();
-              $message = "Error uploading image: $error_message";
-           }else{
-              $query = $wpdb->prepare( "UPDATE $table_name SET `sport_name`='$_POST[sport_name]' ,`image`='$attachment_id' WHERE sportID='$_POST[sportID]' " );
-              $wpdb->query($query);
-            }
-        }else{
-           $query = $wpdb->prepare( "UPDATE $table_name SET `sport_name`='$_POST[sport_name]' WHERE sportID='$_POST[sportID]' " );
-           $wpdb->query($query);
-        }
-        $message = "<p style='color:green;'>Updated successfully!</p>";
-    }
-    
-
-    if(isset($_REQUEST['sid'])){
-        $query = $wpdb->prepare( "DELETE FROM $table_name WHERE sportID = '$_REQUEST[sid]' " );
-        $wpdb->query( $query );
-        $message = "<p style='color:green;'>Deleted successfully!</p>";
-    }
- ?>
- <style>
-    .modal {
-      display: none; /* Hidden by default */
-      position: fixed; /* Stay in place */
-      z-index: 1; /* Sit on top */
-      padding-top: 100px; /* Location of the box */
-      left: 0;
-      top: 0;
-      width: 100%; /* Full width */
-      height: 100%; /* Full height */
-      overflow: auto; /* Enable scroll if needed */
-      background-color: rgb(0,0,0); /* Fallback color */
-      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-      text-align: left;
-    }
-    .modal-content {
-      background-color: #fefefe;
-      margin: auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 30%;
-    }
-    .close {
-      color: #aaaaaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    .close:hover,
-    .close:focus {
-      color: #000;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    table td{
-        text-align: center;
-    }
-    </style>
-
-    <div class="wrap">
-        <h1>Add Sports</h1><hr>
-        <?php echo $message; ?>
-        <form action="" method="post" enctype="multipart/form-data">
-            <label>Sport Image:&nbsp;&nbsp;</label><input type="file" name="upload_image" required><br><br>
-            <label>Sport Name:&nbsp;&nbsp;</label><input type="text" name="sport_name" placeholder="Enter sport name" required><br><br>
-            <button type="submit" name="add_sport">ADD</button>
-        </form>
-        <br><br>
-
-        <h1>Sports List</h1><hr>
-        <table border="1" style="width:100%;">
-            <tr>
-               <th>S.No.</th>
-               <th>IMAGE</th>
-               <th>SPORT NAME</th>
-               <th>ACTION</th>
-            </tr>
-            <?php $results = $wpdb->get_results("SELECT * FROM $table_name");
-            $i=0;
-            foreach ($results as $row) { ?>
-              <tr>
-                <th><?php echo ++$i; ?>.</th>
-
-                <td><?php $image_url = wp_get_attachment_url($row->image);
-                if($image_url){echo "<img src='".$image_url."' width='70' height='70' />";}?></td>
-
-                <td><?php echo $row->sport_name; ?></td>
-
-                <td><a href="javascript:void(0)" onclick="open_popup('myModal<?php echo $row->sportID; ?>')">EDIT</a> &nbsp;&nbsp; 
-                <a href="/wp-admin/admin.php?page=sports&sid=<?php echo $row->sportID; ?>">DELETE</a>
-                <div id="myModal<?php echo $row->sportID; ?>" class="modal">
-                    <div class="modal-content">
-                        <span class="close"  onclick="close_popup('myModal<?php echo $row->sportID; ?>')">&times;</span>
-                        <h1>Edit Sport</h1><hr>
-                        <form action="" method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="sportID" value="<?php echo $row->sportID; ?>">
-                            <label>Sport Image:&nbsp;&nbsp;</label><input type="file" name="upload_image"> <br>(Select image if you want to change otherwise leave it!)<br><br>
-                            <label>Sport Name:&nbsp;&nbsp;</label><input type="text" name="sport_name" placeholder="Enter sport name" value="<?php echo $row->sport_name; ?>" required><br><br>
-                            <button type="submit" name="edit_sport">UPDATE</button>
-                        </form>
-                    </div>
-                </div></td>
-              </tr>
-            <?php } ?>
-        </table>
-    </div>
-    <script>
-        function open_popup(popupID){
-            var modal = document.getElementById(popupID);
-            modal.style.display = "block";
-        }
-        function close_popup(popupID){
-            var modal = document.getElementById(popupID);
-            modal.style.display = "none";
-        }
-    </script>
-<?php
+  include( get_stylesheet_directory() . '/admin_modules/manage_sports.php');
 }
 
 
 
+function check_user_email(){
+    $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+    if ( email_exists( $email ) ) {
+      echo json_encode(array('status' => 1));
+    } else {
+      echo json_encode(array('status' => 0));
+    }
+    exit;
+}
+add_action( 'wp_ajax_nopriv_check_user_email', 'check_user_email' );
+add_action( 'wp_ajax_check_user_email', 'check_user_email' );
+
+function get_referral_code_count($referralCode){
+    global $wpdb;
+    $referralCode = isset($referralCode) ? sanitize_text_field($referralCode) : '';
+
+    $query = $wpdb->prepare(
+        "SELECT COUNT(*) FROM {$wpdb->prefix}usermeta WHERE meta_key = %s AND meta_value = %s",
+        '_my_referralCode',
+        $referralCode       
+    );
+    $count = $wpdb->get_var($query);
+    return $count;
+}
+
+function check_user_referralCode() {
+    $count = get_referral_code_count($_POST['referralCode']);
+    echo json_encode(array('count' => $count));
+    exit; 
+}
+add_action( 'wp_ajax_nopriv_check_user_referralCode', 'check_user_referralCode' );
+add_action( 'wp_ajax_check_user_referralCode', 'check_user_referralCode' );
 
 
+function new_user_email_send($fullname, $role, $email, $phone, $refcode){
+    $message = "<p>Hi ".$fullname.",</p>";
+    $message .= "<p>Thank you for registering with <b>PTP-Luke</b></p>";
+    $message .= "<p>We are excited to welcome you to our community of ".$role.". Your registration was successful, and you now have access to all the features and benefits of being part of our network.<br><br> Your Account Details:</p>";
+    $message .= "<b>Full Name: </b>".$fullname." <br><b>Email Address: </b>".$email." <br><b>Phone: </b>".$phone." <br><b>Role: </b>".$role." <br><b>Referral Code: </b>".$refcode;
+    $message .= "<p>Best regards, <br> The PTP-Luke Team <br>".site_url()."</p>";
+    $headers = array('Content-Type: text/html; charset=UTF-8');
+    wp_mail($email, "Welcome to ".ucwords($role)."Hub – Your Registration is Complete!", $message, $headers);
+}
+
+
+function register_user_ajax(){
+    if (!isset($_POST['full_name'], $_POST['email'], $_POST['password'], $_POST['phone'])) {
+        wp_send_json_error(['alert_type' => 'error', 'message' => 'Missing form data.']);
+    }
+    $fullname = sanitize_text_field($_POST['full_name']);
+    $email = sanitize_email($_POST['email']);
+    $password = sanitize_text_field($_POST['password']);
+    $phone = sanitize_text_field($_POST['phone']);
+    $zipcode = sanitize_text_field($_POST['zipcode']);
+    $sport = sanitize_text_field($_POST['sport']);
+    $experience = sanitize_text_field($_POST['experience']);
+    $refrence_referralCode = sanitize_text_field($_POST['referralCode']);
+    $user_role = sanitize_text_field($_POST['user_role']);
+
+    if (email_exists($email)) {
+        wp_send_json_error(['alert_type' => 'error', 'message' => 'Email is already registered.']);
+    }
+
+    // Create the user
+    $user_id = wp_create_user($email, $password, $email);  
+
+    if (is_wp_error($user_id)) {
+        wp_send_json_error(['alert_type' => 'error', 'message' => 'Error creating user: ' . $user_id->get_error_message()]);
+    }
+
+    $user = new WP_User($user_id);
+    $user->set_role($user_role);
+
+    $random_string = strtoupper(bin2hex(random_bytes(5)));
+    $referral_code = 'REF_' . $user_id .'_'. $random_string;
+
+    update_user_meta($user_id, '_my_referralCode', $referral_code);
+    update_user_meta($user_id, 'first_name', $fullname);
+    update_user_meta($user_id, 'fullname', $fullname);
+    update_user_meta($user_id, 'phone', $phone);
+    update_user_meta($user_id, '_zipcode', $zipcode);
+    update_user_meta($user_id, '_sport', $sport);
+    update_user_meta($user_id, '_experience', $experience);
+
+    $count = get_referral_code_count($refrence_referralCode);
+    if($count != 0){
+      update_user_meta($user_id, '_reference_referralCode', $refrence_referralCode);
+    }
+
+    new_user_email_send($fullname, $user_role, $email, $phone, $referral_code);
+    wp_send_json_success(['alert_type' => 'success', 'message' => 'You are successfully registered as '.$user_role.'.']);
+    exit;
+}
+add_action( 'wp_ajax_nopriv_register_user_ajax', 'register_user_ajax' );
+add_action( 'wp_ajax_register_user_ajax', 'register_user_ajax' );

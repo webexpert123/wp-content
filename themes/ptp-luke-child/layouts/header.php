@@ -35,8 +35,8 @@
                     </div>
                     <div class="action-block">
                         <div class="auth-action">
-                            <button type="button" class="btn outliner btn-round" onclick="window.location.href='login.html'">Log In</button>
-                            <button type="button" class="btn btn-round btn-fill" onclick="window.location.href='register.html'">Sign Up</button>
+                            <button type="button" class="btn outliner btn-round" onclick="window.location.href='<?php echo site_url(); ?>/user-login'">Log In</button>
+                            <button type="button" class="btn btn-round btn-fill" onclick="window.location.href='<?php echo site_url(); ?>/register'">Sign Up</button>
                         </div>
                     </div>
                 </div>

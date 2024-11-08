@@ -13,6 +13,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <!-- animation library -->
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <body class="auth-layout">
     <main>
@@ -44,41 +46,31 @@
                               </div>
                               <!-- auth tabs nav end -->
                              </div>
-                              <!-- <div class="auth-third-party-login">
-                                  <div class="row">
-                                      <div class="col-md-12 col-lg-6">
-                                          <a href="#"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/auth/google.png" alt=""> Login with Google</a>
-                                      </div>
-                                      <div class="col-md-12 col-lg-6">
-                                          <a href="#"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/auth/facebook.png" alt=""> Login with Facebook</a>
-                                      </div>
-                                  </div>
-                              </div>
-                              <div class="auth-block-separator">
-                                <p>Or</p> 
-                              </div> -->
+
                               <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="coach" role="tabpanel" aria-labelledby="coach-tab">
                                   <div class="auth-input-block">
-                                    <form action="register-complete.html" id="commentForm">
+                                    <form action="" id="signupCoach" method="post">
+                                      <input type="hidden" name="user_role" value="coach">
                                       <div class="form-group">
-                                        <input type="text" name="text" class="form-control" id="inputText" placeholder="Full Name" required>
+                                        <input type="text" name="full_name" class="form-control" id="inputText" placeholder="Full Name*" required>
                                         <label for="input-text"><i class="far fa-user"></i></label>
                                       </div>
                                       <div class="form-group">
-                                        <input type="email" name="email" class="form-control" id="inputText" placeholder="Email Address" required>
+                                        <input type="email" name="email" class="form-control" id="emailCoach" placeholder="Email Address*" required>
                                         <label for="input-text"><i class="fa-regular fa-envelope"></i></label>
                                       </div>
+                                      <p class="text-danger" id="email_alert_coach" style="display:none;">This email is already exists !</p>
                                       <div class="row">
                                         <div class="col-md-12 col-lg-6">
                                           <div class="form-group pass-block">
-                                            <input type="number" name="Phone Number" class="form-control" id="inputPass" placeholder="Phone Number" required>
+                                            <input type="number" name="phone" class="form-control" id="inputPass" placeholder="Phone Number*" required>
                                             <label for="input-pass"><i class="fas fa-phone"></i></label>
                                           </div>
                                         </div>
                                         <div class="col-md-12 col-lg-6">
                                           <div class="form-group pass-block">
-                                            <input type="number" name="Zip Code" class="form-control" id="inputPass" placeholder="Zip Code" required>
+                                            <input type="number" name="zipcode" class="form-control" id="inputPass" placeholder="Zip Code*" required>
                                             <label for="input-pass"><i class="fas fa-sort-numeric-up-alt"></i></label>
                                           </div>
                                         </div>
@@ -86,7 +78,7 @@
                                       <div class="row">
                                         <div class="col-md-12 col-lg-6">
                                           <div class="form-group pass-block">
-                                            <input type="password" name="pass" class="form-control" id="inputPass" placeholder="Password" oninput="updateProgressBar()" required>
+                                            <input type="password" name="password" class="form-control" id="password_c" placeholder="Password*" oninput="updateProgressBar()" required>
                                             <label for="input-pass"><i class="fas fa-lock"></i></label>
                                             <div class="pass-toggler-btn">
                                               <i id="eye" class="lar la-eye"></i>
@@ -96,43 +88,48 @@
                                         </div>
                                         <div class="col-md-12 col-lg-6">
                                           <div class="form-group pass-block">
-                                            <input type="password" name="Confirm Password" class="form-control" id="inputPass" placeholder="Confirm Password" oninput="updateProgressBar()" required>
+                                            <input type="password" name="confirm_password" class="form-control" id="confirm_password_c" placeholder="Confirm Password*" oninput="updateProgressBar()" required>
                                             <label for="input-pass"><i class="fas fa-lock"></i></label>
                                             <div class="pass-toggler-btn">
                                               <i id="eye" class="lar la-eye"></i>
                                               <i id="eye-slash" class="lar la-eye-slash"></i>
                                             </div>
                                           </div>
+                                          <p class="text-danger" id="pass_alert_coach" style="display:none;">Both passwords are not same !</p>
                                         </div>
                                       </div>
                                       <div class="row">
                                         <div class="col-md-12 col-lg-6">
                                           <div class="form-group pass-block">
-                                            <select class="form-control" id="exampleFormControlSelect1">
-                                              <option>Sports</option>
-                                              <option>Rugby</option>
-                                              <option>Soccer</option>
-                                              <option>Taekwon-DO</option>
-                                              <option>Martial Art</option>
+                                            <select name="sport" class="form-control" id="exampleFormControlSelect1" required>
+                                              <option value="">Choose Sport*</option>
+                                              <?php
+                                              global $wpdb; 
+                                              $table = $wpdb->prefix.'sports';
+                                              $results = $wpdb->get_results("SELECT * FROM  $table ORDER BY sport_name ASC");
+                                              foreach ($results as $row) { ?>
+                                                <option value="<?php echo $row->sportID; ?>"><?php echo $row->sport_name; ?></option>
+                                              <?php } ?>
                                             </select>
                                             <label for="input-pass"><i class="fas fa-running"></i></label>
                                           </div>
                                         </div>
                                         <div class="col-md-12 col-lg-6">
                                           <div class="form-group pass-block">
-                                            <input type="number" name="experience" class="form-control" id="inputPass" placeholder="Year of Experience" required>
+                                            <input type="number" name="experience" class="form-control" id="inputPass" placeholder="Year of Experience">
                                             <label for="input-pass"><i class="fas fa-sort-numeric-up-alt"></i></label>
                                           </div>
                                         </div>
                                       </div>
                                       <div class="form-group">
-                                        <input type="text" name="text" class="form-control" id="inputText" placeholder="Referal Code" required>
+                                        <input type="text" name="referralCode" class="form-control" id="referralCode_coach" placeholder="Referal Code">
                                         <label for="input-text"><i class="far fa-user"></i></label>
                                       </div>
+                                      <p class="text-danger" id="referral_alert_coach" style="display:none;">Invalid Referal Code!</p>
                                       <div id="suggestions" class="mt-2 d-inline-block">
-                                        <p class="suggestion">
+                                        <!-- <p class="suggestion">
                                           Minimum 8 characters long and containing at least one numeric, uppercase, lowercase, and special character.
-                                        </p>
+                                        </p> -->
                                       </div>
                     
                                       <div class="form-group">
@@ -141,31 +138,33 @@
                                           <label class="custom-control-label" for="customControlValidation1">I accept the <a href="#" target="_blank">Term of Conditions</a> and <a href="#">Privacy Policy</a></label>
                                         </div>
                                       </div>
-                                      <button type="submit" class="btn">Sign up Now</button>
+                                      <button type="submit" class="btn" id="submitCoach">Sign up Now <div id="coach_spinner" class="spinner-border text-dark" style="display:none;"></div></button>
                                     </form>
                                   </div>
                                 </div>
                                 <div class="tab-pane fade" id="athlete" role="tabpanel" aria-labelledby="athlete-tab">
                                   <div class="auth-input-block">
-                                    <form action="register-complete.html" id="commentForm">
+                                    <form action="" id="signupAthlete" method="post">
+                                      <input type="hidden" name="user_role" value="athlete">
                                       <div class="form-group">
-                                        <input type="text" name="text" class="form-control" id="inputText" placeholder="Full Name" required>
+                                        <input type="text" name="full_name" class="form-control" id="inputText" placeholder="Full Name" required>
                                         <label for="input-text"><i class="far fa-user"></i></label>
                                       </div>
                                       <div class="form-group">
-                                        <input type="email" name="email" class="form-control" id="inputText" placeholder="Email Address" required>
+                                        <input type="email" name="email" class="form-control" id="emailAthlete" placeholder="Email Address" required>
                                         <label for="input-text"><i class="fa-regular fa-envelope"></i></label>
                                       </div>
+                                      <p class="text-danger" id="email_alert_athlete" style="display:none;">This email is already exists !</p>
                                       <div class="row">
                                         <div class="col-md-12 col-lg-6">
                                           <div class="form-group pass-block">
-                                            <input type="number" name="Phone Number" class="form-control" id="inputPass" placeholder="Phone Number" required>
+                                            <input type="number" name="phone" class="form-control" id="inputPass" placeholder="Phone Number" required>
                                             <label for="input-pass"><i class="fas fa-phone"></i></label>
                                           </div>
                                         </div>
                                         <div class="col-md-12 col-lg-6">
                                           <div class="form-group pass-block">
-                                            <input type="number" name="Zip Code" class="form-control" id="inputPass" placeholder="Zip Code" required>
+                                            <input type="number" name="zipcode" class="form-control" id="inputPass" placeholder="Zip Code" required>
                                             <label for="input-pass"><i class="fas fa-sort-numeric-up-alt"></i></label>
                                           </div>
                                         </div>
@@ -173,7 +172,7 @@
                                       <div class="row">
                                         <div class="col-md-12 col-lg-6">
                                           <div class="form-group pass-block">
-                                            <input type="password" name="pass" class="form-control" id="inputPass" placeholder="Password" oninput="updateProgressBar()" required>
+                                            <input type="password" name="password" class="form-control" id="password_a" placeholder="Password" oninput="updateProgressBar()" required>
                                             <label for="input-pass"><i class="fas fa-lock"></i></label>
                                             <div class="pass-toggler-btn">
                                               <i id="eye" class="lar la-eye"></i>
@@ -183,48 +182,50 @@
                                         </div>
                                         <div class="col-md-12 col-lg-6">
                                           <div class="form-group pass-block">
-                                            <input type="password" name="Confirm Password" class="form-control" id="inputPass" placeholder="Confirm Password" oninput="updateProgressBar()" required>
+                                            <input type="password" name="confirm_password" class="form-control" id="confirm_password_a" placeholder="Confirm Password" oninput="updateProgressBar()" required>
                                             <label for="input-pass"><i class="fas fa-lock"></i></label>
                                             <div class="pass-toggler-btn">
                                               <i id="eye" class="lar la-eye"></i>
                                               <i id="eye-slash" class="lar la-eye-slash"></i>
                                             </div>
                                           </div>
+                                          <p class="text-danger" id="pass_alert_athlete" style="display:none;">Both passwords are not same !</p>
                                         </div>
                                       </div>
                                       <div class="row">
-                                        <div class="col-md-12 col-lg-6">
+                                        <!--<div class="col-md-12 col-lg-6">
                                           <div class="form-group pass-block">
                                             <select class="form-control" id="exampleFormControlSelect1">
-                                              <option>Sports</option>
-                                              <option>Rugby</option>
-                                              <option>Soccer</option>
-                                              <option>Taekwon-DO</option>
-                                              <option>Martial Art</option>
+                                              <option value="">Choose Sport</option>
+                                              <?php
+                                              foreach ($results as $row) { ?>
+                                                <option value="<?php echo $row->sportID; ?>"><?php echo $row->sport_name; ?></option>
+                                              <?php } ?>
                                             </select>
                                             <label for="input-pass"><i class="fas fa-running"></i></label>
                                           </div>
-                                        </div>
+                                        </div>-->
                                         <div class="col-md-12 col-lg-6">
                                           <div class="form-group">
-                                            <input type="text" name="text" class="form-control" id="inputText" placeholder="Referal Code" required>
+                                            <input type="text" name="referralCode" class="form-control" id="referralCode_Athlete" placeholder="Referal Code" onkeyup="check_valid_referral(this)" required>
                                             <label for="input-text"><i class="far fa-user"></i></label>
                                           </div>
+                                          <p class="text-danger" id="referral_alert_athlete" style="display:none;">Invalid Referal Code!</p>
                                         </div>
                                       </div>
                                       <div id="suggestions" class="mt-2 d-inline-block">
-                                        <p class="suggestion">
+                                        <!-- <p class="suggestion">
                                           Minimum 8 characters long and containing at least one numeric, uppercase, lowercase, and special character.
-                                        </p>
+                                        </p> -->
                                       </div>
                     
                                       <div class="form-group">
                                         <div class="custom-checkbox">
-                                          <input type="checkbox" name="checkbox" class="custom-control-input" id="customControlValidation1" required>
-                                          <label class="custom-control-label" for="customControlValidation1">I accept the <a href="#" target="_blank">Term of Conditions</a> and <a href="#">Privacy Policy</a></label>
+                                          <input type="checkbox" name="checkbox" class="custom-control-input" id="customControlValidation2" required>
+                                          <label class="custom-control-label" for="customControlValidation2">I accept the <a href="#" target="_blank">Term of Conditions</a> and <a href="#">Privacy Policy</a></label>
                                         </div>
                                       </div>
-                                      <button type="submit" class="btn">Sign up Now</button>
+                                      <button type="submit" class="btn" id="submitAthlete">Sign up Now <div id="athlete_spinner" class="spinner-border text-dark" style="display:none;"></div></button>
                                     </form>
                                   </div>
                                </div>
@@ -242,7 +243,7 @@
                     </div>
                     <div class="auth-link">
                       <div class="alternet-access">
-                        <p>Already have an account ?  <a href="login.html">&nbsp; <strong>Sign In Now!</strong></a></p>
+                        <p>Already have an account ?  <a href="<?php echo site_url(); ?>/user-login">&nbsp; <strong>Sign In Now!</strong></a></p>
                       </div>
                     </div>
                     <div class="video-content">
@@ -268,4 +269,160 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
 <script src="./js/main.js"></script>
+<script>
+jQuery(document).ready(function($) {
+    jQuery('#signupCoach').on('submit', function(event) {
+        event.preventDefault();
+        var formData = jQuery(this).serialize(); 
+        formData += '&action=register_user_ajax';
+
+        var password = getFormFieldValue(formData, 'password');
+        var confirmPassword = getFormFieldValue(formData, 'confirm_password');
+
+        if (password !== confirmPassword) {
+            Swal.fire({ title: 'Password and confirm password are not same !', text: '', icon: 'error'});
+            return false;
+        }
+        jQuery('#coach_spinner').show();
+        jQuery("#submitCoach").attr("disabled",true);
+        jQuery.ajax({
+            url: "/wp-admin/admin-ajax.php",
+            type: 'POST',
+            data: formData, 
+            success: function(response) {
+                if (response.data.alert_type === 'success') {jQuery('#signupCoach')[0].reset();}
+                Swal.fire({ title: response.data.message, text: '', icon: response.data.alert_type});
+                jQuery('#coach_spinner').hide();
+                jQuery("#submitCoach").attr("disabled",false);
+            }
+        });
+    });
+
+    jQuery('#signupAthlete').on('submit', function(event) {
+        event.preventDefault();
+        var formData = jQuery(this).serialize(); 
+        formData += '&action=register_user_ajax';
+
+        var password = getFormFieldValue(formData, 'password');
+        var confirmPassword = getFormFieldValue(formData, 'confirm_password');
+
+        if (password !== confirmPassword) {
+            Swal.fire({ title: 'Password and confirm password are not same !', text: '', icon: 'error'});
+            return false;
+        }
+        jQuery('#athlete_spinner').show();
+        jQuery("#submitAthlete").attr("disabled",true);
+        jQuery.ajax({
+            url: "/wp-admin/admin-ajax.php",
+            type: 'POST',
+            data: formData, 
+            success: function(response) {
+                if (response.data.alert_type === 'success') {jQuery('#signupAthlete')[0].reset();}
+                Swal.fire({ title: response.data.message, text: '', icon: response.data.alert_type});
+                jQuery('#athlete_spinner').hide();
+                jQuery("#submitAthlete").attr("disabled",false);
+            }
+        });
+    });
+});
+
+function getFormFieldValue(formData, fieldName) {
+  var fieldValue = '';
+  var dataArray = formData.split('&');
+  jQuery.each(dataArray, function(index, value) {
+    var pair = value.split('=');
+    if (pair[0] === fieldName) {
+      fieldValue = decodeURIComponent(pair[1].replace(/\+/g, ' '));
+      return false;
+    }
+  });
+  return fieldValue;
+}
+
+function check_email(email,msg,submit){
+  jQuery.ajax({
+    url: "/wp-admin/admin-ajax.php",
+    type: 'POST',
+    data: {action:"check_user_email", email:email}, 
+    success: function(response) {
+      var result = JSON.parse(response); 
+      if(result.status === 1){
+        $(msg).show();
+        $(submit).attr("disabled",true);
+      }
+      else{
+        $(msg).hide();
+        $(submit).attr("disabled",false);
+      }
+    }
+  });
+}
+
+jQuery("#emailCoach").change(function(){
+   var email = jQuery("#emailCoach").val(); 
+   check_email(email, "#email_alert_coach", "#submitCoach");
+});
+
+jQuery("#password_c, #confirm_password_c").change(function(){
+  var password_c = jQuery("#password_c").val();
+  var confirm_password_c = jQuery("#confirm_password_c").val();
+  if(password_c!="" && confirm_password_c!=""){
+    if (password_c !== confirm_password_c) {
+      jQuery("#pass_alert_coach").show();
+    }else{
+      jQuery("#pass_alert_coach").hide();
+    }
+  }
+});
+
+jQuery("#referralCode_coach").keyup(function(){
+   var referralCode = jQuery("#referralCode_coach").val(); 
+   check_referralCode(referralCode, "#referral_alert_coach", "#submitCoach");
+});
+
+function check_referralCode(referralCode,msg,submit){
+  if(referralCode===""){
+    $(msg).hide();
+    return false;
+  }
+
+  jQuery.ajax({
+    url: "/wp-admin/admin-ajax.php",
+    type: 'POST',
+    data: {action:"check_user_referralCode", referralCode:referralCode}, 
+    success: function(response) {
+      var result = JSON.parse(response); 
+      if(result.count == 0){
+        $(msg).show();
+      }
+      else{
+        $(msg).hide();
+      }
+    }
+  });
+}
+
+
+jQuery("#emailAthlete").change(function(){
+   var email = jQuery("#emailAthlete").val(); 
+   check_email(email, "#email_alert_athlete", "#submitAthlete");
+});
+
+jQuery("#password_a, #confirm_password_a").change(function(){
+  var password_a = jQuery("#password_a").val();
+  var confirm_password_a = jQuery("#confirm_password_a").val();
+  if(password_a!="" && confirm_password_a!=""){
+    if (password_a !== confirm_password_a) {
+      jQuery("#pass_alert_athlete").show();
+    }else{
+      jQuery("#pass_alert_athlete").hide();
+    }
+  }
+});
+
+function check_valid_referral(inputElement){
+  var referralCode = $(inputElement).val();console.log("referralCode",referralCode); 
+  check_referralCode(referralCode, "#referral_alert_athlete", "#submitAthlete");
+}
+</script>
 </html>

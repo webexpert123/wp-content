@@ -41,7 +41,7 @@
                             <div class="footer-widget link-widget">
                                 <h4>Important Links</h4>
                                 <ul>
-                                    <li><a href="#">Sign Up</a></li>
+                                    <li><a href="<?php echo site_url(); ?>/register">Sign Up</a></li>
                                     <li><a href="#">Login</a></li>
                                     <li><a href="#">Contact</a></li>
                                     <li><a href="#">Locations</a></li>

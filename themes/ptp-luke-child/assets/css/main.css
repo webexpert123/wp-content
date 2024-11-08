@@ -11400,3 +11400,6 @@ body.auth-layout section#auth-section.register-bg .auth-block .row .auth-content
 body.auth-layout section#auth-section.register-bg .auth-block .row .auth-content-block .auth-link .alternet-access p a {
   color: var(--primary-color);
 }
+.swal2-confirm{
+  background-color: var(--aceent0-color);
+}
