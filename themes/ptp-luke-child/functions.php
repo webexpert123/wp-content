@@ -156,3 +156,89 @@ function register_user_ajax(){
 }
 add_action( 'wp_ajax_nopriv_register_user_ajax', 'register_user_ajax' );
 add_action( 'wp_ajax_register_user_ajax', 'register_user_ajax' );
+
+
+function forgot_password_submit_user(){
+    $email = sanitize_email($_POST['email']);
+    if ($email === "") {
+        wp_send_json_error(['alert_type' => 'error', 'message' => 'Please enter a valid email address !']);
+    }
+    elseif (!email_exists($email)) {
+        wp_send_json_error(['alert_type' => 'error', 'message' => 'This email is not registered with us !']);
+    }
+    else{    
+       $user = get_user_by('email', $email);
+       $user_id = $user->ID;
+       $link = site_url()."/reset-password?uid=".md5($user_id);
+       $fullname = get_user_meta($user_id, "fullname", true);
+       $message = "<p>Hi ".$fullname.",</p>";
+       $message .= "<p>We received a request to reset your password on ".site_url().". If you did not request this, please ignore this email, and your password will remain unchanged.</p>
+       <p>To reset your password, please click the link below: <br> ".$link."</p>
+       <p>If you need further assistance, or if you didn't request a password reset, feel free to contact us at support@ptpluke.com.</p>
+       <p>Thanks,<br> The PTP-Luke Team<br>".site_url()."</p>";
+       $headers = array('Content-Type: text/html; charset=UTF-8');
+       wp_mail($email, "Reset Your Password on PTP-Luke", $message, $headers);
+       wp_send_json_error(['alert_type' => 'success', 'message' => 'A password reset link has been sent to your email address.']);
+    }
+}
+add_action( 'wp_ajax_nopriv_forgot_password_submit_user', 'forgot_password_submit_user' );
+add_action( 'wp_ajax_forgot_password_submit_user', 'forgot_submit_password_user' );
+
+
+function reset_password_submit_user(){
+    $password = sanitize_text_field($_POST['password']);
+    $confirm_password = sanitize_text_field($_POST['confirm_password']);
+    $user_id = sanitize_text_field($_POST['userid']);
+    if ($password === "" OR $confirm_password === "") {
+       wp_send_json_error(['alert_type' => 'error', 'message' => 'Please fill required fields !']);
+    }
+    else{
+        wp_set_password($password, $user_id);
+        $user = get_userdata($user_id);
+        $email = $user->user_email;
+        $fullname = get_user_meta($user_id, "fullname", true);
+        $subject = 'Your Password Has Been Successfully Changed - PTP-Luke';
+        $message = 'Hello '.$fullname . ",\n\n" .
+        'This is to inform you that your password has been successfully changed.' . "\n\n" .
+        'Thank you for being part of our community!' . "\n\n" .
+        'Best regards,' . "\n" .
+        'The PTP-Luke Team'. "\n" .site_url();
+        $headers = array('Content-Type: text/html; charset=UTF-8');
+        wp_mail($email, $subject, $message, $headers);
+        wp_send_json_error(['alert_type' => 'success', 'message' => 'Your Password Has Been Successfully Changed !']);
+    }
+}
+add_action( 'wp_ajax_nopriv_reset_password_submit_user', 'reset_password_submit_user' );
+add_action( 'wp_ajax_reset_password_submit_user', 'reset_password_submit_user' );
+
+
+function login_submit_user(){
+    if (!isset($_POST['user_login_nonce']) || !wp_verify_nonce($_POST['user_login_nonce'], 'user_login')) {
+       wp_send_json_error(['alert_type' => 'error', 'message' => 'Permission denied !']);
+    }
+
+    $user_email = sanitize_email($_POST['email']);
+    $user_password = $_POST['pass'];
+    $user = wp_authenticate($user_email, $user_password);
+
+    if (is_wp_error($user)) {
+       wp_send_json_error(['alert_type' => 'error', 'message' => 'Login failed. Please check your credentials.']);
+    } else {
+       wp_set_auth_cookie($user->ID);
+       $user = get_userdata($user->ID);
+       $roles = $user->roles;
+       $primary_role = $roles[0]; 
+       if($primary_role=="coach"){
+         $redirectURL = site_url()."/coach_dashbord"; 
+       }
+       elseif($primary_role=="athlete"){
+         $redirectURL = site_url()."/athlete_dashbord"; 
+       }
+
+       $redirectURL = site_url()."/coach_dashbord"; 
+       wp_send_json_error(['alert_type' => 'success', 'message' => 'Redirecting to your dashbord..', 'redirectURL' => $redirectURL]);
+    }
+    exit;  
+}
+add_action( 'wp_ajax_nopriv_login_submit_user', 'login_submit_user' );
+add_action( 'wp_ajax_login_submit_user', 'login_submit_user' );
