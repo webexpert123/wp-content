@@ -7,50 +7,77 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PTP-Register</title>
+    <title>PTP-User Register</title>
     <link rel="icon" type="image/png" href="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo.png">
     <link href="<?php echo get_stylesheet_directory_uri(); ?>/assets/css/main.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <!-- animation library -->
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 </head>
-<body class="auth-layout">
+<body class="auth-layout login">
     <main>
-      <div id="auth-main">
-        <section id="auth-section" class="auth-block auth-bg register-bg">
-            <div class="auth-block">
-              <div class="row">
-                <div class="col-12 col-lg-6 col-xl-5">
-                  <div class="form-block">
-                        <div class="auth-logo">
-                            <a href="index.html">
+        <div id="auth-main">
+            <section id="auth-section" class="auth-block auth-bg register-bg">
+                <div class="auth-block">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="auth-content-block">
+                        <div class="d-flex align-items-center justify-content-between auth-head">
+                          <div class="auth-logo">
+                            <a href="<?php echo site_url(); ?>">
                               <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo.png" class="img-fluid" alt="">
                             </a>
                           </div>
-                          <div class="form-area">
-                              <div class="auth-form-block-header">
-                              <h1>Sign up Now</h1>
-                              <p>Create a free account to connect with coaches and athletes, <br>and take your skills to the next level!</p>
-                              <!-- auth tabs nav -->
-                              <div class="auth-tabs">
-                                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                  <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="coach-tab" data-toggle="tab" data-target="#coach" type="button" role="tab" aria-controls="coach" aria-selected="true">Become a Coach</button>
-                                  </li>
-                                  <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="athlete-tab" data-toggle="tab" data-target="#athlete" type="button" role="tab" aria-controls="athlete" aria-selected="false">As a Athlete</button>
-                                  </li>
-                                </ul>
-                              </div>
-                              <!-- auth tabs nav end -->
-                             </div>
-
-                              <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active" id="coach" role="tabpanel" aria-labelledby="coach-tab">
-                                  <div class="auth-input-block">
-                                    <form action="" id="signupCoach" method="post">
+                          <div class="auth-link">
+                            <div class="alternet-access">
+                              <p>You have an account ?  <a href="<?php echo site_url(); ?>/user-login">&nbsp; <strong>Login Now!</strong></a></p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="video-bg">
+                          <div class="video-overlay"></div>
+                            <video autoplay muted loop>
+                                <source src="https://mediumpurple-gazelle-798875.hostingersite.com/ptp_design/home_video.mov" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="video-content">
+                          <div class="row align-items-center">
+                          <div class="col-md-12">
+                            <div class="form-block">
+                                <div class="form-area">
+                                    <div class="auth-form-block-header">
+                                    <h1>Sign up Now</h1>
+                                    <!-- auth tabs nav -->
+                                    <div class="auth-tabs">
+                                      <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                          <button class="nav-link active" id="coach-tab" data-toggle="tab" data-target="#coach" type="button" role="tab" aria-controls="coach" aria-selected="true">Become a Coach</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                          <button class="nav-link" id="athlete-tab" data-toggle="tab" data-target="#athlete" type="button" role="tab" aria-controls="athlete" aria-selected="false">As a Athlete</button>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                    <!-- auth tabs nav end -->
+                                   </div>
+                                    <!-- <div class="auth-third-party-login">
+                                        <div class="row">
+                                            <div class="col-md-12 col-lg-6">
+                                                <a href="#"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/auth/google.png" alt=""> Login with Google</a>
+                                            </div>
+                                            <div class="col-md-12 col-lg-6">
+                                                <a href="#"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/auth/facebook.png" alt=""> Login with Facebook</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="auth-block-separator">
+                                      <p>Or</p> 
+                                    </div> -->
+                                    <div class="tab-content" id="myTabContent">
+                                      <div class="tab-pane fade show active" id="coach" role="tabpanel" aria-labelledby="coach-tab">
+                                        <div class="auth-input-block">
+                                          <form action="" id="signupCoach" method="post">
                                       <input type="hidden" name="user_role" value="coach">
                                       <div class="form-group">
                                         <input type="text" name="full_name" class="form-control" id="inputText" placeholder="Full Name*" required>
@@ -140,11 +167,11 @@
                                       </div>
                                       <button type="submit" class="btn" id="submitCoach">Sign up Now <div id="coach_spinner" class="spinner-border text-dark" style="display:none;"></div></button>
                                     </form>
-                                  </div>
-                                </div>
-                                <div class="tab-pane fade" id="athlete" role="tabpanel" aria-labelledby="athlete-tab">
-                                  <div class="auth-input-block">
-                                    <form action="" id="signupAthlete" method="post">
+                                        </div>
+                                      </div>
+                                      <div class="tab-pane fade" id="athlete" role="tabpanel" aria-labelledby="athlete-tab">
+                                        <div class="auth-input-block">
+                                          <form action="" id="signupAthlete" method="post">
                                       <input type="hidden" name="user_role" value="athlete">
                                       <div class="form-group">
                                         <input type="text" name="full_name" class="form-control" id="inputText" placeholder="Full Name" required>
@@ -227,38 +254,21 @@
                                       </div>
                                       <button type="submit" class="btn" id="submitAthlete">Sign up Now <div id="athlete_spinner" class="spinner-border text-dark" style="display:none;"></div></button>
                                     </form>
+                                        </div>
+                                     </div>
                                   </div>
-                               </div>
-                            </div>
+                                </div>
+                        </div>
                           </div>
-                  </div>
-                </div>
-                <div class="col-12 col-lg-6 col-xl-7">
-                  <div class="auth-content-block">
-                    <div class="video-bg">
-                      <div class="video-overlay"></div>
-                        <video autoplay muted loop>
-                            <source src="https://mediumpurple-gazelle-798875.hostingersite.com/ptp_design/home_video.mov" type="video/mp4">
-                        </video>
-                    </div>
-                    <div class="auth-link">
-                      <div class="alternet-access">
-                        <p>Already have an account ?  <a href="<?php echo site_url(); ?>/user-login">&nbsp; <strong>Sign In Now!</strong></a></p>
-                      </div>
-                    </div>
-                    <div class="video-content">
-                      <h1>Welcome to <span>PTP!</span><br> Connect with the perfect coach to elevate your game.</h1>
-                      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the</p>
-                      <div class="custom-button view-more mt-4">
-                        <button type="button" class="btn btn-round btn-fill">Login Now!</button>
+                        </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-        </section>
-    </div>
+            </section>
+        </div>
+       
     </main>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
   <script>
@@ -268,7 +278,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
-<script src="<?php echo get_stylesheet_directory_uri(); ?>/assets/js/main.js"></script>
+<script src="./js/main.js"></script>
 <script>
 jQuery(document).ready(function($) {
     jQuery('#signupCoach').on('submit', function(event) {
@@ -426,3 +436,7 @@ function check_valid_referral(inputElement){
 }
 </script>
 </html>
+
+
+
+

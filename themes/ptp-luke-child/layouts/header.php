@@ -21,7 +21,7 @@
             <div class="container">
                 <div class="header-blocks">
                     <div class="brand">
-                        <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo.png" alt="brand image" />
+                        <a href="<?php echo site_url(); ?>"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo.png" alt="brand image" /></a>
                     </div>
                     <div class="menu-block">
                         <ul>

@@ -242,3 +242,14 @@ function login_submit_user(){
 }
 add_action( 'wp_ajax_nopriv_login_submit_user', 'login_submit_user' );
 add_action( 'wp_ajax_login_submit_user', 'login_submit_user' );
+
+function handle_logout_user() {
+    if (is_user_logged_in()) {
+        wp_logout();
+        wp_send_json_success(array('ajax_status' => 'success', 'redirect_url' => site_url()."/user-login"));
+    } else {
+        wp_send_json_error(array('ajax_status' => 'error', 'message' => 'You are not logged in.'));
+    }
+}
+add_action('wp_ajax_logout_user', 'handle_logout_user');
+add_action('wp_ajax_nopriv_logout_user', 'handle_logout_user'); 
