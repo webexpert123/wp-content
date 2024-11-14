@@ -1,3 +1,12 @@
+<?php
+$name = (null !== get_user_meta($user_id, "fullname", true)) ? get_user_meta($user_id, "fullname", true) : "";
+if(get_user_meta($user_id, "_profile_img", true)){
+  $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.jpg";
+}else{
+  $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.jpg";
+}
+$role = "COACH";
+?>
 <nav class="sidebar">
                 <a class="navbar-brand" href="javascript:;">
                     <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo_white.png" class="align-top" alt="">
@@ -5,32 +14,33 @@
                 <ul class="nav">
                     <li class="nav-profile">
                         <div class="image">
-                            <a href="javascript:;"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/avatars/avatar-1.png" alt=""></a>
+                            <a href="javascript:;"><img src="<?php echo $profile_img_link; ?>" alt=""></a>
                         </div>
                         <div class="info">
-                            Andrio Rechard <small>Football Coach</small>
+                            <?php echo $name; ?> <small><?php echo $role; ?></small>
                         </div>
                     </li>
                 </ul>
+                <?php $section = isset($_REQUEST["section"]) ? $_REQUEST["section"] : "dashboard"; ?>
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="dashboard.html"><i class="bx bx-home-alt"></i>Dashboard<span
+                        <a class="nav-link  <?php if($section=="dashboard"){echo "active";} ?>" href="<?php echo site_url(); ?>/my-account-coach/"><i class="bx bx-home-alt"></i>Dashboard<span
                                 class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="training-plans.html"><i class="bx bx-diamond"></i>Training Plans</a>
+                        <a class="nav-link <?php if($section=="sessions"){echo "active";} ?>" href="?section=sessions"><i class="bx bx-diamond"></i>Training Plans</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="messages.html"><i class="bx bx-chat"></i>Messages</a>
+                        <a class="nav-link <?php if($section=="messages"){echo "active";} ?>" href="?section=messages"><i class="bx bx-chat"></i>Messages</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="student-info.html"><i class="bx bx-book-reader"></i>Students Info</a>
+                        <a class="nav-link <?php if($section=="students"){echo "active";} ?>" href="?section=students"><i class="bx bx-book-reader"></i>Students Info</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="coach-profile.html"><i class="bx bx-user-circle"></i>My Profile</a>
+                        <a class="nav-link <?php if($section=="profile"){echo "active";} ?>" href="?section=profile"><i class="bx bx-user-circle"></i>My Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="manage-subscription.html"><i class="bx bx-money"></i>Manage
+                        <a class="nav-link <?php if($section=="subscription"){echo "active";} ?>" href="?section=subscription"><i class="bx bx-money"></i>Manage
                             Subscription</a>
                     </li>
                     <li class="nav-item">

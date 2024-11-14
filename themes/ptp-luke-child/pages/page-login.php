@@ -71,6 +71,7 @@
                                     </div>
                                     <div class="form-group">
                                       <?php wp_nonce_field('user_login', 'user_login_nonce'); ?>
+                                      <a href="<?php site_url(); ?>/forgot-password/">Forgot Password ?</a>
                                       <!-- <div class="custom-checkbox">
                                         <input type="checkbox" name="checkbox" class="custom-control-input" id="customControlValidation1" required>
                                         <label class="custom-control-label" for="customControlValidation1">I accept the <a href="#" target="_blank">Term of Conditions</a> and <a href="#">Privacy Policy</a></label>
@@ -126,7 +127,7 @@
             type: 'POST',
             data: formData, 
             success: function(response) {
-                if (response.data.alert_type === 'success') {}
+                if (response.data.alert_type === 'success') { window.location.href = response.data.redirectURL; }
                 Swal.fire({ title: response.data.message, text: '', icon: response.data.alert_type});
                 jQuery('#spinner').hide();
                 jQuery("#loginSubmit").attr("disabled",false);

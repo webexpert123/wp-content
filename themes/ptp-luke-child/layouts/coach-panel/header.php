@@ -1,3 +1,10 @@
+<?php
+$current_user = wp_get_current_user();
+$user_id = $current_user->ID;
+if (!in_array('coach', $current_user->roles)) {
+    wp_redirect(site_url()."/user-login");
+}
+?>
 <div class="dashbaord-header d-flex justify-content-end">
                 <nav class="navbar navbar-expand-sm navbar-light justify-content-end bg-faded">
                     <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -170,7 +177,7 @@
                                 <li><span><a href="javascript:void(0);"><img
                                                 src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/dashboard/search.svg" alt=""></a></span></li>
                                 <li><a href="my-account.html">My Account</a></li>
-                                <li><a href="javascript:void(0);">Sign Out</a></li>
+                                <li><a href="javascript:void(0);" onclick="logout_user()">Sign Out</a></li>
                             </ul>
                         </div>
                     </div>

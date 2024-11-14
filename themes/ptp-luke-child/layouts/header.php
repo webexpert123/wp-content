@@ -35,8 +35,27 @@
                     </div>
                     <div class="action-block">
                         <div class="auth-action">
+                            <?php if (!is_user_logged_in()) { ?>
                             <button type="button" class="btn outliner btn-round" onclick="window.location.href='<?php echo site_url(); ?>/user-login'">Log In</button>
                             <button type="button" class="btn btn-round btn-fill" onclick="window.location.href='<?php echo site_url(); ?>/register'">Sign Up</button>
+                            <?php }else{
+                            $current_user = wp_get_current_user();
+                            $user_id = $current_user->ID;
+                            $user = get_userdata($user_id);
+                            $roles = $user->roles;
+                            $primary_role = $roles[0]; 
+                            if($primary_role=="coach"){
+                              $redirectURL = site_url()."/my-account-coach"; 
+                            }
+                            elseif($primary_role=="athlete"){
+                              $redirectURL = site_url()."/my-account-athlete"; 
+                            }
+                            else{
+                              $redirectURL = site_url()."/wp-admin";
+                            }
+                            ?>
+                            <button type="button" class="btn btn-round btn-fill" onclick="window.location.href='<?php echo $redirectURL; ?>'">My Account</button>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>

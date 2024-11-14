@@ -10205,3 +10205,13 @@ div#inner-template .content-wrapper .dashboard-main .student-info table tr td im
   background: #232a2f;
   transition-duration: 0.2s;
 }
+
+/* MY CSS STRAT */
+.sidebar a.nav-link.active{
+  background: var(--aceent0-color);
+  color: #000 !important;
+}
+button.swal2-confirm.swal2-styled.swal2-default-outline{
+  background: var(--aceent0-color) !important;
+}
+/* MY CSS END */

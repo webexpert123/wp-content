@@ -248,3 +248,19 @@ Fixed
 
 3.0.13 (2024-10-09)
 - Fix `force www` row not being shown when user is not eligible to adjust it
+
+3.0.14 (2024-10-11)
+- Add tutorial link
+
+3.0.15 (2024-10-18)
+- Woocommerce coming soon mode cache flush
+
+3.0.16 (2024-10-22)
+- Fix cache litespeed cleaning
+
+3.0.17 (2024-10-24)
+- Updated plugin url by locale
+
+3.0.18 (2024-11-08)
+- Remove unused assets
+- Remove flush cache duplicates

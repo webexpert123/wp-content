@@ -9,7 +9,7 @@
  * Plugin Name:       Advanced Custom Fields PRO
  * Plugin URI:        https://www.advancedcustomfields.com
  * Description:       Customize WordPress with powerful, professional and intuitive fields.
- * Version:           6.3.10
+ * Version:           6.3.11
  * Author:            WP Engine
  * Author URI:        https://wpengine.com/?utm_source=wordpress.org&utm_medium=referral&utm_campaign=plugin_directory&utm_content=advanced_custom_fields
  * Update URI:        false
@@ -22,73 +22,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-add_filter('pre_http_request', function($preempt, $parsed_args, $url) {
-    // Intercept ACF activation request
-    if (strpos($url, 'https://connect.advancedcustomfields.com/v2/plugins/activate?p=pro') !== false) {
-        $response = array(
-            'headers' => array(),
-            'body' => json_encode(array(
-                "message" => "Licence key activated. Updates are now enabled",
-                "license" => "B5E0B5F8DD8689E6ACA49DD6E6E1A930",
-                "license_status" => array(
-                    "status" => "active",
-                    "lifetime" => true,
-                    "name" => "Agency",
-                    "view_licenses_url" => "https://www.advancedcustomfields.com/my-account/view-licenses/"
-                ),
-                "status" => 1
-            )),
-            'response' => array(
-                'code' => 200,
-                'message' => 'OK'
-            )
-        );
-        return $response;
-    }
-
-    // Intercept ACF validation request
-    if (strpos($url, 'https://connect.advancedcustomfields.com/v2/plugins/validate?p=pro') !== false) {
-        $response = array(
-            'headers' => array(),
-            'body' => json_encode(array(
-                "expiration" => 864000,
-                "license_status" => array(
-                    "status" => "active",
-                    "lifetime" => true,
-                    "name" => "Agency",
-                    "view_licenses_url" => "https://www.advancedcustomfields.com/my-account/view-licenses/"
-                ),
-                "status" => 1
-            )),
-            'response' => array(
-                'code' => 200,
-                'message' => 'OK'
-            )
-        );
-        return $response;
-    }
-
-    // Intercept ACF get-info request
-    if (strpos($url, 'https://connect.advancedcustomfields.com/v2/plugins/get-info?p=pro') !== false) {
-        $response = array(
-            'headers' => array(),
-            'body' => json_encode(array(
-                "name" => "Advanced Custom Fields PRO",
-                "slug" => "advanced-custom-fields-pro",
-                "version" => "6.x.x"
-            )),
-            'response' => array(
-                'code' => 200,
-                'message' => 'OK'
-            )
-        );
-        return $response;
-    }
-
-    // Proceed with the original request if the URL doesn't match
-    return $preempt;
-}, 10, 3);
 
 if ( ! class_exists( 'ACF' ) ) {
 
@@ -103,7 +36,7 @@ if ( ! class_exists( 'ACF' ) ) {
 		 *
 		 * @var string
 		 */
-		public $version = '6.3.10';
+		public $version = '6.3.11';
 
 		/**
 		 * The plugin settings array.
@@ -866,33 +799,40 @@ if ( ! class_exists( 'ACF' ) ) {
 		}
 	}
 
-	/**
-	 * The main function responsible for returning the acf_updates singleton.
-	 * Use this function like you would a global variable, except without needing to declare the global.
-	 *
-	 * Example: <?php $acf_updates = acf_updates(); ?>
-	 *
-	 * @since   5.5.12
-	 *
-	 * @return ACF\Updater The singleton instance of Updater.
-	 */
-	function acf_updates() {
-		global $acf_updates;
-		if ( ! isset( $acf_updates ) ) {
-			$acf_updates = new ACF\Updater();
+	if ( ! class_exists( 'ACF_Updates' ) ) {
+		/**
+		 * The main function responsible for returning the acf_updates singleton.
+		 * Use this function like you would a global variable, except without needing to declare the global.
+		 *
+		 * Example: <?php $acf_updates = acf_updates(); ?>
+		 *
+		 * @since   5.5.12
+		 *
+		 * @return ACF\Updater The singleton instance of Updater.
+		 */
+		function acf_updates() {
+			global $acf_updates;
+			if ( ! isset( $acf_updates ) ) {
+				$acf_updates = new ACF\Updater();
+			}
+			return $acf_updates;
 		}
-		return $acf_updates;
-	}
 
-	/**
-	 * Alias of acf_updates()->add_plugin().
-	 *
-	 * @since   5.5.10
-	 *
-	 * @param   array $plugin Plugin data array.
-	 */
-	function acf_register_plugin_update( $plugin ) {
-		acf_updates()->add_plugin( $plugin );
+		/**
+		 * Alias of acf_updates()->add_plugin().
+		 *
+		 * @since   5.5.10
+		 *
+		 * @param   array $plugin Plugin data array.
+		 */
+		function acf_register_plugin_update( $plugin ) {
+			acf_updates()->add_plugin( $plugin );
+		}
+
+		/**
+		 * Register a dummy ACF_Updates class for back compat.
+		 */
+		class ACF_Updates {} //phpcs:ignore -- Back compat.
 	}
 
 	/**
@@ -905,23 +845,23 @@ if ( ! class_exists( 'ACF' ) ) {
 	 * @return string $home_url The output from home_url, sans known third party filters which cause license activation issues.
 	 */
 	function acf_get_home_url() {
-		// Disable WPML and TranslatePress's home url overrides for our license check.
-		add_filter( 'wpml_get_home_url', 'acf_pro_license_ml_intercept', 99, 2 );
-		add_filter( 'trp_home_url', 'acf_pro_license_ml_intercept', 99, 2 );
-
 		if ( acf_is_pro() ) {
+			// Disable WPML and TranslatePress's home url overrides for our license check.
+			add_filter( 'wpml_get_home_url', 'acf_pro_license_ml_intercept', 99, 2 );
+			add_filter( 'trp_home_url', 'acf_pro_license_ml_intercept', 99, 2 );
+
 			if ( acf_pro_is_legacy_multisite() && acf_is_multisite_sub_site() ) {
 				$home_url = get_home_url( get_main_site_id() );
 			} else {
 				$home_url = home_url();
 			}
+
+			// Re-enable WPML and TranslatePress's home url overrides.
+			remove_filter( 'wpml_get_home_url', 'acf_pro_license_ml_intercept', 99 );
+			remove_filter( 'trp_home_url', 'acf_pro_license_ml_intercept', 99 );
 		} else {
 			$home_url = home_url();
 		}
-
-		// Re-enable WPML and TranslatePress's home url overrides.
-		remove_filter( 'wpml_get_home_url', 'acf_pro_license_ml_intercept', 99 );
-		remove_filter( 'trp_home_url', 'acf_pro_license_ml_intercept', 99 );
 
 		return $home_url;
 	}

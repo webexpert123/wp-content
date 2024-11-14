@@ -10,19 +10,6 @@ function my_theme_enqueue_styles() {
 }
 add_action('wp_enqueue_scripts', 'my_theme_enqueue_styles');
 
-
-function custom_page_templates($template) {
-    if (is_page('home')) {
-        $template = locate_template('pages/page-home.php');
-    } elseif (is_page('contact')) {
-        $template = locate_template('pages/page-contact.php');
-    } elseif (is_page('about')) {
-        $template = locate_template('pages/page-about.php');
-    }
-    return $template;
-}
-//add_filter('page_template', 'custom_page_templates');
-
 function add_custom_roles() {
     // Add Coach Role
     add_role('coach', 'Coach', array(
@@ -72,6 +59,7 @@ function check_user_email(){
 }
 add_action( 'wp_ajax_nopriv_check_user_email', 'check_user_email' );
 add_action( 'wp_ajax_check_user_email', 'check_user_email' );
+
 
 function get_referral_code_count($referralCode){
     global $wpdb;
@@ -229,13 +217,14 @@ function login_submit_user(){
        $roles = $user->roles;
        $primary_role = $roles[0]; 
        if($primary_role=="coach"){
-         $redirectURL = site_url()."/coach_dashbord"; 
+         $redirectURL = site_url()."/my-account-coach"; 
        }
        elseif($primary_role=="athlete"){
-         $redirectURL = site_url()."/athlete_dashbord"; 
+         $redirectURL = site_url()."/my-account-athlete"; 
        }
-
-       $redirectURL = site_url()."/coach_dashbord"; 
+       else{
+        $redirectURL = home_url();
+       }
        wp_send_json_error(['alert_type' => 'success', 'message' => 'Redirecting to your dashbord..', 'redirectURL' => $redirectURL]);
     }
     exit;  
@@ -253,3 +242,32 @@ function handle_logout_user() {
 }
 add_action('wp_ajax_logout_user', 'handle_logout_user');
 add_action('wp_ajax_nopriv_logout_user', 'handle_logout_user'); 
+
+function redirect_logged_in_users_from_templates($template) {
+    if (is_user_logged_in()) {
+        if (strpos($template, 'page-login.php') !== false ||
+            strpos($template, 'page-register.php') !== false ||
+            strpos($template, 'page-forgot.php') !== false ||
+            strpos($template, 'page-reset.php') !== false) {
+              $user = wp_get_current_user();
+              $roles = $user->roles; 
+              if (in_array('coach', $roles)) {
+                 wp_redirect(site_url()."/my-account-coach");
+              }
+              elseif (in_array('athlete', $roles)) {
+                 wp_redirect(site_url()."/my-account-athlete");
+              }
+              else {
+                 wp_redirect(home_url());
+              }
+              exit(); 
+        }
+    }
+    else if (!is_user_logged_in()) {
+        if (strpos($template, 'page-coach-dashbord.php') !== false){
+            wp_redirect(site_url()."/user-login");
+        }
+    }
+    return $template;
+}
+add_filter('template_include', 'redirect_logged_in_users_from_templates');

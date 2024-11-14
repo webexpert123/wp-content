@@ -73,7 +73,7 @@
                           </div>
                           <div class="auth-link">
                             <div class="alternet-access">
-                              <p>Don't have an account ?  <a href="<?php echo site_url(); ?>/register">&nbsp; <strong>Register Now!</strong></a></p>
+                              <p>Don't have an account ?  <a href="<?php echo site_url(); ?>/user-login">&nbsp; <strong>Login Now!</strong></a></p>
                             </div>
                           </div>
                         </div>
