@@ -271,3 +271,15 @@ function redirect_logged_in_users_from_templates($template) {
     return $template;
 }
 add_filter('template_include', 'redirect_logged_in_users_from_templates');
+
+function my_custom_single_template($template) {
+    // Check if we are viewing a single post
+    if (is_single()) {
+        $new_template = locate_template(array('single.php')); // Replace with your custom template
+        if (!empty($new_template)) {
+            return $new_template; // Return the custom template if found
+        }
+    }
+    return $template; // Return the default template if conditions aren't met
+}
+add_filter('template_include', 'my_custom_single_template');

@@ -1,9 +1,9 @@
 <?php
-/* Template Name: Blogs */
 
 require locate_template('layouts/header.php') ;
 $current_page_id = get_queried_object_id();
-
+$category = get_queried_object();
+$category_slug = $category->slug; 
 ?>
 <div id="frontend-main">
             <!--Start breadcrumb area-->     
@@ -13,7 +13,7 @@ $current_page_id = get_queried_object_id();
         <div class="row">
             <div class="col-md-12">
                 <div class="breadcrumbs">
-                    <h1>Blog Listing</h1>
+                    <h1>Category: <?php echo $category->name; ?></h1>
                 </div>
             </div>
         </div>
@@ -30,7 +30,9 @@ $current_page_id = get_queried_object_id();
                     <ul>
                         <li><a href="<?php echo home_url(); ?>">Home</a></li>
                         <li><i class="fa fa-angle-right" aria-hidden="true"></i></li>
-                        <li class="active">Blog Listing</li>
+                        <li class=""><a>Blog Category</a></li>
+                        <li><i class="fa fa-angle-right" aria-hidden="true"></i></li>
+                        <li class="active"><?php echo $category->name; ?></li>
                     </ul>
                 </div>
                 <div class="right pull-right d-none">
@@ -48,7 +50,7 @@ $current_page_id = get_queried_object_id();
 <section id="blog-area" class="blog-default-area">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="blog-post">
                     <div class="row">
                         <!--Start single blog post-->
@@ -60,10 +62,8 @@ $current_page_id = get_queried_object_id();
                             'paged'          => $paged,       
                             'orderby'        => 'ID',         
                             'order'          => 'DESC', 
+                            'category_name'  => $category_slug, 
                         );
-                        if (isset($_GET['search']) && !empty($_GET['search'])) {
-                            $args['s'] = sanitize_text_field($_GET['search']);
-                        }
                         $query = new WP_Query($args);
                         if ($query->have_posts()) :
                             while ($query->have_posts()) : $query->the_post();
@@ -79,8 +79,8 @@ $current_page_id = get_queried_object_id();
                                 }
                                 $comment_count = get_comments_number();
                         ?>
-                            <div class="col-md-6">   
-                                <div class="single-blog-item wow fadeInUp" data-wow-delay="0s" data-wow-duration="1s" data-wow-offset="0" onclick="window.location.href='<?php echo $post_permalink; ?>';">
+                            <div class="col-md-4">   
+                                <div class="single-blog-item wow fadeInUp" data-wow-delay="0s" data-wow-duration="1s" data-wow-offset="0">
                                     <div class="img-holder">
                                         <img class="img-fluid" src="<?php echo $post_image_url; ?>" alt="Post Image">
                                     </div>
@@ -92,9 +92,9 @@ $current_page_id = get_queried_object_id();
                                         <a href="<?php echo $post_permalink; ?>">
                                             <h3 class="blog-title"><?php echo $post_title; ?></h3>
                                         </a>
-                                        <div class="text">
+                                        <!-- <div class="text">
                                             <p><?php echo $post_excerpt; ?></p>
-                                        </div>
+                                        </div> -->
                                     </div>     
                                 </div>  
                             </div>
@@ -136,7 +136,7 @@ $current_page_id = get_queried_object_id();
                 </div>
             </div>
             <!--Start sidebar Wrapper-->
-            <div class="col-lg-4 col-md-6 col-sm-7 col-xs-12">
+            <div class="col-lg-4 col-md-6 col-sm-7 col-xs-12 d-none">
                 <div class="sidebar-wrapper">
                     <!--Start single sidebar-->
                     <div class="single-sidebar wow fadeInUp" data-wow-delay="0s" data-wow-duration="1s" data-wow-offset="0">
@@ -154,7 +154,7 @@ $current_page_id = get_queried_object_id();
                         <ul class="categories clearfix">
                             <?php $categories = get_categories();
                              foreach ($categories as $category){ ?>
-                               <li><a href="<?php echo site_url()."/category/".esc_html($category->slug); ?>"><?php echo esc_html($category->name); ?><span>(<?php echo $category->count; ?>)</span></a></li>
+                               <li><a href="<?php echo esc_html($category->slug); ?>"><?php echo esc_html($category->name); ?><span>(<?php echo $category->count; ?>)</span></a></li>
                             <?php } ?>
                         </ul>
                     </div>

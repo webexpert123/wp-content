@@ -13,7 +13,7 @@ $current_page_id = get_queried_object_id();
         <div class="row">
             <div class="col-md-12">
                 <div class="breadcrumbs">
-                    <h1>Blog Listing</h1>
+                    <h1><?php the_title(); ?></h1>
                 </div>
             </div>
         </div>
@@ -30,11 +30,13 @@ $current_page_id = get_queried_object_id();
                     <ul>
                         <li><a href="<?php echo home_url(); ?>">Home</a></li>
                         <li><i class="fa fa-angle-right" aria-hidden="true"></i></li>
-                        <li class="active">Blog Listing</li>
+                        <li><a href="<?php echo site_url(); ?>/blogs">Blogs</a></li>
+                        <li><i class="fa fa-angle-right" aria-hidden="true"></i></li>
+                        <li class="active"><?php the_title(); ?></li>
                     </ul>
                 </div>
-                <div class="right pull-right d-none">
-                    <a href="#">
+                <div class="right pull-right">
+                    <a href="javascript:void(0)" data-toggle="modal" data-target="#myModal">
                         <span class="text-light"><i class="fa fa-share-alt" aria-hidden="true"></i>Share</span> 
                     </a>   
                 </div>    
@@ -52,84 +54,33 @@ $current_page_id = get_queried_object_id();
                 <div class="blog-post">
                     <div class="row">
                         <!--Start single blog post-->
-                        <?php
-                        $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1; 
-                        $args = array(
-                            'post_type'      => 'post',       
-                            'posts_per_page' => 10,           
-                            'paged'          => $paged,       
-                            'orderby'        => 'ID',         
-                            'order'          => 'DESC', 
-                        );
-                        if (isset($_GET['search']) && !empty($_GET['search'])) {
-                            $args['s'] = sanitize_text_field($_GET['search']);
-                        }
-                        $query = new WP_Query($args);
-                        if ($query->have_posts()) :
-                            while ($query->have_posts()) : $query->the_post();
-                                 $post_id = get_the_ID();
-                                 $post_title = get_the_title();
-                                 $post_excerpt = wp_trim_words(get_the_excerpt(), 20, '...'); 
-                                 $post_date = get_the_date('F j, Y'); 
-                                 $post_permalink = get_permalink($post_id);
-                                 if (has_post_thumbnail()) {
-                                    $post_image_url = get_the_post_thumbnail_url($post_id, 'full');
-                                } else {
-                                    $post_image_url = get_stylesheet_directory_uri().'/assets/images/default-post.png'; 
-                                }
-                                $comment_count = get_comments_number();
-                        ?>
-                            <div class="col-md-6">   
-                                <div class="single-blog-item wow fadeInUp" data-wow-delay="0s" data-wow-duration="1s" data-wow-offset="0" onclick="window.location.href='<?php echo $post_permalink; ?>';">
-                                    <div class="img-holder">
-                                        <img class="img-fluid" src="<?php echo $post_image_url; ?>" alt="Post Image">
-                                    </div>
-                                    <div class="text-holder">
-                                        <ul class="meta-info">
-                                            <li><a href="<?php echo $post_permalink; ?>"><?php echo $post_date; ?></a></li>
-                                            <li><a href="<?php echo $post_permalink; ?>"><?php echo $comment_count; ?> Comments</a></li>
-                                        </ul>
-                                        <a href="<?php echo $post_permalink; ?>">
-                                            <h3 class="blog-title"><?php echo $post_title; ?></h3>
-                                        </a>
-                                        <div class="text">
-                                            <p><?php echo $post_excerpt; ?></p>
-                                        </div>
-                                    </div>     
-                                </div>  
+                            <div class="col-md-12"> 
+                            	<div class="post-featured-image">
+							       <?php
+							       $post_id = get_the_ID();
+							       if (has_post_thumbnail()) {
+							           $featured_image_url = get_the_post_thumbnail_url($post_id, 'large');
+							           echo "<img src='".$featured_image_url."' class='img-fluid'>";
+							       }
+							       $author_id = get_post_field('post_author', $post_id);
+							       ?>
+							    </div>
+
+							    <div class="post-details mt-5 text-light">
+							    	<b class="text-warning">Published On : </b> <span><?php echo get_the_date('F j, Y', $post_id); ?></span> 
+							    	<span class="seperate"> | </span>
+							    	<b class="text-warning">Author : </b> <span><?php echo get_the_author_meta('display_name', $author_id);  ?></span>
+							    </div>
+
+							    <h2 class="text-warning mt-5"><?php the_title(); ?></h2>
+							    <div class="post-content mt-5 text-light"> <?php the_content(); ?></div>
                             </div>
-                        <?php endwhile;
-
-                        wp_reset_postdata();
-
-                        else :
-                            echo '<p class="text-light">No posts found.</p>';
-                        endif; ?>
                         <!--End single blog post-->
                     </div>
                     <!--Start post pagination-->
                     <div class="row">
                         <div class="col-md-12"> 
-                            <?php
-                            $pagination_args = array(
-                              'total'        => $query->max_num_pages, 
-                              'current' => max( 1, get_query_var( 'paged' ) ), // Current page number
-                              'prev_text' => '&laquo;', // Previous page text
-                              'next_text' => '&raquo;', // Next page text
-                              'type' => 'array',
-                            );
-                            $pagination_links = paginate_links($pagination_args);
-                            ?>
-                            <ul class="post-pagination text-center">
-                                <?php
-                                if ( !empty( $pagination_links ) ) {
-                                  foreach ( $pagination_links as $link ) {
-                                    $active="";
-                                    if ( strpos( $link, $paged ) !== false ) {$active="active";}
-                                    echo '<li class="'.$active.'">' . $link . '</li>';
-                                  }
-                                } ?>
-                            </ul>
+                           
                         </div> 
                     </div>
                     <!--End post pagination-->
@@ -223,6 +174,24 @@ $current_page_id = get_queried_object_id();
             <!--End Sidebar Wrapper-->  
         </div>
     </div>
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title text-dark">SHARE THIS BLOG</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body text-center">
+          <?php echo do_shortcode('[Sassy_Social_Share]'); ?>
+        </div>
+
+       </div>
+    </div>
+  </div>
 </section> 
 <!--End blog area--> 
         </div>
