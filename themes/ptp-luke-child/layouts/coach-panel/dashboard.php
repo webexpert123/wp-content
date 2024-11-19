@@ -2,7 +2,7 @@
                     <div class="row">
                         <div class="col page-title">
                             <div class="d-flex align-items-center justify-content-between">
-                                <h2>Hello, Andrio Rechard!</h2>
+                                <h2>Hello, <?php echo $name; ?></h2>
                                 <ul class="breadcrumbs">
                                     <li>Home</li>
                                     <li><a href="#">Dashboard</a></li>
@@ -17,10 +17,11 @@
                                 <div class="card-body">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <div>
-                                            <p class="mb-0 text-white">Annual Earnings</p>
+                                            <p class="mb-0 text-white">Total Earnings</p>
                                             <h4 class="my-1 text-white">$75</h4>
-                                            <p class="mb-0 font-13 text-white"><i
-                                                    class="bx bxs-up-arrow align-middle"></i>$34 from last week</p>
+                                            <!-- <p class="mb-0 font-13 text-white">
+                                                <i class="bx bxs-up-arrow align-middle"></i>$34 from last week
+                                            </p> -->
                                         </div>
                                         <div class="widgets-icons bg-light-transparent text-white ms-auto"><i
                                                 class="bx bxs-wallet"></i>
@@ -34,10 +35,11 @@
                                 <div class="card-body">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <div>
-                                            <p class="mb-0 text-white">30-Day Earnings</p>
+                                            <p class="mb-0 text-white">Last 30-Days Earnings</p>
                                             <h4 class="my-1 text-white">$101</h4>
-                                            <p class="mb-0 font-13 text-white"><i
-                                                    class="bx bxs-up-arrow align-middle"></i>1.6K from last week</p>
+                                            <!-- <p class="mb-0 font-13 text-white">
+                                                <i class="bx bxs-up-arrow align-middle"></i>1.6K from last week
+                                            </p> -->
                                         </div>
                                         <div class="widgets-icons bg-light-transparent text-white ms-auto"><i
                                                 class="bx bxs-group"></i>
@@ -53,8 +55,9 @@
                                         <div>
                                             <p class="mb-0 text-white">30-Day Sessions</p>
                                             <h4 class="my-1 text-white">$120</h4>
-                                            <p class="mb-0 font-13 text-white"><i
-                                                    class="bx bxs-down-arrow align-middle"></i>2.4K from last week</p>
+                                            <!-- <p class="mb-0 font-13 text-white">
+                                                <i class="bx bxs-down-arrow align-middle"></i>2.4K from last week
+                                            </p> -->
                                         </div>
                                         <div class="widgets-icons bg-light-transparent text-white ms-auto"><i
                                                 class="bx bxs-binoculars"></i>
@@ -70,8 +73,9 @@
                                         <div>
                                             <p class="mb-0 text-white">Total Students</p>
                                             <h4 class="my-1 text-white">30</h4>
-                                            <p class="mb-0 font-13 text-white"><i
-                                                    class="bx bxs-down-arrow align-middle"></i>12.2% from last week</p>
+                                            <!-- <p class="mb-0 font-13 text-white">
+                                                <i class="bx bxs-down-arrow align-middle"></i>12.2% from last week
+                                            </p> -->
                                         </div>
                                         <div class="widgets-icons bg-light-transparent text-white"><i
                                                 class="bx bx-line-chart-down"></i>
@@ -188,7 +192,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card radius-10 overflow-hidden w-100">
+                            <div class="card radius-10 overflow-hidden w-100 d-none">
                                 <div class="card-body">
                                     <div class="mb-3">
                                         <div class="card-title mb-4 d-flex align-items-center justify-content-between">

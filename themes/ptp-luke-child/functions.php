@@ -275,11 +275,136 @@ add_filter('template_include', 'redirect_logged_in_users_from_templates');
 function my_custom_single_template($template) {
     // Check if we are viewing a single post
     if (is_single()) {
-        $new_template = locate_template(array('single.php')); // Replace with your custom template
+        $new_template = locate_template(array('single.php')); 
         if (!empty($new_template)) {
-            return $new_template; // Return the custom template if found
+            return $new_template;
         }
     }
-    return $template; // Return the default template if conditions aren't met
+    return $template;
 }
 add_filter('template_include', 'my_custom_single_template');
+
+
+//When adding summercamp from backend create also a product with it
+function create_woocommerce_product_for_summer_camp( $post_id, $post, $update ) {
+    if ( 'summer-camps' !== $post->post_type ) {
+        return;
+    }
+
+    $summer_camp_title = get_the_title( $post_id );
+    $summer_camp_description = get_post_field( 'post_content', $post_id );
+    $summer_camp_price = get_post_meta( $post_id, '_event_price', true );
+
+    if ( empty( $summer_camp_price ) ) {
+        return; 
+    }
+
+    $existing_product = get_posts( array(
+        'post_type'   => 'product',
+        'title'       => "Summer-Camp: " . $summer_camp_title,
+        'posts_per_page' => 1
+    ) );
+
+    if ( ! empty( $existing_product ) ) {
+        $product_id = $existing_product[0]->ID;
+        wp_update_post( array(
+            'ID'           => $product_id,
+            'post_title'   => "Summer-Camp: ".$summer_camp_title, 
+            'post_content' => $summer_camp_description,
+        ));
+    } else {
+        $product_data = array(
+            'post_title'   => "Summer-Camp: ".$summer_camp_title,
+            'post_content' => $summer_camp_description,
+            'post_status'  => 'publish',
+            'post_type'    => 'product',
+        );
+        $product_id = wp_insert_post( $product_data );
+    }
+
+    if ( is_wp_error( $product_id ) ) {
+        return; 
+    }
+    update_post_meta( $product_id, '_regular_price', $summer_camp_price );
+    update_post_meta( $product_id, '_price', $summer_camp_price );
+
+    $category_id = 21; 
+    if ( term_exists( $category_id, 'product_cat' ) ) {
+        wp_set_object_terms( $product_id, $category_id, 'product_cat' );
+    }
+    update_post_meta( $post_id, '_product_id', $product_id );
+}
+add_action( 'save_post', 'create_woocommerce_product_for_summer_camp', 10, 3 );
+
+//add summercamp by user programatically
+function submit_summercamp_event(){
+    $current_user_id = get_current_user_id(); 
+
+    $post_data = array(
+        'post_title'   => $_POST['event_title'],
+        'post_content' => $_POST['event_description'],
+        'post_author'  => $current_user_id, 
+        'post_status'  => 'publish', 
+        'post_type'    => 'summer-camps'
+    );
+    $post_id = wp_insert_post( $post_data );
+
+    update_post_meta( $post_id, '_event_from_date', $_POST['event_date_from'] );
+    update_post_meta( $post_id, '_event_to_date', $_POST['event_date_to'] );
+    update_post_meta( $post_id, '_event_location', $_POST['event_location'] );
+    update_post_meta( $post_id, '_event_price', $_POST['event_price'] );
+
+    if ( isset( $_FILES['event_image'] ) && ! empty( $_FILES['event_image']['event_image'] ) ) {
+        $uploaded_image = custom_mediafile_upload('event_image');
+        if ( !empty( $uploaded_image ) ) {
+            set_post_thumbnail( $post_id, $uploaded_image );
+        }
+    }
+
+    //Add product for event
+    $existing_product = get_posts( array(
+        'post_type'   => 'product',
+        'title'       => "Summer-Camp: " . $_POST['event_title'],
+        'posts_per_page' => 1
+    ) );
+
+
+    if (empty( $existing_product ) ) {
+        $product_data = array(
+            'post_title'   => "Summer-Camp: ".$_POST['event_title'],
+            'post_content' => $_POST['event_description'],
+            'post_status'  => 'publish',
+            'post_type'    => 'product',
+        );
+        $product_id = wp_insert_post( $product_data );
+
+        if ( is_wp_error( $product_id ) ) {
+            return; 
+        }
+        update_post_meta( $product_id, '_regular_price', $summer_camp_price );
+        update_post_meta( $product_id, '_price', $summer_camp_price );
+
+        $category_id = 21; 
+        if ( term_exists( $category_id, 'product_cat' ) ) {
+            wp_set_object_terms( $product_id, $category_id, 'product_cat' );
+        }
+        update_post_meta( $post_id, '_product_id', $product_id );
+    }
+    wp_send_json_error(['alert_type' => 'success', 'message' => 'Successfully Added !']);
+}
+add_action('wp_ajax_submit_summercamp_event', 'submit_summercamp_event');
+add_action('wp_ajax_nopriv_submit_summercamp_event', 'submit_summercamp_event'); 
+
+function custom_mediafile_upload($file){
+    if ( !empty($file)) {
+        require_once( ABSPATH . 'wp-admin/includes/image.php' );
+        require_once( ABSPATH . 'wp-admin/includes/file.php' );
+        require_once( ABSPATH . 'wp-admin/includes/media.php' );
+        $uploaded_image = media_handle_upload( $file, 0 );
+        if ( !is_wp_error( $uploaded_image ) ) {
+            return $uploaded_image;
+        }else{
+            return $uploaded_image='';
+        }
+    }
+}

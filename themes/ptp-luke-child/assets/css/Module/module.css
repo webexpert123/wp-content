@@ -9462,7 +9462,7 @@ div#inner-template .content-wrapper .dashboard-main .modal .modal-dialog .modal-
   background: #29323c;
 }
 div#inner-template .content-wrapper .dashboard-main .modal .modal-dialog .modal-content .modal-header {
-  border-bottom-color: #29323c;
+  border-bottom-color: var(--secondary-color);
 }
 div#inner-template .content-wrapper .dashboard-main .modal .modal-dialog .modal-content .modal-header h5 {
   color: var(--primary-color);
@@ -9470,8 +9470,25 @@ div#inner-template .content-wrapper .dashboard-main .modal .modal-dialog .modal-
 div#inner-template .content-wrapper .dashboard-main .modal .modal-dialog .modal-content .modal-header button span {
   color: var(--primary-color);
 }
+div#inner-template .content-wrapper .dashboard-main .modal .modal-dialog .modal-content .modal-body .t-plan-fees-main h6 {
+  color: var(--primary-color);
+}
+div#inner-template .content-wrapper .dashboard-main .modal .modal-dialog .modal-content .modal-body .t-plan-fees-main h6 span {
+  color: var(--aceent0-color);
+  font-size: 26px;
+}
+div#inner-template .content-wrapper .dashboard-main .modal .modal-dialog .modal-content .modal-body .t-plan-fees-main ul {
+  padding-left: 15px;
+}
+div#inner-template .content-wrapper .dashboard-main .modal .modal-dialog .modal-content .modal-body .t-plan-fees-main ul li {
+  color: var(--primary-color);
+  font-size: 16px;
+  list-style: circle;
+  list-style: auto;
+  padding-bottom: 5px;
+}
 div#inner-template .content-wrapper .dashboard-main .modal .modal-dialog .modal-content .modal-footer {
-  border-top-color: #29323c;
+  border-top-color: var(--secondary-color);
 }
 div#inner-template .content-wrapper .dashboard-main table {
   background-color: rgba(0, 0, 0, 0.15);
@@ -9939,6 +9956,77 @@ div#inner-template .content-wrapper .dashboard-main .profile-page .created-plans
 div#inner-template .content-wrapper .dashboard-main .profile-page .created-plans-item .plan-heading button.deactive_btn:hover {
   background: var(--secondary-color);
   color: var(--primary-color);
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item {
+  background: #181818;
+  border-radius: 10px;
+  column-gap: 20px;
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item .event-heading {
+  width: 40%;
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item .event-heading h3 {
+  font-weight: 800;
+  color: var(--aceent0-color);
+  font-size: 24px;
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item .event-heading span {
+  color: #fff;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item .event-heading span i {
+  font-size: 20px;
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item .event-heading div {
+  gap: 20px;
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item .event-pricing {
+  width: 15%;
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item .event-pricing h4 {
+  font-size: 26px;
+  color: var(--primary-color);
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item .event-pricing h4 span {
+  font-size: 18px;
+  font-weight: 500;
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item .event-amenities {
+  width: 25%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item .event-amenities span {
+  background: #008ddf;
+  font-size: 12px;
+  padding: 5px 15px;
+  border-radius: 25px;
+  color: #fff;
+  font-weight: 600;
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item .event-action {
+  margin-left: auto !important;
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item .event-action a {
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  text-align: center;
+  border-radius: 5px;
+  color: var(--primary-color);
+  font-size: 22px;
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item .event-action a.edit_action {
+  background: #ffc107;
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item .event-action a.delete_action {
+  background: #dc3545;
+}
+div#inner-template .content-wrapper .dashboard-main .profile-page .event_listing .event_listing_items .event-item .event-action a i {
+  line-height: 36px;
 }
 div#inner-template .content-wrapper .dashboard-main .single-chat-tab {
   /* width */

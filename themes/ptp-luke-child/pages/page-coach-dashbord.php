@@ -14,6 +14,20 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <!-- animation library -->
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap4.css" rel="stylesheet"/>
+    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+        crossorigin="anonymous"></script>
+    <script src="<?php echo get_stylesheet_directory_uri(); ?>/assets//js/main.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script> 
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap4.js"></script> 
+    <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="module-template">
@@ -29,7 +43,6 @@
             <!-- content col start -->
             <div class="content-wrapper">
                <?php 
-               $page = isset($_REQUEST["section"]) ? $_REQUEST["section"] : "dashboard";
                $template_name = $page.".php";
                $template_path = locate_template('layouts/coach-panel/' . $template_name);
                if ($template_path) {
@@ -48,15 +61,22 @@
             AOS.init();
         </script>
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-    crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
-    crossorigin="anonymous"></script>
-<script src="<?php echo get_stylesheet_directory_uri(); ?>/assets//js/main.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+new DataTable('#example');
+
+$('#datetimepicker').datetimepicker({
+    uiLibrary: 'bootstrap5',
+    modal: true,
+    footer: true,
+    format: 'yyyy-mm-dd hh:MM tt'
+});
+$('#datetimepicker2').datetimepicker({
+    uiLibrary: 'bootstrap5',
+    modal: true,
+    footer: true,
+    format: 'yyyy-mm-dd hh:MM tt'
+});
+</script>
 <script>
     function logout_user(){
         Swal.fire({

@@ -1,9 +1,20 @@
 <?php
 $current_user = wp_get_current_user();
 $user_id = $current_user->ID;
+
 if (!in_array('coach', $current_user->roles)) {
     wp_redirect(site_url()."/user-login");
 }
+
+$name = (null !== get_user_meta($user_id, "fullname", true)) ? get_user_meta($user_id, "fullname", true) : "";
+if(get_user_meta($user_id, "_profile_img", true)){
+  $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.jpg";
+}else{
+  $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.jpg";
+}
+$role = "COACH";
+
+$page = isset($_REQUEST["section"]) ? $_REQUEST["section"] : "dashboard";
 ?>
 <div class="dashbaord-header d-flex justify-content-end">
                 <nav class="navbar navbar-expand-sm navbar-light justify-content-end bg-faded">
@@ -14,15 +25,18 @@ if (!in_array('coach', $current_user->roles)) {
                     </button>
                     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                         <ul class="navbar-nav mr-auto nav-pills">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="javascript:;">Dashboard<span
+                            <li class="nav-item <?php if($page=="dashboard" OR $page==""){echo "active";} ?>">
+                                <a class="nav-link" href="?section=dashboard">Dashboard<span
                                         class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="booking.html">Booking</a>
+                            <li class="nav-item <?php if($page=="bookings"){echo "active";} ?>">
+                                <a class="nav-link" href="?section=bookings">Booking</a>
+                            </li>
+                            <li class="nav-item <?php if($page=="calender"){echo "active";} ?>">
+                                <a class="nav-link" href="?section=calender">Calendar</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="calendar.html">Calendar</a>
+                                <a class="nav-link" href="<?php echo site_url(); ?>" target="_blank">Visit Site</a>
                             </li>
                         </ul>
 

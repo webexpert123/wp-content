@@ -1,12 +1,3 @@
-<?php
-$name = (null !== get_user_meta($user_id, "fullname", true)) ? get_user_meta($user_id, "fullname", true) : "";
-if(get_user_meta($user_id, "_profile_img", true)){
-  $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.jpg";
-}else{
-  $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.jpg";
-}
-$role = "COACH";
-?>
 <nav class="sidebar">
                 <a class="navbar-brand" href="javascript:;">
                     <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo_white.png" class="align-top" alt="">
