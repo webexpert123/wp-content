@@ -76,6 +76,18 @@ $('#datetimepicker2').datetimepicker({
     footer: true,
     format: 'yyyy-mm-dd hh:MM tt'
 });
+$('#Edit_datetimepicker').datetimepicker({
+    uiLibrary: 'bootstrap5',
+    modal: true,
+    footer: true,
+    format: 'yyyy-mm-dd hh:MM tt'
+});
+$('#Edit_datetimepicker2').datetimepicker({
+    uiLibrary: 'bootstrap5',
+    modal: true,
+    footer: true,
+    format: 'yyyy-mm-dd hh:MM tt'
+});
 </script>
 <script>
     function logout_user(){

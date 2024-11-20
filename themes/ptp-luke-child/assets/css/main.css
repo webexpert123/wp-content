@@ -12225,8 +12225,8 @@ body.auth-layout section#auth-section.register-bg .auth-block .row .auth-content
 
 
 /* MY CSS STRAT */
-button.swal2-confirm.swal2-styled.swal2-default-outline{
-  background: var(--aceent0-color) !important;
+button.swal2-confirm.swal2-styled {
+    background: var(--aceent0-color);
 }
 #blog-area .post-pagination li.active span {
     background: var(--aceent0-color);

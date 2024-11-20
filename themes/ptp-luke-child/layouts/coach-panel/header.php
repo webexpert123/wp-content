@@ -188,8 +188,8 @@ $page = isset($_REQUEST["section"]) ? $_REQUEST["section"] : "dashboard";
                                         </div>
                                     </span>
                                 </li>
-                                <li><span><a href="javascript:void(0);"><img
-                                                src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/dashboard/search.svg" alt=""></a></span></li>
+                                <!-- <li><span><a href="javascript:void(0);"><img
+                                                src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/dashboard/search.svg" alt=""></a></span></li> -->
                                 <li><a href="my-account.html">My Account</a></li>
                                 <li><a href="javascript:void(0);" onclick="logout_user()">Sign Out</a></li>
                             </ul>

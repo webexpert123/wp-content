@@ -21,6 +21,20 @@
                     <li class="nav-item">
                         <a class="nav-link <?php if($section=="sessions"){echo "active";} ?>" href="?section=sessions"><i class="bx bx-diamond"></i>Training Plans</a>
                     </li>
+                    <li class="nav-item has-sub">
+                        <a class="nav-link <?php if($section=="summercamp"){echo "active";} ?>" data-toggle="collapse" href="#sub3" aria-expanded="false" aria-controls="sub3">
+                            <i class="fa-solid fa-person-hiking"></i>
+                            Summer Camps
+                        </a>
+                        <ul class="sub collapse" id="sub3">
+                            <li class="nav-item">
+                                <a class="nav-link" href="?section=summercamp">All Summer Camps</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="javascript:;">Registered Student</a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link <?php if($section=="messages"){echo "active";} ?>" href="?section=messages"><i class="bx bx-chat"></i>Messages</a>
                     </li>

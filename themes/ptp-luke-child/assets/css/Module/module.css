@@ -10302,4 +10302,7 @@ div#inner-template .content-wrapper .dashboard-main .student-info table tr td im
 button.swal2-confirm.swal2-styled.swal2-default-outline{
   background: var(--aceent0-color) !important;
 }
+button.swal2-confirm.swal2-styled {
+    background: var(--aceent0-color);
+}
 /* MY CSS END */

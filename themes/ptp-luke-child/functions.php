@@ -10,6 +10,23 @@ function my_theme_enqueue_styles() {
 }
 add_action('wp_enqueue_scripts', 'my_theme_enqueue_styles');
 
+// Add Author column to custom post type
+function add_author_column_to_custom_post_type($columns) {
+    $columns['author'] = __('Created By');
+    return $columns;
+}
+add_filter('manage_summer-camps_posts_columns', 'add_author_column_to_custom_post_type');
+
+// Display Author in the column
+function display_author_in_custom_post_type_column($column, $post_id) {
+    if ($column == 'author') {
+        $author = get_the_author_meta('display_name', get_post_field('post_author', $post_id));
+        echo $author;
+    }
+}
+add_action('manage_summer-camps_posts_custom_column', 'display_author_in_custom_post_type_column', 10, 2);
+
+
 function add_custom_roles() {
     // Add Coach Role
     add_role('coach', 'Coach', array(
@@ -349,17 +366,10 @@ function submit_summercamp_event(){
     );
     $post_id = wp_insert_post( $post_data );
 
-    update_post_meta( $post_id, '_event_from_date', $_POST['event_date_from'] );
-    update_post_meta( $post_id, '_event_to_date', $_POST['event_date_to'] );
+    update_post_meta( $post_id, '_event_from_date', date("Y-m-d h:i:s", strtotime($_POST['event_date_from']) ));
+    update_post_meta( $post_id, '_event_to_date', date("Y-m-d h:i:s", strtotime($_POST['event_date_to']) ));
     update_post_meta( $post_id, '_event_location', $_POST['event_location'] );
     update_post_meta( $post_id, '_event_price', $_POST['event_price'] );
-
-    if ( isset( $_FILES['event_image'] ) && ! empty( $_FILES['event_image']['event_image'] ) ) {
-        $uploaded_image = custom_mediafile_upload('event_image');
-        if ( !empty( $uploaded_image ) ) {
-            set_post_thumbnail( $post_id, $uploaded_image );
-        }
-    }
 
     //Add product for event
     $existing_product = get_posts( array(
@@ -381,8 +391,8 @@ function submit_summercamp_event(){
         if ( is_wp_error( $product_id ) ) {
             return; 
         }
-        update_post_meta( $product_id, '_regular_price', $summer_camp_price );
-        update_post_meta( $product_id, '_price', $summer_camp_price );
+        update_post_meta( $product_id, '_regular_price', $_POST['event_price'] );
+        update_post_meta( $product_id, '_price', $_POST['event_price'] );
 
         $category_id = 21; 
         if ( term_exists( $category_id, 'product_cat' ) ) {
@@ -390,10 +400,44 @@ function submit_summercamp_event(){
         }
         update_post_meta( $post_id, '_product_id', $product_id );
     }
-    wp_send_json_error(['alert_type' => 'success', 'message' => 'Successfully Added !']);
+    wp_send_json_success(['alert_type' => 'success', 'message' => 'Successfully Added !']);
 }
 add_action('wp_ajax_submit_summercamp_event', 'submit_summercamp_event');
 add_action('wp_ajax_nopriv_submit_summercamp_event', 'submit_summercamp_event'); 
+
+
+//UPDATE summercamp by user programatically
+function update_summercamp_event(){
+   if (empty($_POST["postid"]) || !is_numeric($_POST["postid"])) {
+      wp_send_json_error(['alert_type' => 'error', 'message' => 'Invalid Post ID !']);
+   }
+
+    $post = get_post($_POST["postid"]);
+    if (!$post) {
+      wp_send_json_error(['alert_type' => 'error', 'message' => 'Post not found.']);
+    }
+
+    $post_data = array(
+       'ID'           => $_POST["postid"],       
+       'post_title'   => $_POST["event_title"],       
+       'post_content' => $_POST["event_description"],     
+       'post_status'  => $_POST["event_status"]
+    );
+    $updated_post_id = wp_update_post($post_data);
+
+    update_post_meta( $updated_post_id, '_event_from_date', date("Y-m-d h:i:s", strtotime($_POST['event_date_from']) ));
+    update_post_meta( $updated_post_id, '_event_to_date', date("Y-m-d h:i:s", strtotime($_POST['event_date_to']) ));
+    update_post_meta( $updated_post_id, '_event_location', $_POST['event_location'] );
+    update_post_meta( $updated_post_id, '_event_price', $_POST['event_price'] );
+
+    //update linked product price-
+    update_post_meta( $_POST['productid'], '_regular_price', $_POST['event_price'] );
+    update_post_meta( $_POST['productid'], '_price', $_POST['event_price'] );
+
+    wp_send_json_success(['alert_type' => 'success', 'message' => 'Updated Successfully']);
+}
+add_action('wp_ajax_update_summercamp_event', 'update_summercamp_event');
+add_action('wp_ajax_nopriv_update_summercamp_event', 'update_summercamp_event'); 
 
 function custom_mediafile_upload($file){
     if ( !empty($file)) {
@@ -408,3 +452,54 @@ function custom_mediafile_upload($file){
         }
     }
 }
+
+function add_custom_meta_box() {
+    // Only show the meta box for the 'summer-camps' post type
+    add_meta_box(
+        'custom_html_after_title', // Unique ID for the meta box
+        'Linked Product', // Meta box title
+        'display_custom_html_after_title', // Callback function to display the content
+        'summer-camps', // Post type slug
+        'normal', // Where to display: normal (default), side, advanced
+        'high' // Priority: high (default), low, default
+    );
+}
+add_action('add_meta_boxes', 'add_custom_meta_box');
+
+function display_custom_html_after_title($post) {
+    // You can add any custom HTML here
+    $productID = get_post_meta( $post->ID, '_product_id', true );
+    echo '<div class="custom-html-content">';
+    echo '<a href="' . admin_url('post.php?post=' . $productID . '&action=edit') . '" target="_blank">View Product</a>';
+    echo '</div>';
+}
+
+function delete_summercamp_func(){
+   if (empty($_POST["postid"]) || !is_numeric($_POST["postid"])) {
+      wp_send_json_error(['alert_type' => 'error', 'message' => 'Invalid Post ID !']);
+   }
+
+    $post = get_post($_POST["postid"]);
+    if (!$post) {
+      wp_send_json_error(['alert_type' => 'error', 'message' => 'Post not found.']);
+    }
+
+    if ($post->post_type !== 'summer-camps') {
+      wp_send_json_error(['alert_type' => 'error', 'message' => 'Invalid post type.']);
+    }
+    
+    $deleted = wp_delete_post($_POST["postid"], true);
+
+    if ($deleted) {
+      wp_send_json_success(['alert_type' => 'success', 'message' => 'Deleted Successfully']);
+    } else {
+      wp_send_json_error(['alert_type' => 'error', 'message' => 'Error in deleting !']);
+    }
+}
+add_action('wp_ajax_delete_summercamp', 'delete_summercamp_func');
+add_action('wp_ajax_nopriv_delete_summercamp', 'delete_summercamp_func'); 
+
+
+
+
+
