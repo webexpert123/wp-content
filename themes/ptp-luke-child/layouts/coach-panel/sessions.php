@@ -1,16 +1,25 @@
+<?php
+if(isset($_POST['udpate_btn'])){
+    update_user_meta($user_id ,"_session_quantity", $_POST['session_quantity']);
+    update_user_meta($user_id ,"_session_price", $_POST['session_price']);
+    echo "<script>Swal.fire({ title: 'Updated Successfully', text: '', icon: 'success' });</script>";
+}
+$session_quantity = get_user_meta($user_id, "_session_quantity", true);
+$session_quantity = isset($session_quantity) && $session_quantity !== '' ? $session_quantity : '';
+
+$session_price = get_user_meta($user_id, "_session_price", true);
+$session_price = isset($session_price) && $session_price !== '' ? $session_price : '';
+?>
 <div class="dashboard-main">
                     <div class="row">
                         <div class="col page-title">
                             <div class="d-flex align-items-center justify-content-between">
-                                <h2 class="m-0">Training Plan</h2>
+                                <h2 class="m-0">My Per Session Rate</h2>
                                 <div class="d-flex align-items-center pd-3">
                                     <ul class="breadcrumbs">
                                         <li><a href="#">Home</a></li>
-                                        <li>My Account</li>
+                                        <li>Session Rate</li>
                                     </ul>
-                                    <div class="page-edit-action">
-                                        <button type="button" data-toggle="modal" data-target="#add_t-plans"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>&nbsp;Add Plan</button>
-                                    </div>
                                 </div>
                             </div>
 
@@ -19,165 +28,78 @@
                     <!-- top cols of dashboard -->
                     <div class="profile-page">
                         <div class="row">
-                            <div class="col-lg-4">
-                                <div class="card custom-plan">
-                                    <div class="card-body">
-                                        <div class="custom-plan-content d-flex align-items-center flex-column text-center py-4">
-                                            <h3>Need to create a custom pricing package?</h3>
-                                            <button type="button" class="mt-4">Click Here!</button>
-                                        </div>
-                                    </div>
+                        <div class="col-lg-6">
+                            <div class="card custom-plan session-rate">
+                                <div class="card-title mb-4">
+                                    <h5 class="">What to keep in mind</h5>
                                 </div>
-                            </div>
-                        <div class="col-lg-8">
-                            <div class="card">
                                 <div class="card-body">
-                                    <div class="card-title mb-4">
-                                        <h5 class="">Created Plans</h5>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 col-lg-4 created-plans-item">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div class="plan-heading">
-                                                        <h1>$30<span> / Session</span></h1>
-                                                        <p>It includes only 4 session in month</p>
-                                                        <div class="t-plans-action page-save-action d-flex align-items-center">
-                                                            <button type="button" class="published_btn">Active</button>
-                                                            <button type="button" class="cancel_btn">Delete</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 created-plans-item">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div class="plan-heading">
-                                                        <h1>$10<span> / Session</span></h1>
-                                                        <p>It includes only 2 session in month</p>
-                                                        <div class="t-plans-action page-save-action d-flex align-items-center">
-                                                            <button type="button" class="deactive_btn">Deactive</button>
-                                                            <button type="button" class="cancel_btn">Delete</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 created-plans-item">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div class="plan-heading">
-                                                        <h1>$100<span> / Session</span></h1>
-                                                        <p>It includes only 12 session in month</p>
-                                                        <div class="t-plans-action page-save-action d-flex align-items-center">
-                                                            <button type="button" class="deactive_btn">Deactive</button>
-                                                            <button type="button" class="cancel_btn">Delete</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 created-plans-item">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div class="plan-heading">
-                                                        <h1>$30<span> / Session</span></h1>
-                                                        <p>It includes only 4 session in month</p>
-                                                        <div class="t-plans-action page-save-action d-flex align-items-center">
-                                                            <button type="button" class="published_btn">Active</button>
-                                                            <button type="button" class="cancel_btn">Delete</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 created-plans-item">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div class="plan-heading">
-                                                        <h1>$60<span> / Session</span></h1>
-                                                        <p>It includes only 8 session in month</p>
-                                                        <div class="t-plans-action page-save-action d-flex align-items-center">
-                                                            <button type="button" class="deactive_btn">Deactive</button>
-                                                            <button type="button" class="cancel_btn">Delete</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-4 created-plans-item">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div class="plan-heading">
-                                                        <h1>$25<span> / Session</span></h1>
-                                                        <p>It includes only 5 session in month</p>
-                                                        <div class="t-plans-action page-save-action d-flex align-items-center">
-                                                            <button type="button" class="deactive_btn">Deactive</button>
-                                                            <button type="button" class="cancel_btn">Delete</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="t-plan-fees-main">
+                                            <ul>
+                                                <li>The minimum session rate you can offer is $30.</li>
+                                                <li>The average AU session rate is $65.</li>
+                                                <li>You can change your session rate at any time.</li>
+                                            </ul> 
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal fade" id="add_t-plans" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="exampleModalLabel">Add Training Plan</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row mb-3 profile-overview">
-                                            <div class="col-md-6 mb-2">
+                        <div class="col-lg-6">
+                            <div class="card session-rate">
+                                <div class="card-title mb-4">
+                                    <h5 class="">Set your session rate</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form action="" method="post">
+                                        <div class="row mb-3">
+                                            <div class="col-md-12 mb-2">
                                                 <div class="form-group">
-                                                    <label for="formGroupExampleInput">Session Rate</label>
-                                                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter Price">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <div class="form-group">
-                                                    <label for="formGroupExampleInput">Sessions</label>
-                                                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Sessions">
+                                                    <label for="formGroupExampleInput">Number of People<b class="text-danger">*</b></label>
+                                                    <select class="form-control" name="session_quantity" required>
+                                                        <option value="">Select number of people</option>
+                                                        <?php for($i=1 ; $i<=10 ; $i++){ ?>
+                                                            <option value="<?php echo $i; ?>" <?php if($session_quantity==$i){echo "selected";} ?>><?php echo $i; ?></option>
+                                                        <?php } ?>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-12 mb-2">
                                                 <div class="form-group">
-                                                    <label for="formGroupExampleInput">Per Additional Athlete</label>
-                                                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter Price">
+                                                    <label for="formGroupExampleInput">Session Price ($)<b class="text-danger">*</b></label>
+                                                    <input type="number" class="form-control" id="session_price" placeholder="Enter Price" name="session_price" value="<?php echo $session_price; ?>" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 mb-2">
+                                                <div class="page-save-action mt-4">
+                                                    <button type="submit" class="udpate_btn" name="udpate_btn">Save</button>
+                                                </div>
+                                                <div class="t-plan-fees d-flex justify-content-between align-items-center mt-5">
+                                                    <h6 class="mb-0">PTP Fees *<br><span>20%</span></h6>
+                                                    <h6 class="mb-0">Earnings/Session<br><span>$ <span id="my_amount">24.00</span></span></h6>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="card t-plan-fees-main">
-                                    <div class="card-body">
-                                        <div class="t-plan-fees d-flex justify-content-between align-items-center">
-                                            <h6>PTP Fees *: 20%</h6>
-                                            <h6>Earnings/Session: $24.00</h6>
-                                        </div>
-                                        <ul>
-                                            <li>The minimum session rate you can offer is $30.</li>
-                                            <li>The average AU session rate is $65.</li>
-                                            <li>You can change your session rate at any time.</li>
-                                        </ul>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
-                            <div class="modal-footer page-save-action">
-                              <button type="button"  data-dismiss="modal">Close</button>
-                              <button type="button" class="cancel_btn">Save changes</button>
-                            </div>
-                          </div>
                         </div>
                     </div>
                 </div>
+<script>
+    $( document ).ready(function() {
+        calculate_my_amount();
+    });
+
+    function calculate_my_amount(){
+        var session_price = $("#session_price").val();
+        var discount_percentage = 20;
+        var discount = session_price * (discount_percentage / 100);
+        var remaining_price = session_price - discount;
+        var remaining_price = remaining_price.toFixed(2);
+        $("#my_amount").text(remaining_price);
+    }
+
+    $("#session_price").keyup(function(){
+        calculate_my_amount();
+    });
+</script>

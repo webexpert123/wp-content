@@ -366,6 +366,14 @@ function submit_summercamp_event(){
     );
     $post_id = wp_insert_post( $post_data );
 
+    $file_input_name = 'event_image';
+    $thumbnail_id = custom_upload_and_get_thumbnail_id($file_input_name);
+
+    if (!is_wp_error($thumbnail_id)) {
+        update_post_meta( $post_id, '_thumbnail_id', $thumbnail_id);
+    }
+
+
     update_post_meta( $post_id, '_event_from_date', date("Y-m-d h:i:s", strtotime($_POST['event_date_from']) ));
     update_post_meta( $post_id, '_event_to_date', date("Y-m-d h:i:s", strtotime($_POST['event_date_to']) ));
     update_post_meta( $post_id, '_event_location', $_POST['event_location'] );
@@ -425,6 +433,13 @@ function update_summercamp_event(){
     );
     $updated_post_id = wp_update_post($post_data);
 
+    $file_input_name = 'event_image';
+    $thumbnail_id = custom_upload_and_get_thumbnail_id($file_input_name);
+
+    if (!is_wp_error($thumbnail_id)) {
+        update_post_meta( $updated_post_id, '_thumbnail_id', $thumbnail_id);
+    }
+
     update_post_meta( $updated_post_id, '_event_from_date', date("Y-m-d h:i:s", strtotime($_POST['event_date_from']) ));
     update_post_meta( $updated_post_id, '_event_to_date', date("Y-m-d h:i:s", strtotime($_POST['event_date_to']) ));
     update_post_meta( $updated_post_id, '_event_location', $_POST['event_location'] );
@@ -439,19 +454,49 @@ function update_summercamp_event(){
 add_action('wp_ajax_update_summercamp_event', 'update_summercamp_event');
 add_action('wp_ajax_nopriv_update_summercamp_event', 'update_summercamp_event'); 
 
-function custom_mediafile_upload($file){
-    if ( !empty($file)) {
-        require_once( ABSPATH . 'wp-admin/includes/image.php' );
-        require_once( ABSPATH . 'wp-admin/includes/file.php' );
-        require_once( ABSPATH . 'wp-admin/includes/media.php' );
-        $uploaded_image = media_handle_upload( $file, 0 );
-        if ( !is_wp_error( $uploaded_image ) ) {
-            return $uploaded_image;
-        }else{
-            return $uploaded_image='';
+function custom_upload_and_get_thumbnail_id($file_input_name) {
+    if (isset($_FILES[$file_input_name])) {
+        $file = $_FILES[$file_input_name];
+
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            return new WP_Error('upload_error', 'There was an error uploading the file.');
         }
+
+        require_once(ABSPATH . 'wp-admin/includes/media.php');
+        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . 'wp-admin/includes/image.php');
+
+        $upload = wp_handle_upload($file, array('test_form' => false));
+
+        if (isset($upload['error'])) {
+            return new WP_Error('upload_failed', 'File upload failed: ' . $upload['error']);
+        }
+
+        $file_path = $upload['file'];
+
+        $attachment = array(
+            'post_mime_type' => $upload['type'],
+            'post_title'     => sanitize_file_name($file['name']),
+            'post_content'   => '',
+            'post_status'    => 'inherit',
+        );
+
+        $attachment_id = wp_insert_attachment($attachment, $file_path);
+
+        if (is_wp_error($attachment_id)) {
+            return $attachment_id;
+        }
+
+        $attachment_data = wp_generate_attachment_metadata($attachment_id, $file_path);
+        wp_update_attachment_metadata($attachment_id, $attachment_data);
+
+        $thumbnail_id = get_post_thumbnail_id($attachment_id);
+        return $thumbnail_id ? $thumbnail_id : $attachment_id;
     }
+
+    return new WP_Error('no_file', 'No file was uploaded.');
 }
+
 
 function add_custom_meta_box() {
     // Only show the meta box for the 'summer-camps' post type

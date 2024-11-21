@@ -44,7 +44,13 @@
                                             $event_end_date = date("d/m/Y h:i A", strtotime($event_end));
                                             $event_location = get_post_meta($post_id, "_event_location", true);
                                             $event_price = get_post_meta($post_id, "_event_price", true);
-                                            $productID = get_post_meta($post_id, "_product_id", true); ?>
+                                            $productID = get_post_meta($post_id, "_product_id", true);
+                                            $attachment_id = get_post_meta($post_id, "_thumbnail_id", true);
+                                            if( $attachment_id ) {
+                                                $thumbnail_url = wp_get_attachment_image_url($attachment_id, 'thumbnail');
+                                            }else{
+                                                $thumbnail_url = get_stylesheet_directory_uri()."/assets/images/default-post.png";
+                                            } ?>
                                             <div class="event-item p-4 d-flex align-items-start mb-3">
                                                     <div class="event-heading">
                                                         <h3><?php echo get_the_title(); ?></h3>
@@ -58,7 +64,7 @@
                                                         <b>Status:</b> <?php echo strtoupper($post_status); ?>
                                                     </div>
                                                 <div class="event-action">
-                                                    <a href="javascript:void(0)" class="edit_action" data-toggle="modal" data-target="#edit_modal" data-id="<?php echo $post_id; ?>" data-title="<?php echo get_the_title(); ?>" data-content="<?php echo base64_encode($post_content); ?>" data-price="<?php echo $event_price; ?>" data-from_date="<?php echo date("Y-m-d h:i A", strtotime($event_start)); ?>" data-end_date="<?php echo date("Y-m-d h:i A", strtotime($event_end)); ?>" data-location="<?php echo $event_location; ?>"  data-status="<?php echo $post_status; ?>"  data-productid="<?php echo $productID; ?>"><i class="bx bx-edit-alt"></i></a>
+                                                    <a href="javascript:void(0)" class="edit_action" data-toggle="modal" data-target="#edit_modal" data-id="<?php echo $post_id; ?>" data-title="<?php echo get_the_title(); ?>" data-content="<?php echo base64_encode($post_content); ?>" data-price="<?php echo $event_price; ?>" data-from_date="<?php echo date("Y-m-d h:i A", strtotime($event_start)); ?>" data-end_date="<?php echo date("Y-m-d h:i A", strtotime($event_end)); ?>" data-location="<?php echo $event_location; ?>"  data-status="<?php echo $post_status; ?>"  data-productid="<?php echo $productID; ?>" data-imageurl="<?php echo $thumbnail_url; ?>"><i class="bx bx-edit-alt"></i></a>
                                                     <a href="javascript:void(0)" class="delete_action" data-id="<?php echo $post_id; ?>"><i class="bx bx-trash-alt"></i></a>
                                                 </div>
                                             </div>
@@ -117,6 +123,12 @@
                                                 </div>
                                                 <div class="col-md-12 mb-2">
                                                     <div class="form-group">
+                                                        <label for="">Image<b class="text-danger">*</b></label>
+                                                        <input type="file" class="form-control" id="" name="event_image" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 mb-2">
+                                                    <div class="form-group">
                                                         <label for="">Description</label>
                                                         <textarea type="text" class="form-control" name="event_description"></textarea>
                                                     </div>
@@ -152,6 +164,10 @@
                                             <input type="hidden" id="postid" name="postid" value="">
                                             <input type="hidden" id="productid" name="productid" value="">
                                             <div class="row mb-3 profile-overview">
+                                                <div class="col-md-12 mb-2">
+                                                    <div class="form-group" id="post_image">
+                                                    </div>
+                                                </div>
                                                 <div class="col-md-6 mb-2">
                                                     <div class="form-group">
                                                         <label for="">Event Title<b class="text-danger">*</b></label>
@@ -180,6 +196,12 @@
                                                     <div class="form-group">
                                                         <label for="">Location<b class="text-danger">*</b></label>
                                                         <input type="text" class="form-control" id="event_location" name="event_location" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 mb-2">
+                                                    <div class="form-group">
+                                                        <label for="">Change Image (Optional)</label>
+                                                        <input type="file" class="form-control" id="" name="event_image">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 mb-2">
@@ -216,8 +238,8 @@
 <script>
     jQuery('#eventSubmitFrom').on('submit', function(event) {
         event.preventDefault();
-        var formData = jQuery(this).serialize(); 
-        formData += '&action=submit_summercamp_event';
+        var formData = new FormData(this);
+        formData.append('action', 'submit_summercamp_event');
 
         jQuery('#spinner').show();
         jQuery("#eventSubmit").attr("disabled",true);
@@ -225,7 +247,9 @@
         jQuery.ajax({
             url: "/wp-admin/admin-ajax.php",
             type: 'POST',
-            data: formData, 
+            data: formData,
+            contentType: false,
+            processData: false, 
             success: function(response) {
                 if (response.data.alert_type === 'success') {jQuery('#eventSubmitFrom')[0].reset();}
                 Swal.fire({ 
@@ -243,8 +267,8 @@
 
     jQuery('#eventEditSubmitFrom').on('submit', function(event) {
         event.preventDefault();
-        var formData = jQuery(this).serialize(); 
-        formData += '&action=update_summercamp_event';
+        var formData = new FormData(this);
+        formData.append('action', 'update_summercamp_event');
 
         jQuery('#Editspinner').show();
         jQuery("#eventEditSubmit").attr("disabled",true);
@@ -253,6 +277,8 @@
             url: "/wp-admin/admin-ajax.php",
             type: 'POST',
             data: formData, 
+            contentType: false,
+            processData: false,
             success: function(response) {
                 Swal.fire({ 
                     title: response.data.message, text: '', icon: response.data.alert_type
@@ -278,6 +304,8 @@
         jQuery("#event_price").val($(this).data('price'));
         jQuery("#event_status").val($(this).data('status'));
         jQuery("#event_status").trigger('change');
+        var imageurl = $(this).data('imageurl');
+        jQuery("#post_image").html("<img src='"+imageurl+"' class='img-fluid'>");
     });
 
     jQuery('.delete_action').on('click', function() {

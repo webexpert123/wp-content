@@ -19,7 +19,7 @@
                                 class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php if($section=="sessions"){echo "active";} ?>" href="?section=sessions"><i class="bx bx-diamond"></i>Training Plans</a>
+                        <a class="nav-link <?php if($section=="sessions"){echo "active";} ?>" href="?section=sessions"><i class="bx bx-diamond"></i>Session Rate</a>
                     </li>
                     <li class="nav-item has-sub">
                         <a class="nav-link <?php if($section=="summercamp"){echo "active";} ?>" data-toggle="collapse" href="#sub3" aria-expanded="false" aria-controls="sub3">
