@@ -52,19 +52,22 @@
                                                 $thumbnail_url = get_stylesheet_directory_uri()."/assets/images/default-post.png";
                                             } ?>
                                             <div class="event-item p-4 d-flex align-items-start mb-3">
-                                                    <div class="event-heading">
-                                                        <h3><?php echo get_the_title(); ?></h3>
-                                                        <div class="d-flex align-items-center"><span><i class="bx bx-pin"></i>&nbsp; <?php echo $event_location; ?>&nbsp;</span><span><i class="bx bx-calendar"></i>&nbsp; <?php echo $event_start_date; ?> to <?php echo $event_end_date; ?>&nbsp;</span></div>
+                                                <div class="camp-image">
+                                                    <img src="<?php echo $thumbnail_url; ?>" alt="camp image" /> 
+                                                </div>
+                                                <div class="event-heading">
+                                                    <h3><?php echo get_the_title(); ?></h3>
+                                                    <div class="d-flex align-items-center"><span><i class="bx bx-pin"></i>&nbsp; <?php echo $event_location; ?>&nbsp;</span><span><i class="bx bx-calendar"></i>&nbsp; <?php echo $event_start_date; ?> to <?php echo $event_end_date; ?>&nbsp;</span></div>
+                                                    <div class="event-pricing d-flex align-items-center">
+                                                        <h4>$<?php echo $event_price; ?><span>/ Session</span></h4>
+                                                        <div class="text-light">
+                                                            <b>Create at:</b> <?php echo $created_date; ?><br>
+                                                             <b>Status:</b> <?php echo strtoupper($post_status); ?>
+                                                        </div>
                                                     </div>
-                                                    <div class="event-pricing">
-                                                        <h4>$<?php echo $event_price; ?></h4>
-                                                    </div>
-                                                    <div class="text-light">
-                                                        <b>Create at:</b> <?php echo $created_date; ?><br>
-                                                        <b>Status:</b> <?php echo strtoupper($post_status); ?>
-                                                    </div>
+                                                </div>
                                                 <div class="event-action">
-                                                    <a href="javascript:void(0)" class="edit_action" data-toggle="modal" data-target="#edit_modal" data-id="<?php echo $post_id; ?>" data-title="<?php echo get_the_title(); ?>" data-content="<?php echo base64_encode($post_content); ?>" data-price="<?php echo $event_price; ?>" data-from_date="<?php echo date("Y-m-d h:i A", strtotime($event_start)); ?>" data-end_date="<?php echo date("Y-m-d h:i A", strtotime($event_end)); ?>" data-location="<?php echo $event_location; ?>"  data-status="<?php echo $post_status; ?>"  data-productid="<?php echo $productID; ?>" data-imageurl="<?php echo $thumbnail_url; ?>"><i class="bx bx-edit-alt"></i></a>
+                                                    <a href="javascript:void(0)" class="edit_action" data-toggle="modal" data-target="#edit_modal" data-id="<?php echo $post_id; ?>" data-title="<?php echo get_the_title(); ?>" data-content="<?php echo base64_encode($post_content); ?>" data-price="<?php echo $event_price; ?>" data-from_date="<?php echo date("Y-m-d h:i A", strtotime($event_start)); ?>" data-end_date="<?php echo date("Y-m-d h:i A", strtotime($event_end)); ?>" data-location="<?php echo $event_location; ?>"  data-status="<?php echo $post_status; ?>"  data-productid="<?php echo $productID; ?>"><i class="bx bx-edit-alt"></i></a>
                                                     <a href="javascript:void(0)" class="delete_action" data-id="<?php echo $post_id; ?>"><i class="bx bx-trash-alt"></i></a>
                                                 </div>
                                             </div>
@@ -94,31 +97,31 @@
                                                 <div class="col-md-6 mb-2">
                                                     <div class="form-group">
                                                         <label for="">Event Title<b class="text-danger">*</b></label>
-                                                        <input type="text" class="form-control" id="" name="event_title" required>
+                                                        <input type="text" class="form-control" id="" name="event_title" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 mb-2">
                                                     <div class="form-group">
                                                         <label for="">Pricing<b class="text-danger">*</b></label>
-                                                        <input type="number" class="form-control" id="" name="event_price" required>
+                                                        <input type="number" class="form-control" id="" name="event_price" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 mb-2">
                                                     <div class="form-group">
                                                         <label for="">Event From<b class="text-danger">*</b></label>
-                                                        <input type="text" class="form-control" id="datetimepicker" name="event_date_from" required>
+                                                        <input type="text" class="form-control" id="datetimepicker" name="event_date_from" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 mb-2">
                                                     <div class="form-group">
                                                         <label for="">Event To<b class="text-danger">*</b></label>
-                                                        <input type="text" class="form-control" id="datetimepicker2" name="event_date_to" required>
+                                                        <input type="text" class="form-control" id="datetimepicker2" name="event_date_to" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 mb-2">
                                                     <div class="form-group">
                                                         <label for="">Location<b class="text-danger">*</b></label>
-                                                        <input type="text" class="form-control" id="" name="event_location" required>
+                                                        <input type="text" class="form-control" id="" name="event_location" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 mb-2">
@@ -130,7 +133,7 @@
                                                 <div class="col-md-12 mb-2">
                                                     <div class="form-group">
                                                         <label for="">Description</label>
-                                                        <textarea type="text" class="form-control" name="event_description"></textarea>
+                                                        <textarea type="text" class="form-control" name="event_description" autocomplete="off"></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 mb-2">
@@ -164,38 +167,34 @@
                                             <input type="hidden" id="postid" name="postid" value="">
                                             <input type="hidden" id="productid" name="productid" value="">
                                             <div class="row mb-3 profile-overview">
-                                                <div class="col-md-12 mb-2">
-                                                    <div class="form-group" id="post_image">
-                                                    </div>
-                                                </div>
                                                 <div class="col-md-6 mb-2">
                                                     <div class="form-group">
                                                         <label for="">Event Title<b class="text-danger">*</b></label>
-                                                        <input type="text" class="form-control" id="event_title" name="event_title" required>
+                                                        <input type="text" class="form-control" id="event_title" name="event_title" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 mb-2">
                                                     <div class="form-group">
                                                         <label for="">Pricing<b class="text-danger">*</b></label>
-                                                        <input type="number" class="form-control" id="event_price" name="event_price" required>
+                                                        <input type="number" class="form-control" id="event_price" name="event_price" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 mb-2">
                                                     <div class="form-group">
                                                         <label for="">Event From<b class="text-danger">*</b></label>
-                                                        <input type="text" class="form-control" id="Edit_datetimepicker" name="event_date_from" required>
+                                                        <input type="text" class="form-control" id="Edit_datetimepicker" name="event_date_from" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 mb-2">
                                                     <div class="form-group">
                                                         <label for="">Event To<b class="text-danger">*</b></label>
-                                                        <input type="text" class="form-control" id="Edit_datetimepicker2" name="event_date_to" required>
+                                                        <input type="text" class="form-control" id="Edit_datetimepicker2" name="event_date_to" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 mb-2">
                                                     <div class="form-group">
                                                         <label for="">Location<b class="text-danger">*</b></label>
-                                                        <input type="text" class="form-control" id="event_location" name="event_location" required>
+                                                        <input type="text" class="form-control" id="event_location" name="event_location" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 mb-2">
@@ -207,7 +206,7 @@
                                                 <div class="col-md-12 mb-2">
                                                     <div class="form-group">
                                                         <label for="">Status<b class="text-danger">*</b></label>
-                                                        <select type="text" class="form-control" id="event_status" name="event_status" required>
+                                                        <select type="text" class="form-control" id="event_status" name="event_status" autocomplete="off" required>
                                                             <option value="">Select Status</option>
                                                             <option value="publish">Publish</option>
                                                             <option value="draft">Draft</option>
@@ -217,7 +216,7 @@
                                                 <div class="col-md-12 mb-2">
                                                     <div class="form-group">
                                                         <label for="">Description</label>
-                                                        <textarea type="text" class="form-control" id="event_description" name="event_description"></textarea>
+                                                        <textarea type="text" class="form-control" id="event_description" name="event_description" autocomplete="off"></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 mb-2">
@@ -304,8 +303,6 @@
         jQuery("#event_price").val($(this).data('price'));
         jQuery("#event_status").val($(this).data('status'));
         jQuery("#event_status").trigger('change');
-        var imageurl = $(this).data('imageurl');
-        jQuery("#post_image").html("<img src='"+imageurl+"' class='img-fluid'>");
     });
 
     jQuery('.delete_action').on('click', function() {

@@ -8,7 +8,7 @@
                             <a href="javascript:;"><img src="<?php echo $profile_img_link; ?>" alt=""></a>
                         </div>
                         <div class="info">
-                            <?php echo $name; ?> <small><?php echo $role; ?></small>
+                            <?php echo $name; ?> <small><?php echo $my_sport; ?> <?php echo $role; ?></small>
                         </div>
                     </li>
                 </ul>

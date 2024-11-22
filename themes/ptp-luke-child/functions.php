@@ -544,6 +544,16 @@ function delete_summercamp_func(){
 add_action('wp_ajax_delete_summercamp', 'delete_summercamp_func');
 add_action('wp_ajax_nopriv_delete_summercamp', 'delete_summercamp_func'); 
 
+function get_sport_name($id){
+  global $wpdb;
+  $sport_name = $wpdb->get_var( $wpdb->prepare( "SELECT sport_name FROM {$wpdb->prefix}sports WHERE sportID = %d", $id ) );
+  if($sport_name){
+    return $sport_name;
+  }else{
+    return "";
+  }
+}
+
 
 
 

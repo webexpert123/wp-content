@@ -7,12 +7,25 @@ if (!in_array('coach', $current_user->roles)) {
 }
 
 $name = (null !== get_user_meta($user_id, "fullname", true)) ? get_user_meta($user_id, "fullname", true) : "";
-if(get_user_meta($user_id, "_profile_img", true)){
-  $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.jpg";
+if(get_user_meta($user_id, "_profile_pic_id", true)){
+    $attachment_id = get_user_meta($user_id, "_profile_pic_id", true);
+    if( $attachment_id ) {
+       $profile_img_link = wp_get_attachment_image_url($attachment_id, 'thumbnail');
+    }else{
+       $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.png";
+    }
 }else{
   $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.jpg";
 }
-$role = "COACH";
+
+$role = "Coach";
+
+$my_sport_id = get_user_meta($user_id, '_sport', true);
+if($my_sport_id){
+  $my_sport = get_sport_name($my_sport_id);
+}else{
+  $my_sport = "";
+}
 
 $page = isset($_REQUEST["section"]) ? $_REQUEST["section"] : "dashboard";
 ?>
