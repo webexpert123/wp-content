@@ -299,7 +299,7 @@ function my_custom_single_template($template) {
     }
     return $template;
 }
-add_filter('template_include', 'my_custom_single_template');
+//add_filter('template_include', 'my_custom_single_template');
 
 
 //When adding summercamp from backend create also a product with it

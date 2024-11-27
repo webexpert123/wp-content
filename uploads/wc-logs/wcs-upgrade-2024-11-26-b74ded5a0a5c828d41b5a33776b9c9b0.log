@@ -1,0 +1,12 @@
+2024-11-26T11:21:03+00:00 NOTICE 3.1.0 - No subscription webhooks found using API version 3. No updates needed. CONTEXT: {"_legacy":true}
+2024-11-26T11:21:04+00:00 NOTICE 7.7.1 upgrade complete from Subscriptions v0 while WooCommerce WC_VERSION 9.4.1 and database version 9.4.1 was active. CONTEXT: {"_legacy":true}
+2024-11-26T11:21:04+00:00 NOTICE Environment info: CONTEXT: {"_legacy":true}
+2024-11-26T11:21:04+00:00 NOTICE     WordPress Version : 6.7 CONTEXT: {"_legacy":true}
+2024-11-26T11:21:04+00:00 NOTICE Active Plugins: CONTEXT: {"_legacy":true}
+2024-11-26T11:21:04+00:00 NOTICE     Advanced Custom Fields PRO by WP Engine – 6.3.11 CONTEXT: {"_legacy":true}
+2024-11-26T11:21:04+00:00 NOTICE     Sassy Social Share by Team Heateor – 3.3.69 CONTEXT: {"_legacy":true}
+2024-11-26T11:21:04+00:00 NOTICE     WooPayments by WooCommerce – 8.5.0 CONTEXT: {"_legacy":true}
+2024-11-26T11:21:04+00:00 NOTICE     WooCommerce Shipping & Tax by WooCommerce – 2.8.3 CONTEXT: {"_legacy":true}
+2024-11-26T11:21:04+00:00 NOTICE     WooCommerce Subscriptions by WooCommerce – 6.9.0 CONTEXT: {"_legacy":true}
+2024-11-26T11:21:04+00:00 NOTICE     WooCommerce by Automattic – 9.4.1 CONTEXT: {"_legacy":true}
+2024-11-26T11:21:04+00:00 NOTICE     WP Mail SMTP by WP Mail SMTP – 4.2.0 CONTEXT: {"_legacy":true}
