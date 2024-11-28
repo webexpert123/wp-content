@@ -36,10 +36,12 @@
                                                 if ( is_user_logged_in() ) {
                                                     $subscriptions = wcs_get_users_subscriptions( $user_id );
                                                     if ( ! empty( $subscriptions ) ) {
+                                                        $active = 0;
 
                                                         foreach ( $subscriptions as $subscription ) {
 
                                                             if ( $subscription->has_status( 'active' ) ) {
+                                                                ++$active;
 
                                                                 $items = $subscription->get_items();
 
@@ -60,7 +62,7 @@
                                                                     <h3 class="mb-0"><?php echo $subscription_name; ?></h3>
                                                                     <span><?php echo $subscription_price; ?> /Month</span>
                                                                     <div class="d-flex align-items-center">
-                                                                        <div class="badge badge-success mr-2">
+                                                                        <div class="badge badge-<?php if($subscription_status=="active"){echo "success";}else{echo "danger";} ?>  mr-2">
                                                                             <?php echo ucwords($subscription_status); ?>
                                                                         </div>
                                                                         <span>Next Payment on <?php echo date("F d, Y", strtotime($subscription_nxt_pay)); ?>.</span>
@@ -71,6 +73,7 @@
                                                                 }
                                                             }
                                                         }
+                                                        if($active == 0){echo '<p class="text-light">You do not have any active subscriptions.</p>';}
                                                     } else {
                                                        echo '<p class="text-light">You do not have any active subscriptions.</p>';
                                                     }
@@ -130,11 +133,12 @@
                                                             </div>
                                                             <div class="subscription-info">
                                                                 <h3 class="mb-0"><?php echo $name; ?></h3>
+                                                                <h5 class="text-light"><?php echo $price; ?> /Month</h5>
                                                                 <span><a href="javascript:void(0);" class="show_details"  data-toggle="modal" data-target="#add_t-plans" data-title="<?php echo $name; ?>" data-description="<?php the_content(); ?>">Show Subscription Details</a></span>
                                                             </div>
                                                             <div class="subscription-action ms-auto">
                                                                 <div class="page-save-action">
-                                                                    <a href="<?php echo $add_to_cart; ?>" class="udpate_btn btn btn-success">Subscribe</a>
+                                                                    <a href="javascript:void(0);" class="udpate_btn btn btn-success add_to_cart_btn" data-id="<?php echo $pid; ?>">Subscribe</a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -184,5 +188,18 @@
    jQuery('.show_details').on('click', function() {
         jQuery("#plan_heading").html($(this).data('title'));
         jQuery("#plan_content").html($(this).data('description'));
+    });
+
+   jQuery('.add_to_cart_btn').on('click', function() {
+        var pid = $(this).data('id');
+        jQuery.ajax({
+            url: "/wp-admin/admin-ajax.php",
+            type: 'POST',
+            data: {action:"ajax_add_to_cart", productid:pid}, 
+            success: function(response) {
+                if (response.data.alert_type === 'success') { window.location.href = "<?php echo wc_get_checkout_url(); ?>"; }
+                Swal.fire({ title: response.data.message, text: '', icon: response.data.alert_type});
+            }
+        });
     });
 </script>

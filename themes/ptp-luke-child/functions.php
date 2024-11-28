@@ -555,6 +555,38 @@ function get_sport_name($id){
 }
 
 
+function ajax_add_to_cart() {
+    $productid = $_POST['productid'];
+    $cart = WC()->cart;
+    $cart->empty_cart();
+    if($cart->add_to_cart($productid, 1)){
+       wp_send_json_success(['alert_type' => 'success', 'message' => 'Redirecting to checkout..']);
+    }else{
+       wp_send_json_error(['alert_type' => 'error', 'message' => 'Something is wrong !']);
+    }
+}
+add_action('wp_ajax_ajax_add_to_cart', 'ajax_add_to_cart');
+add_action('wp_ajax_nopriv_ajax_add_to_cart', 'ajax_add_to_cart');
+
+
+function cancel_previous_subscription_and_add_new_one( $order_id ) {
+    $order = wc_get_order( $order_id );
+    $user_id = $order->get_user_id();
+
+    if ( $user_id ) {
+        $subscriptions = wcs_get_users_subscriptions( $user_id );
+        foreach ( $subscriptions as $subscription ) {
+            $subscription_order = $subscription->get_parent();
+            $subscription_order_id = $subscription_order->get_id();
+            if ( $subscription->get_status() == 'active' && $subscription_order_id !== $order_id ) {
+                $subscription->update_status( 'cancelled', 'Cancelled due to new subscription.' );
+            }
+        }
+    }
+}
+add_action( 'woocommerce_thankyou', 'cancel_previous_subscription_and_add_new_one', 20 );
+
+
 
 
 
