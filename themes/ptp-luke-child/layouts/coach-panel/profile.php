@@ -85,6 +85,63 @@ if($card_details){
   $expiry_date = $unserialized_card["expiry_date"];
   $cvv_number = $unserialized_card["cvv_number"];
 }
+
+
+function get_user_subscription_history($user_id) {
+    // Query for subscriptions without filtering by status
+    $args = array(
+        'post_type' => 'shop_subscription',
+        'posts_per_page' => -1,
+        'author' => $user_id, // Get subscriptions for this user
+    );
+
+    // Get the subscriptions for the user
+    $subscriptions = get_posts($args);
+
+    // Check if subscriptions exist
+    if (empty($subscriptions)) {
+        return 'No subscriptions found for this user.';
+    }
+
+    // Prepare an array to store subscription history
+    $subscription_history = [];
+
+    // Loop through each subscription
+    foreach ($subscriptions as $subscription_post) {
+        // Get subscription object
+        $subscription = wcs_get_subscription($subscription_post->ID);
+
+        // Check if the subscription object is valid
+        if (!$subscription) {
+            continue;  // Skip if subscription is invalid
+        }
+
+        // Get subscription details
+        $plan_id = $subscription->get_id();  // Plan ID
+        $plan_name = $subscription->get_product()->get_name();  // Plan Name
+        $start_date = $subscription->get_date_created()->date('Y-m-d');  // Start Date
+        $next_payment_date = $subscription->get_date_next_payment()->date('Y-m-d');  // Next Payment Date
+        $price = $subscription->get_total();  // Total Price (for the subscription)
+        
+        // Optional: You can use get_view_order_url() for the subscription view URL
+        $view_url = $subscription->get_view_order_url();  // View URL
+
+        // Add subscription details to the array
+        $subscription_history[] = [
+            'plan_id' => $plan_id,
+            'plan_name' => $plan_name,
+            'start_date' => $start_date,
+            'next_payment' => $next_payment_date,
+            'price' => $price,
+            'view_url' => $view_url
+        ];
+    }
+
+    return $subscription_history;
+}
+
+
+
 ?>
 <div class="dashboard-main">
     <div class="row">
@@ -359,152 +416,26 @@ if($card_details){
                                                         <thead>
                                                             <tr>
                                                                 <th>ID</th>
-                                                                <th>Plan</th>
-                                                                <th>Start date</th>
-                                                                <th>End date</th>
-                                                                <th>Plan Pricing</th>
-                                                                <th>Download</th>
+                                                                <th>PLAN</th>
+                                                                <th>START DATE</th>
+                                                                <th>NEXT PAYMENT</th>
+                                                                <th>PRICING</th>
+                                                                <th>VIEW</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
+                                                            <?php
+                                                            $subscription_history = get_user_subscription_history($user_id);
+                                                            foreach($subscription_history as $history){ ?>
                                                             <tr>
-                                                                <td>#25368759</td>
+                                                                <td>#<?php echo $history['plan_id']; ?></td>
                                                                 <td>Pro Tier</td>
                                                                 <td>2024-08-25</td>
                                                                 <td>2024-09-25</td>
                                                                 <td>$300</td>
                                                                 <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
                                                             </tr>
-                                                            <tr>
-                                                                <td>#45228165</td>
-                                                                <td>Basic Tier</td>
-                                                                <td>2024-08-25</td>
-                                                                <td>2024-09-25</td>
-                                                                <td>$300</td>
-                                                                <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#25368759</td>
-                                                                <td>Pro Tier</td>
-                                                                <td>2024-08-25</td>
-                                                                <td>2024-09-25</td>
-                                                                <td>$300</td>
-                                                                <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#25368759</td>
-                                                                <td>Pro Tier</td>
-                                                                <td>2024-08-25</td>
-                                                                <td>2024-09-25</td>
-                                                                <td>$300</td>
-                                                                <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#25368759</td>
-                                                                <td>Pro Tier</td>
-                                                                <td>2024-08-25</td>
-                                                                <td>2024-09-25</td>
-                                                                <td>$300</td>
-                                                                <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#25368759</td>
-                                                                <td>Pro Tier</td>
-                                                                <td>2024-08-25</td>
-                                                                <td>2024-09-25</td>
-                                                                <td>$300</td>
-                                                                <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#25368759</td>
-                                                                <td>Pro Tier</td>
-                                                                <td>2024-08-25</td>
-                                                                <td>2024-09-25</td>
-                                                                <td>$300</td>
-                                                                <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#25368759</td>
-                                                                <td>Pro Tier</td>
-                                                                <td>2024-08-25</td>
-                                                                <td>2024-09-25</td>
-                                                                <td>$300</td>
-                                                                <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#25368759</td>
-                                                                <td>Pro Tier</td>
-                                                                <td>2024-08-25</td>
-                                                                <td>2024-09-25</td>
-                                                                <td>$300</td>
-                                                                <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#25368759</td>
-                                                                <td>Pro Tier</td>
-                                                                <td>2024-08-25</td>
-                                                                <td>2024-09-25</td>
-                                                                <td>$300</td>
-                                                                <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#25368759</td>
-                                                                <td>Pro Tier</td>
-                                                                <td>2024-08-25</td>
-                                                                <td>2024-09-25</td>
-                                                                <td>$300</td>
-                                                                <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#25368759</td>
-                                                                <td>Pro Tier</td>
-                                                                <td>2024-08-25</td>
-                                                                <td>2024-09-25</td>
-                                                                <td>$300</td>
-                                                                <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#25368759</td>
-                                                                <td>Pro Tier</td>
-                                                                <td>2024-08-25</td>
-                                                                <td>2024-09-25</td>
-                                                                <td>$300</td>
-                                                                <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#25368759</td>
-                                                                <td>Pro Tier</td>
-                                                                <td>2024-08-25</td>
-                                                                <td>2024-09-25</td>
-                                                                <td>$300</td>
-                                                                <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#25368759</td>
-                                                                <td>Pro Tier</td>
-                                                                <td>2024-08-25</td>
-                                                                <td>2024-09-25</td>
-                                                                <td>$300</td>
-                                                                <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>#25368759</td>
-                                                                <td>Pro Tier</td>
-                                                                <td>2024-08-25</td>
-                                                                <td>2024-09-25</td>
-                                                                <td>$300</td>
-                                                                <td><a href="#" class="btn btn-success btn-rounded">Download Invoice</a></td>
-                                                            </tr>
-                                                        </tbody>
-                                                        <tfoot>
-                                                            <tr>
-                                                                <th>ID</th>
-                                                                <th>Plan</th>
-                                                                <th>Start date</th>
-                                                                <th>End date</th>
-                                                                <th>Plan Pricing</th>
-                                                                <th>Download</th>
-                                                            </tr>
+                                                            <?php } ?>
                                                         </tfoot>
                                                     </table>
                                                 </div>
