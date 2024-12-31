@@ -26,7 +26,7 @@
         <section class="header-main navbar js-sticky-header w-100">
             <div class="container-fluid">
                 <div class="header-blocks">
-                    <div class="brand" onclick="<?php echo site_url(); ?>">
+                    <div class="brand" onclick="window.location.href='<?php echo site_url(); ?>';">
                         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo_yellow.png" alt="brand image" />
                     </div>
                     <div class="menu-block">
