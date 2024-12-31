@@ -37,7 +37,7 @@
                             <li><a href="javascript:void(0);">Parents & Athlete</a></li>
                             <li><a href="javascript:void(0);">Apply to Coach</a></li>
                             <li><a href="javascript:void(0);">Summer Camp</a></li>
-                            <li><a href="javascript:void(0);">Our Blog</a></li>
+                            <li><a href="<?php echo site_url(); ?>/blogs">Our Blog</a></li>
                             <li><a href="javascript:void(0);">Contact Us</a></li>
                         </ul>
                     </div>

@@ -41,7 +41,7 @@
                                     <li><a href="#">Coach</a></li>
                                     <li><a href="#">Booking</a></li>
                                     <li><a href="#">Summer Camp</a></li>
-                                    <li><a href="#">Our Blog</a></li>
+                                    <li><a href="<?php echo site_url(); ?>/blogs">Our Blog</a></li>
                                 </ul>
                             </div>
                         </div>
