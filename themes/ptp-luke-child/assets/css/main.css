@@ -9157,7 +9157,7 @@ p {
   padding-bottom: 100px;
   position: relative;
   z-index: 1;
-  background: url(../assets/images/blog-image/blog_header.jpg) no-repeat center center;
+  background: url(../images/blog-image/blog_header.jpg) no-repeat center center;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   background-size: cover;

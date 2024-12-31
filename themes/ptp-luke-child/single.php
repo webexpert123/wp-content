@@ -26,7 +26,7 @@ $current_page_id = get_queried_object_id();
     <div class="container">
         <div class="row">
             <div class="col-md-12 d-flex align-items-center justify-content-between">
-                <div class="left pull-left">
+                <!-- <div class="left pull-left">
                     <ul>
                         <li><a href="<?php echo home_url(); ?>">Home</a></li>
                         <li><i class="fa fa-angle-right" aria-hidden="true"></i></li>
@@ -34,10 +34,10 @@ $current_page_id = get_queried_object_id();
                         <li><i class="fa fa-angle-right" aria-hidden="true"></i></li>
                         <li class="active"><?php the_title(); ?></li>
                     </ul>
-                </div>
+                </div> -->
                 <div class="right pull-right">
                     <a href="javascript:void(0)" data-toggle="modal" data-target="#myModal">
-                        <span class="text-light"><i class="fa fa-share-alt" aria-hidden="true"></i>Share</span> 
+                        <span><i class="fa fa-share-alt" aria-hidden="true"></i>Share</span> 
                     </a>   
                 </div>    
             </div>
@@ -66,14 +66,14 @@ $current_page_id = get_queried_object_id();
 							       ?>
 							    </div>
 
-							    <div class="post-details mt-5 text-light">
+							    <div class="post-details mt-5">
 							    	<b class="text-warning">Published On : </b> <span><?php echo get_the_date('F j, Y', $post_id); ?></span> 
 							    	<span class="seperate"> | </span>
 							    	<b class="text-warning">Author : </b> <span><?php echo get_the_author_meta('display_name', $author_id);  ?></span>
 							    </div>
 
 							    <h2 class="text-warning mt-5"><?php the_title(); ?></h2>
-							    <div class="post-content mt-5 text-light"> <?php the_content(); ?></div>
+							    <div class="post-content mt-5"> <?php the_content(); ?></div>
                             </div>
                         <!--End single blog post-->
                     </div>
