@@ -66,6 +66,9 @@
                                                                             <?php echo ucwords($subscription_status); ?>
                                                                         </div>
                                                                         <span>Next Payment on <?php echo date("F d, Y", strtotime($subscription_nxt_pay)); ?>.</span>
+                                                                    </div><br>
+                                                                    <div class="page-save-action">
+                                                                        <button type="button" class="cancel_btn" onclick="cancel_func('<?php echo $subscription_id; ?>');">Cancel Subscription</button>
                                                                     </div>
                                                                     <?php
                                                                 } else {
@@ -202,4 +205,27 @@
             }
         });
     });
+
+   function cancel_func(sid){
+        Swal.fire({
+              title: "Are you sure to cancel this subscription ?",
+              text: "",
+              icon: "question",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Confirm"
+            }).then((result) => {
+              if (result.isConfirmed) {
+                 jQuery.ajax({
+                    url: "/wp-admin/admin-ajax.php",
+                    type: 'POST',
+                    data: {action:"cancel_subscription", subscription_id:sid}, 
+                    success: function(response) {
+                        location.reload();
+                    }
+                 });
+              }
+        });
+   }
 </script>

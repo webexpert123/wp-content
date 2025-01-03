@@ -587,6 +587,36 @@ function cancel_previous_subscription_and_add_new_one( $order_id ) {
 add_action( 'woocommerce_thankyou', 'cancel_previous_subscription_and_add_new_one', 20 );
 
 
+function cancel_woo_subscription() {
+    try {
+        if (!class_exists('WC_Subscription')) {
+            require_once WC_ABSPATH . 'includes/class-wc-subscription.php';
+        }
+        
+        $subscription_id = isset($_POST['subscription_id']) ? intval($_POST['subscription_id']) : 0;
+        
+        if (!$subscription_id) {
+            throw new Exception('Invalid subscription ID');
+        }
+        
+        $subscription = wc_get_order($subscription_id);
+        
+        if (!$subscription || !is_a($subscription, 'WC_Subscription')) {
+            throw new Exception('Subscription not found');
+        }
+        
+        $subscription->update_status('cancelled');
+        echo "1";
+        
+    } catch (Exception $e) {
+        error_log('Subscription cancellation error: ' . $e->getMessage());
+        echo "0";
+    }
+    die();
+}
+
+add_action('wp_ajax_cancel_subscription', 'cancel_woo_subscription');
+add_action('wp_ajax_nopriv_cancel_subscription', 'cancel_woo_subscription');
 
 
 
