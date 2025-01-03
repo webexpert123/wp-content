@@ -26,7 +26,7 @@
                         <div class="d-flex align-items-center justify-content-between auth-head">
                           <div class="auth-logo">
                             <a href="<?php echo site_url(); ?>">
-                              <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo.png" class="img-fluid" alt="">
+                              <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo_yellow.png" class="img-fluid" alt="">
                             </a>
                           </div>
                           <div class="auth-link">
@@ -38,7 +38,7 @@
                         <div class="video-bg">
                           <div class="video-overlay"></div>
                             <video autoplay muted loop>
-                                <source src="https://mediumpurple-gazelle-798875.hostingersite.com/ptp_design/home_video.mov" type="video/mp4">
+                                <source src="<?php echo get_stylesheet_directory_uri(); ?>/home_video.mov" type="video/mp4">
                             </video>
                         </div>
                         <div class="video-content">
@@ -47,7 +47,7 @@
                             <div class="form-block">
                                 <div class="form-area">
                                   <div class="auth-form-block-header">
-                                    <h1>Forgot Password</h1>
+                                    <h2>Forgot Password</h2>
                                   </div>
                                   <div class="auth-input-block">
                                   <form action="" method="post" id="forgotForm">
