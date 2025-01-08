@@ -618,5 +618,12 @@ function cancel_woo_subscription() {
 add_action('wp_ajax_cancel_subscription', 'cancel_woo_subscription');
 add_action('wp_ajax_nopriv_cancel_subscription', 'cancel_woo_subscription');
 
-
-
+function add_coach_profile_rewrite_rule() {
+    add_rewrite_rule(
+        'coach-profile/([^/]+)/?$',
+        'index.php?pagename=coach-profile&coach_slug=$matches[1]',
+        'top'
+    );
+    add_rewrite_tag('%coach_slug%', '([^/]+)');
+}
+add_action('init', 'add_coach_profile_rewrite_rule');

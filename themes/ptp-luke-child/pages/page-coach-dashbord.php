@@ -116,5 +116,21 @@ $('#Edit_datetimepicker2').datetimepicker({
           }
         });
     }
+
+function copy_link(text) {
+    const tempInput = document.createElement('textarea');
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    tempInput.setSelectionRange(0, 99999);
+    try {
+        document.execCommand('copy');
+        Swal.fire({ title: "Copied !", text: '', icon: ""});
+    } catch (err) {
+        console.error('Failed to copy text:', err);
+    }
+    document.body.removeChild(tempInput);
+}
+
 </script>
 </html>

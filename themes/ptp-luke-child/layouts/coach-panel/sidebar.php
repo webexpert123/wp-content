@@ -39,7 +39,7 @@
                         <a class="nav-link <?php if($section=="messages"){echo "active";} ?>" href="?section=messages"><i class="bx bx-chat"></i>Messages</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php if($section=="students"){echo "active";} ?>" href="?section=students"><i class="bx bx-book-reader"></i>Students Info</a>
+                        <a class="nav-link <?php if($section=="students"){echo "active";} ?>" href="?section=students"><i class="bx bx-book-reader"></i>My Athletes</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php if($section=="profile"){echo "active";} ?>" href="?section=profile"><i class="bx bx-user-circle"></i>My Profile</a>

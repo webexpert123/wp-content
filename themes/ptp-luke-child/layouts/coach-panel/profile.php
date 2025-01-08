@@ -298,9 +298,9 @@ function get_user_subscription_history($user_id) {
                                                             <div class="copy-link">
                                                                 <div class="d-flex align-items-center justify-content-between mb-2 px-2">
                                                                     <label>Profile Link</label>
-                                                                    <i class="bx bx-copy" onclick="copy_link();"></i>
+                                                                    <i class="bx bx-copy" onclick="copy_link('<?php echo site_url("/coach-profile/".$current_user->user_nicename); ?>');"></i>
                                                                 </div>
-                                                                <a href="javascript:void(0)" id="profile_link" onclick="copy_link();"><?php echo site_url(); ?>/coach-profile/<?php echo $current_user->user_nicename; ?></a>
+                                                                <a href="javascript:void(0)" id="profile_link" onclick="copy_link('<?php echo site_url("/coach-profile/".$current_user->user_nicename); ?>');"><?php echo site_url("/coach-profile/".$current_user->user_nicename); ?></a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -346,6 +346,26 @@ function get_user_subscription_history($user_id) {
                                                                             <div class="form-group">
                                                                                 <label for="">Tell Us About Yourself</label>
                                                                                 <textarea class="form-control" name="about_myself" rows="3"><?php echo $about_myself; ?></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 mb-2">
+                                                                            <div class="form-group">
+                                                                                <label for="">Full Address</label>
+                                                                                <input type="" class="form-control" name="full_address" value="<?php echo $experience; ?>">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 mb-2">
+                                                                            <div class="form-group">
+                                                                                <label for="">Levels Taught</label>
+                                                                                <div id="levels-tag-div"></div>
+                                                                                <input type="hidden" id="levels-tags-string" value="">
+                                                                                <input type="" id="levels-tag-input" class="form-control" name="full_address">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 mb-2">
+                                                                            <div class="form-group">
+                                                                                <label for="">Teaches</label>
+                                                                                <input type="" class="form-control" name="full_address" value="">
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-12 mb-2">
@@ -478,5 +498,20 @@ function get_user_subscription_history($user_id) {
               jQuery("#update_btn").attr("disabled", false);
             }
           }
+        });
+
+
+        const tags = document.getElementById('levels-tag-div');
+        const input = document.getElementById('levels-tag-input');
+
+        input.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const tagContent = input.value.trim();
+                if (tagContent !== '') {
+                    jQuery("#levels-tag-div").append('<span class="badge badge-pill badge-warning">'+tagContent+' <span aria-hidden="true">&times;</span></span>');
+                    input.value = "";
+                }
+            }
         });
     </script>

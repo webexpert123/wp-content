@@ -9,7 +9,7 @@
                                         <li>Summer Camps</li>
                                     </ul>
                                     <div class="page-edit-action">
-                                        <button type="button" data-toggle="modal" data-target="#add_t-plans"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>&nbsp;Create Summer Camps</button>
+                                        <!-- <button type="button" data-toggle="modal" data-target="#add_t-plans"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>&nbsp;Create Summer Camps</button> -->
                                     </div>
                                 </div>
                             </div>
@@ -25,53 +25,54 @@
                                     <div class="row">
                                         <div class="col-md-12 col-lg-12 event_listing_items">
                                         <?php
-                                        $args = array(
+                                        $args = [
                                             'post_type' => 'summer-camps', 
                                             'posts_per_page' => -1, 
-                                            'author' => $user_id,
-                                            'post_status'    => array('publish', 'draft') 
-                                        );
+                                            'post_status'    => array('publish')
+                                        ];
                                         $query = new WP_Query($args);
-                                        while ($query->have_posts()) {
-                                            $query->the_post();
-                                            $post_id = get_the_ID();
-                                            $created_date = get_the_date('F j, Y', $post_id);
-                                            $post_status = get_post_status($post_id);
-                                            $post_content = get_the_content();
-                                            $event_start = get_post_meta($post_id, "_event_from_date", true);
-                                            $event_start_date = date("d/m/Y h:i A", strtotime($event_start));
-                                            $event_end = get_post_meta($post_id, "_event_to_date", true);
-                                            $event_end_date = date("d/m/Y h:i A", strtotime($event_end));
-                                            $event_location = get_post_meta($post_id, "_event_location", true);
-                                            $event_price = get_post_meta($post_id, "_event_price", true);
-                                            $productID = get_post_meta($post_id, "_product_id", true);
-                                            $attachment_id = get_post_meta($post_id, "_thumbnail_id", true);
-                                            if( $attachment_id ) {
-                                                $thumbnail_url = wp_get_attachment_image_url($attachment_id, 'thumbnail');
-                                            }else{
-                                                $thumbnail_url = get_stylesheet_directory_uri()."/assets/images/default-post.png";
-                                            } ?>
-                                            <div class="event-item p-4 d-flex align-items-start mb-3">
-                                                <div class="camp-image">
-                                                    <img src="<?php echo $thumbnail_url; ?>" alt="camp image" /> 
-                                                </div>
-                                                <div class="event-heading">
-                                                    <h3><?php echo get_the_title(); ?></h3>
-                                                    <div class="d-flex align-items-center"><span><i class="bx bx-pin"></i>&nbsp; <?php echo $event_location; ?>&nbsp;</span><span><i class="bx bx-calendar"></i>&nbsp; <?php echo $event_start_date; ?> to <?php echo $event_end_date; ?>&nbsp;</span></div>
-                                                    <div class="event-pricing d-flex align-items-center">
-                                                        <h4>$<?php echo $event_price; ?><span>/ Session</span></h4>
-                                                        <div class="text-light">
-                                                            <b>Create at:</b> <?php echo $created_date; ?><br>
-                                                             <b>Status:</b> <?php echo strtoupper($post_status); ?>
+                                        if ($query->have_posts()) {
+                                            while ($query->have_posts()) {
+                                                $query->the_post();
+                                                $post_id = get_the_ID();
+                                                $created_date = get_the_date('F j, Y', $post_id);
+                                                $post_status = get_post_status($post_id);
+                                                $post_content = get_the_content();
+                                                $event_start = get_post_meta($post_id, "_event_from_date", true);
+                                                $event_start_date = date("d/m/Y h:i A", strtotime($event_start));
+                                                $event_end = get_post_meta($post_id, "_event_to_date", true);
+                                                $event_end_date = date("d/m/Y h:i A", strtotime($event_end));
+                                                $event_location = get_post_meta($post_id, "_event_location", true);
+                                                $event_price = get_post_meta($post_id, "_event_price", true);
+                                                $productID = get_post_meta($post_id, "_product_id", true);
+                                                $attachment_id = get_post_meta($post_id, "_thumbnail_id", true);
+                                                if( $attachment_id ) {
+                                                   $thumbnail_url = wp_get_attachment_image_url($attachment_id, 'thumbnail');
+                                                }else{
+                                                   $thumbnail_url = get_stylesheet_directory_uri()."/assets/images/default-post.png";
+                                                }
+
+                                                $assign_coach = get_post_meta($post_id, "assign_coach", true) ?: array();
+                                                if (!in_array($user_id, $assign_coach)) { continue; } ?>
+                                                <div class="event-item p-4 d-flex align-items-start mb-3">
+                                                    <div class="camp-image">
+                                                        <img src="<?php echo $thumbnail_url; ?>" alt="camp image" /> 
+                                                    </div>
+                                                    <div class="event-heading">
+                                                        <h3><?php echo get_the_title(); ?></h3>
+                                                        <div class="d-flex align-items-center"><span><i class="bx bx-pin"></i>&nbsp; <?php echo $event_location; ?>&nbsp;</span><span><i class="bx bx-calendar"></i>&nbsp; <?php echo $event_start_date; ?> to <?php echo $event_end_date; ?>&nbsp;</span></div>
+                                                        <div class="event-pricing d-flex align-items-center">
+                                                            <h4 class="text-light">$<?php echo $event_price; ?><span> / Session</span></h4>
                                                         </div>
                                                     </div>
+                                                    <div class="event-action">
+                                                        <button class="btn btn-warning btn-flat btn-block" onclick="copy_link('<?php echo site_url("summercamp?user=".base64_encode($user_id)."&camp=".base64_encode($post_id)); ?>');">REFERRAL LINK</button>
+                                                    </div>
                                                 </div>
-                                                <div class="event-action">
-                                                    <a href="javascript:void(0)" class="edit_action" data-toggle="modal" data-target="#edit_modal" data-id="<?php echo $post_id; ?>" data-title="<?php echo get_the_title(); ?>" data-content="<?php echo base64_encode($post_content); ?>" data-price="<?php echo $event_price; ?>" data-from_date="<?php echo date("Y-m-d h:i A", strtotime($event_start)); ?>" data-end_date="<?php echo date("Y-m-d h:i A", strtotime($event_end)); ?>" data-location="<?php echo $event_location; ?>"  data-status="<?php echo $post_status; ?>"  data-productid="<?php echo $productID; ?>"><i class="bx bx-edit-alt"></i></a>
-                                                    <a href="javascript:void(0)" class="delete_action" data-id="<?php echo $post_id; ?>"><i class="bx bx-trash-alt"></i></a>
-                                                </div>
-                                            </div>
                                         <?php }
+                                        } else {
+                                            echo 'No summer camps found for you !';
+                                        }
                                         wp_reset_postdata(); ?>
 
                                         </div>
