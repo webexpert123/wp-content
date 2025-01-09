@@ -10759,7 +10759,7 @@ section#profile-layout .profile-top .profile-sidebar .coach-card .card .card-hea
   height: 368px;
   overflow: hidden;
 }
-section#profile-layout .profile-top .profile-sidebar .coach-card .card .card-header video {
+section#profile-layout .profile-top .profile-sidebar .coach-card .card .card-header video, .coach-card .card .card-header img {
   width: 100%;
 }
 section#profile-layout .profile-top .profile-sidebar .coach-card .card .card-body {

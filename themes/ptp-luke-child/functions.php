@@ -627,3 +627,60 @@ function add_coach_profile_rewrite_rule() {
     add_rewrite_tag('%coach_slug%', '([^/]+)');
 }
 add_action('init', 'add_coach_profile_rewrite_rule');
+
+
+function add_summarcamp_link_rewrite_rule() {
+    add_rewrite_rule(
+        'summercamp/([^/]+)/?$',
+        'index.php?pagename=summercamp&camp_slug=$matches[1]',
+        'top'
+    );
+    add_rewrite_tag('%camp_slug%', '([^/]+)');
+}
+add_action('init', 'add_summarcamp_link_rewrite_rule');
+
+
+add_action('woocommerce_checkout_update_order_meta', 'add_custom_order_meta_based_on_product_type', 10, 2);
+function add_custom_order_meta_based_on_product_type($order_id, $data) {
+    $order = wc_get_order($order_id);
+    $categories = [];
+
+    if (WC()->session->get('referral_id')) {
+        $referral_code = WC()->session->get('referral_id');
+        update_post_meta($order_id, 'referral_id', $referral_code);
+    }
+
+    foreach ($order->get_items() as $item) {
+        $product_id = $item->get_product_id();
+        $terms = get_the_terms($product_id, 'product_cat');
+        if ($terms) {
+            foreach ($terms as $term) {
+                $categories[] = $term->name;
+            }
+        }
+    }
+
+    if (in_array('Subscriptions', $categories)) {
+        update_post_meta($order_id, 'order_type', 'subscription');
+    } elseif (in_array('Summer Camps', $categories)) {
+        update_post_meta($order_id, 'order_type', 'summercamp');
+    }
+}
+
+add_action('init', 'capture_referral_code');
+function capture_referral_code() {
+    if (isset($_GET['referral_id'])) {
+        $referral_id = sanitize_text_field($_GET['referral_id']);
+        WC()->session->set('referral_id', $referral_id);
+    }
+}
+
+add_action('woocommerce_admin_order_data_after_order_details', 'display_referral_code_in_admin');
+function display_referral_code_in_admin($order) {
+    $referral_code = get_post_meta($order->get_id(), 'referral_id', true);
+    if ($referral_code) {
+        echo '<p><strong>Referral Code:</strong> ' . esc_html($referral_code) . '</p>';
+    }
+}
+
+

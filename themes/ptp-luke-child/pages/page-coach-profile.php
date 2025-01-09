@@ -17,6 +17,13 @@ require locate_template('layouts/header.php') ;
             $coach_sport_id = get_user_meta($user->ID, '_sport', true);  
             $session_price = get_user_meta($user->ID, '_session_price', true);  
             $description = get_user_meta($user->ID, '_about_myself', true);  
+            $full_address = get_user_meta($user->ID, '_full_address', true);
+            $levels_tags = get_user_meta($user->ID, '_levels_tags', true);
+            $teaches_tags = get_user_meta($user->ID, '_teaches_tags', true);
+            $facebook = get_user_meta($user->ID, '_facebook', true);
+            $instagram = get_user_meta($user->ID, '_instagram', true);
+            $tiktok = get_user_meta($user->ID, '_tiktok', true);
+            $profile_pic_id = get_user_meta($user->ID, '_profile_pic_id', true);
             $coach_sport = $wpdb->get_var("SELECT sport_name FROM {$wpdb->prefix}sports WHERE sportID = '$coach_sport_id'");
 
         ?>
@@ -37,15 +44,34 @@ require locate_template('layouts/header.php') ;
                                     <div class="coach-card">
                                         <div class="card">
                                             <div class="card-header p-0">
-                                                <video class="video-intro" src="https://ewvfbezbkbxmtghxhiij.supabase.co/storage/v1/object/public/media/568f8ae4-1a91-42ba-a408-63cec16eaa8c--2023-09-05T19:36:51.537Z.mp4" loop></video>
+                                                <?php
+                                                if($profile_pic_id){
+                                                    if( $profile_pic_id ) {
+                                                       $profile_img_link = wp_get_attachment_image_url($profile_pic_id, 'thumbnail');
+                                                    }else{
+                                                       $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.png";
+                                                    }
+                                                }else{
+                                                  $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.jpg";
+                                                }
+                                                ?>
+                                                <img src="<?php echo $profile_img_link; ?>" >
                                             </div>
                                             <div class="card-body">
                                                 <div class="coach-content">
                                                     <div class="profile-social">
                                                         <ul>
-                                                            <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
-                                                            <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
-                                                            <li><a href="#"><i class="fa-brands fa-tiktok"></i></a></li>
+                                                          <?php
+                                                          if(!empty($facebook)){
+                                                            echo '<li><a href="'.$facebook.'" target="_blank"><i class="fa-brands fa-facebook-f"></i></a></li>';
+                                                          }
+                                                          if(!empty($instagram)){
+                                                            echo '<li><a href="'.$instagram.'" target="_blank"><i class="fa-brands  fa-instagram"></i></a></li>';
+                                                          }
+                                                          if(!empty($tiktok)){
+                                                            echo '<li><a href="'.$tiktok.'" target="_blank"><i class="fa-brands  fa-tiktok"></i></a></li>';
+                                                          }
+                                                          ?>
                                                         </ul>
                                                     </div>
                                                     <div class="custom-button mt-3">
@@ -71,14 +97,16 @@ require locate_template('layouts/header.php') ;
                                                     <div class="pd-left">
                                                         <h4>Meet your coach, <?php echo $coach_name; ?></h4>
                                                         <ul class="mt-3 mb-3">
+                                                            <?php if($full_address!=""){ ?>
                                                             <li>
                                                                 <a href="#">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map">
                                                                         <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
                                                                         <line x1="8" y1="2" x2="8" y2="18" />
                                                                         <line x1="16" y1="6" x2="16" y2="22" />
-                                                                    </svg>&nbsp;Far Away</a>
+                                                                    </svg>&nbsp;<?php echo $full_address; ?></a>
                                                             </li>
+                                                            <?php } ?>
                                                             <li>
                                                                 <a href="#">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
@@ -101,22 +129,32 @@ require locate_template('layouts/header.php') ;
                                                 </div>
                                                 <div class="profile-meta">
                                                     <div class="d-flex align-items-center">
+                                                        <?php if($levels_tags!=""){ ?>
                                                         <div class="meta-category">
                                                             <label>Levels taught:</label>
-                                                            <span class="badge badge-pill badge-success">Beginners</span>
-                                                            <span class="badge badge-pill badge-success">Intermediates</span>
+                                                            <?php $levels_arr = explode("," ,$levels_tags);
+                                                            foreach($levels_arr as $levels){
+                                                               if($levels==""){continue;}
+                                                               echo '<span class="badge badge-pill badge-success">'.$levels.'</span>';
+                                                            } ?>
                                                         </div>
+                                                        <?php }
+                                                        if($teaches_tags!=""){ ?>
                                                         <div class="meta-category">
                                                             <label>Teaches:</label>
-                                                            <span class="badge badge-pill badge-warning">Adults</span>
-                                                            <span class="badge badge-pill badge-warning">Kids</span>
-                                                            <span class="badge badge-pill badge-warning">Seniors</span>
-                                                            <span class="badge badge-pill badge-warning">Teenagers</span>
+                                                            <?php $teaches_arr = explode("," ,$teaches_tags);
+                                                            foreach($teaches_arr as $teaches){
+                                                                if($teaches==""){continue;}
+                                                                echo '<span class="badge badge-pill badge-warning">'.$teaches.'</span>';
+                                                            } ?>
                                                         </div>
+                                                        <?php } ?>
                                                     </div>
+                                                    <?php if($description!=""){ ?>
                                                     <div class="meta-about">
                                                        <?php echo $description; ?>
                                                     </div>
+                                                    <?php } ?>
                                                 </div>
                                             </div>
 
@@ -125,7 +163,7 @@ require locate_template('layouts/header.php') ;
                                             <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" height="40px" width="40px" xmlns="http://www.w3.org/2000/svg">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                                             </svg>
-                                            <p>Try Christian risk free. If you don't love your first lesson with Christian, we'll switch you to another coach or give you a full refund. <a href="#"><strong>Learn more</strong></a></p>
+                                            <p>Try <?php echo $coach_name; ?> risk free. If you don't love your first lesson with <?php echo $coach_name; ?>, we'll switch you to another coach or give you a full refund. <a href="#"><strong>Learn more</strong></a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -729,111 +767,63 @@ require locate_template('layouts/header.php') ;
                                     <h2>Unleash Your Summer Spirit!</h2>
                                 </div>
                                 <div class="summer-camp-carousel owl-carousel">
-                                    <div class="camp-item">
-                                        <div class="loc-top-content">
-                                            <div class="d-flex align-items-center">
-                                                <div class="camp-image">
-                                                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/blog-image/blog-1.jpg" alt="camp image" />
-                                                </div>
-                                                <div class="loc-title">
-                                                    <h4>Boston Marathon Level 1 (Nov.) - 12wks</h4>
-                                                    <p><span><i class="bx bx-pin"></i>&nbsp; W 13th St, New York, NY 10011, USA&nbsp;</span></p>
-                                                    <p><span><i class="bx bx-calendar"></i>&nbsp; 28/10/2024 to 01/11/2024&nbsp;</span></p>
-                                                    <div class="loc-btm-content">
-                                                        <span class="badge badge-pill badge-dark">OUTDOOR</span>
-                                                        <span class="badge badge-pill badge-warning">$45 FEE</span>
+                                    <?php
+                                        $args = [
+                                            'post_type' => 'summer-camps', 
+                                            'posts_per_page' => -1, 
+                                            'post_status'    => array('publish')
+                                        ];
+                                        $query = new WP_Query($args);
+                                        if ($query->have_posts()) {
+                                            while ($query->have_posts()) {
+                                                $query->the_post();
+                                                $post_id = get_the_ID();
+                                                $created_date = get_the_date('F j, Y', $post_id);
+                                                $post_status = get_post_status($post_id);
+                                                $post_content = get_the_content();
+                                                $event_start = get_post_meta($post_id, "_event_from_date", true);
+                                                $event_start_date = date("d/m/Y h:i A", strtotime($event_start));
+                                                $event_end = get_post_meta($post_id, "_event_to_date", true);
+                                                $event_end_date = date("d/m/Y h:i A", strtotime($event_end));
+                                                $event_location = get_post_meta($post_id, "_event_location", true);
+                                                $event_price = get_post_meta($post_id, "_event_price", true);
+                                                $productID = get_post_meta($post_id, "_product_id", true);
+                                                $post_slug = get_post_field( 'post_name', get_the_ID() );
+                                                $attachment_id = get_post_meta($post_id, "_thumbnail_id", true);
+                                                if( $attachment_id ) {
+                                                   $thumbnail_url = wp_get_attachment_image_url($attachment_id, 'thumbnail');
+                                                }else{
+                                                   $thumbnail_url = get_stylesheet_directory_uri()."/assets/images/default-post.png";
+                                                }
+
+                                                $assign_coach = get_post_meta($post_id, "assign_coach", true) ?: array();
+                                                if (!in_array($user->ID, $assign_coach)) { continue; } ?>
+                                                <div class="camp-item">
+                                                    <div class="loc-top-content">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="camp-image">
+                                                                <img src="<?php echo $thumbnail_url; ?>" alt="camp image" />
+                                                            </div>
+                                                            <div class="loc-title">
+                                                                <h4><?php echo get_the_title(); ?></h4>
+                                                                <p><span><i class="bx bx-pin"></i>&nbsp; <?php echo $event_location; ?>&nbsp;</span></p>
+                                                                <p><span><i class="bx bx-calendar"></i>&nbsp; <?php echo $event_start_date; ?> to <?php echo $event_end_date; ?>&nbsp;</span></p>
+                                                                <div class="loc-btm-content">
+                                                                    <span class="badge badge-pill badge-warning">$<?php echo $event_price; ?> FEE</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="custom-button">
+                                                            <button type="button" class="btn-outliner" onclick="window.location.href='<?php echo site_url('summercamp/'.$post_slug.'/?referral_id='.$user->ID); ?>'">Join Now!</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="custom-button">
-                                                <button type="button" class="btn-outliner">Join Now!</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="camp-item">
-                                        <div class="loc-top-content">
-                                            <div class="d-flex align-items-center">
-                                                <div class="camp-image">
-                                                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/blog-image/blog-1.jpg" alt="camp image" />
-                                                </div>
-                                                <div class="loc-title">
-                                                    <h4>Boston Marathon Level 1 (Nov.) - 12wks</h4>
-                                                    <p><span><i class="bx bx-pin"></i>&nbsp; W 13th St, New York, NY 10011, USA&nbsp;</span></p>
-                                                    <p><span><i class="bx bx-calendar"></i>&nbsp; 28/10/2024 to 01/11/2024&nbsp;</span></p>
-                                                    <div class="loc-btm-content">
-                                                        <span class="badge badge-pill badge-dark">OUTDOOR</span>
-                                                        <span class="badge badge-pill badge-warning">$45 FEE</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="custom-button">
-                                                <button type="button" class="btn-outliner">Join Now!</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="camp-item">
-                                        <div class="loc-top-content">
-                                            <div class="d-flex align-items-center">
-                                                <div class="camp-image">
-                                                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/blog-image/blog-1.jpg" alt="camp image" />
-                                                </div>
-                                                <div class="loc-title">
-                                                    <h4>Boston Marathon Level 1 (Nov.) - 12wks</h4>
-                                                    <p><span><i class="bx bx-pin"></i>&nbsp; W 13th St, New York, NY 10011, USA&nbsp;</span></p>
-                                                    <p><span><i class="bx bx-calendar"></i>&nbsp; 28/10/2024 to 01/11/2024&nbsp;</span></p>
-                                                    <div class="loc-btm-content">
-                                                        <span class="badge badge-pill badge-dark">OUTDOOR</span>
-                                                        <span class="badge badge-pill badge-warning">$45 FEE</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="custom-button">
-                                                <button type="button" class="btn-outliner">Join Now!</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="camp-item">
-                                        <div class="loc-top-content">
-                                            <div class="d-flex align-items-center">
-                                                <div class="camp-image">
-                                                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/blog-image/blog-1.jpg" alt="camp image" />
-                                                </div>
-                                                <div class="loc-title">
-                                                    <h4>Boston Marathon Level 1 (Nov.) - 12wks</h4>
-                                                    <p><span><i class="bx bx-pin"></i>&nbsp; W 13th St, New York, NY 10011, USA&nbsp;</span></p>
-                                                    <p><span><i class="bx bx-calendar"></i>&nbsp; 28/10/2024 to 01/11/2024&nbsp;</span></p>
-                                                    <div class="loc-btm-content">
-                                                        <span class="badge badge-pill badge-dark">OUTDOOR</span>
-                                                        <span class="badge badge-pill badge-warning">$45 FEE</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="custom-button">
-                                                <button type="button" class="btn-outliner">Join Now!</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="camp-item">
-                                        <div class="loc-top-content">
-                                            <div class="d-flex align-items-center">
-                                                <div class="camp-image">
-                                                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/blog-image/blog-1.jpg" alt="camp image" />
-                                                </div>
-                                                <div class="loc-title">
-                                                    <h4>Boston Marathon Level 1 (Nov.) - 12wks</h4>
-                                                    <p><span><i class="bx bx-pin"></i>&nbsp; W 13th St, New York, NY 10011, USA&nbsp;</span></p>
-                                                    <p><span><i class="bx bx-calendar"></i>&nbsp; 28/10/2024 to 01/11/2024&nbsp;</span></p>
-                                                    <div class="loc-btm-content">
-                                                        <span class="badge badge-pill badge-dark">OUTDOOR</span>
-                                                        <span class="badge badge-pill badge-warning">$45 FEE</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="custom-button">
-                                                <button type="button" class="btn-outliner">Join Now!</button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        <?php }
+                                        } else {
+                                            echo 'No summer camps found for you !';
+                                        }
+                                        wp_reset_postdata(); ?>  
+
                                 </div>
                             </div>
                         </div>
@@ -1067,9 +1057,9 @@ require locate_template('layouts/header.php') ;
             </section>
             <div id="fixed-booking" class="shadow-sm fixed-bottom">
                 <div class="f-booking text-center ">
-                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/profile_pic.png" alt="profile-pic">
+                    <img src="<?php echo $profile_img_link; ?>" alt="">
                     <div class="f-content">
-                        <h5>Pickleball with Christian</h5>
+                        <h5><?php echo $coach_name; ?></h5>
                     </div>
                 </div>
                 <div class="custom-button mt-3">

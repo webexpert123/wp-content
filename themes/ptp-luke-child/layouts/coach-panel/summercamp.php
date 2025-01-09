@@ -62,7 +62,7 @@
                                                         <h3><?php echo get_the_title(); ?></h3>
                                                         <div class="d-flex align-items-center"><span><i class="bx bx-pin"></i>&nbsp; <?php echo $event_location; ?>&nbsp;</span><span><i class="bx bx-calendar"></i>&nbsp; <?php echo $event_start_date; ?> to <?php echo $event_end_date; ?>&nbsp;</span></div>
                                                         <div class="event-pricing d-flex align-items-center">
-                                                            <h4 class="text-light">$<?php echo $event_price; ?><span> / Session</span></h4>
+                                                            <h4 class="text-light">$<?php echo $event_price; ?></h4>
                                                         </div>
                                                     </div>
                                                     <div class="event-action">

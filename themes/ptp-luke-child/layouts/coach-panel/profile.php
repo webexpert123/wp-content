@@ -6,6 +6,12 @@ if(isset($_POST['save_profile_details'])){
     update_user_meta($user_id, '_zipcode', $_POST['zipcode']);
     update_user_meta($user_id, '_experience', $_POST['experience']);
     update_user_meta($user_id, '_about_myself', $_POST['about_myself']);
+    update_user_meta($user_id, '_full_address', $_POST['full_address']);
+    update_user_meta($user_id, '_levels_tags', $_POST['levels_tags']);
+    update_user_meta($user_id, '_teaches_tags', $_POST['teaches_tags']);
+    update_user_meta($user_id, '_instagram', $_POST['instagram']);
+    update_user_meta($user_id, '_facebook', $_POST['facebook']);
+    update_user_meta($user_id, '_tiktok', $_POST['tiktok']);
     $user = get_userdata($user_id);
     $user->user_email = $_POST['email_addr'];
     $emailError = "";
@@ -74,7 +80,13 @@ $phone = get_user_meta($user_id, 'phone', true);
 $zipcode = get_user_meta($user_id, '_zipcode', true);
 $experience = get_user_meta($user_id, '_experience', true);
 $about_myself = get_user_meta($user_id, '_about_myself', true);
+$full_address = get_user_meta($user_id, '_full_address', true);
+$levels_tags = get_user_meta($user_id, '_levels_tags', true);
+$teaches_tags = get_user_meta($user_id, '_teaches_tags', true);
 $my_country = get_user_meta($user_id, '_my_country_code', true);
+$facebook = get_user_meta($user_id, '_facebook', true);
+$instagram = get_user_meta($user_id, '_instagram', true);
+$tiktok = get_user_meta($user_id, '_tiktok', true);
 $card_details = get_user_meta($user_id, '_card_details', true);
 $card_number = "";
 $expiry_date = "";
@@ -351,21 +363,53 @@ function get_user_subscription_history($user_id) {
                                                                         <div class="col-md-12 mb-2">
                                                                             <div class="form-group">
                                                                                 <label for="">Full Address</label>
-                                                                                <input type="" class="form-control" name="full_address" value="<?php echo $experience; ?>">
+                                                                                <input type="" class="form-control" name="full_address" value="<?php echo $full_address; ?>">
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-12 mb-2">
                                                                             <div class="form-group">
                                                                                 <label for="">Levels Taught</label>
-                                                                                <div id="levels-tag-div"></div>
-                                                                                <input type="hidden" id="levels-tags-string" value="">
-                                                                                <input type="" id="levels-tag-input" class="form-control" name="full_address">
+                                                                                <div id="levels-tag-div">
+                                                                                  <?php $levels_arr = explode("," ,$levels_tags);
+                                                                                  foreach($levels_arr as $levels){
+                                                                                    if($levels==""){continue;}
+                                                                                    echo '<span class="badge badge-pill badge-warning">'.$levels.' <span aria-hidden="true">&times;</span></span>';
+                                                                                  } ?>
+                                                                                </div>
+                                                                                <input type="hidden" id="levels-tags-string" name="levels_tags" value="<?php echo $levels_tags; ?>">
+                                                                                <input type="" id="levels-tag-input" class="form-control" name="">
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-12 mb-2">
                                                                             <div class="form-group">
                                                                                 <label for="">Teaches</label>
-                                                                                <input type="" class="form-control" name="full_address" value="">
+                                                                                <div id="teaches-tag-div">
+                                                                                  <?php $teaches_arr = explode("," ,$teaches_tags);
+                                                                                  foreach($teaches_arr as $teaches){
+                                                                                    if($teaches==""){continue;}
+                                                                                    echo '<span class="badge badge-pill badge-warning">'.$teaches.' <span aria-hidden="true">&times;</span></span>';
+                                                                                  } ?>
+                                                                                </div>
+                                                                                <input type="hidden" id="teaches-tags-string" name="teaches_tags" value="<?php echo $teaches_tags; ?>">
+                                                                                <input type="" id="teaches-tag-input" class="form-control" name="">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 mb-2">
+                                                                            <div class="form-group">
+                                                                                <label for="">Facebook Link</label>
+                                                                                <input type="" class="form-control" name="facebook" value="<?php echo $facebook; ?>">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 mb-2">
+                                                                            <div class="form-group">
+                                                                                <label for="">Instagram Link</label>
+                                                                                <input type="" class="form-control" name="instagram" value="<?php echo $instagram; ?>">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 mb-2">
+                                                                            <div class="form-group">
+                                                                                <label for="">TikTok Link</label>
+                                                                                <input type="" class="form-control" name="tiktok" value="<?php echo $tiktok; ?>">
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-12 mb-2">
@@ -501,17 +545,45 @@ function get_user_subscription_history($user_id) {
         });
 
 
-        const tags = document.getElementById('levels-tag-div');
-        const input = document.getElementById('levels-tag-input');
-
-        input.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                const tagContent = input.value.trim();
-                if (tagContent !== '') {
-                    jQuery("#levels-tag-div").append('<span class="badge badge-pill badge-warning">'+tagContent+' <span aria-hidden="true">&times;</span></span>');
-                    input.value = "";
+        // Function to handle tag addition
+        function handleTagInput(inputSelector, tagDivSelector, tagStringSelector) {
+            const input = document.getElementById(inputSelector);
+            input.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    const tagContent = input.value.trim();
+                    if (tagContent !== '') {
+                        jQuery(`#${tagDivSelector}`).append(
+                            `<span class="badge badge-pill badge-warning">${tagContent} <span aria-hidden="true">&times;</span></span>`
+                        );
+                        updateTagString(tagDivSelector, tagStringSelector);
+                        input.value = "";
+                    }
                 }
-            }
-        });
+            });
+        }
+
+        // Function to handle tag removal
+        function handleTagRemoval(tagDivSelector, tagStringSelector) {
+            $(document).on("click", `#${tagDivSelector} span[aria-hidden='true']`, function () {
+                $(this).closest('.badge').remove();
+                updateTagString(tagDivSelector, tagStringSelector);
+            });
+        }
+
+        // Function to update tag string
+        function updateTagString(tagDivSelector, tagStringSelector) {
+            let tagString = $(`#${tagDivSelector} span.badge`).map(function () {
+                return $(this).contents().get(0).nodeValue.trim();
+            }).get().join(",");
+            jQuery(`#${tagStringSelector}`).val(tagString);
+        }
+
+        // Initialize for each input
+        handleTagInput('levels-tag-input', 'levels-tag-div', 'levels-tags-string');
+        handleTagRemoval('levels-tag-div', 'levels-tags-string');
+
+        handleTagInput('teaches-tag-input', 'teaches-tag-div', 'teaches-tags-string');
+        handleTagRemoval('teaches-tag-div', 'teaches-tags-string');
+
     </script>
