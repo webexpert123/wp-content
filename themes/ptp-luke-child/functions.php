@@ -10,6 +10,16 @@ function my_theme_enqueue_styles() {
 }
 add_action('wp_enqueue_scripts', 'my_theme_enqueue_styles');
 
+
+add_filter('show_admin_bar', function ($show) {
+    if (current_user_can('athlete') || current_user_can('coach')) {
+        return false; 
+    }
+    return $show;
+});
+
+
+
 // Add Author column to custom post type
 function add_author_column_to_custom_post_type($columns) {
     $columns['author'] = __('Created By');
@@ -640,32 +650,76 @@ function add_summarcamp_link_rewrite_rule() {
 add_action('init', 'add_summarcamp_link_rewrite_rule');
 
 
-add_action('woocommerce_checkout_update_order_meta', 'add_custom_order_meta_based_on_product_type', 10, 2);
-function add_custom_order_meta_based_on_product_type($order_id, $data) {
+function debug_log($message) {
+    if (WP_DEBUG === true) {
+        if (is_array($message) || is_object($message)) {
+            error_log(print_r($message, true));
+        } else {
+            error_log($message);
+        }
+    }
+}
+
+// Test multiple WooCommerce order hooks
+add_action('woocommerce_new_order', 'test_new_order_hook', 10, 1);
+function test_new_order_hook($order_id) {
     $order = wc_get_order($order_id);
     $categories = [];
 
-    if (WC()->session->get('referral_id')) {
-        $referral_code = WC()->session->get('referral_id');
-        update_post_meta($order_id, 'referral_id', $referral_code);
-    }
+    if ($order) {
+        if (WC()->session->get('referral_id')) {
+            $referral_code = WC()->session->get('referral_id');
+            $order->update_meta_data('_referral_id', $referral_code);
+        }
+        // Check product categories in the order
+        foreach ($order->get_items() as $item) {
+            $product_id = $item->get_product_id();
+            $terms = get_the_terms($product_id, 'product_cat');
 
-    foreach ($order->get_items() as $item) {
-        $product_id = $item->get_product_id();
-        $terms = get_the_terms($product_id, 'product_cat');
-        if ($terms) {
-            foreach ($terms as $term) {
-                $categories[] = $term->name;
+            if (!empty($terms) && is_array($terms)) {
+                foreach ($terms as $term) {
+                    $categories[] = $term->slug; // Use slug for better consistency
+                }
             }
         }
-    }
-
-    if (in_array('Subscriptions', $categories)) {
-        update_post_meta($order_id, 'order_type', 'subscription');
-    } elseif (in_array('Summer Camps', $categories)) {
-        update_post_meta($order_id, 'order_type', 'summercamp');
+        // Set order type based on categories
+        if (in_array('subscriptions', $categories)) { // Use category slug
+            $order->update_meta_data('_order_type', 'subscription');
+        } elseif (in_array('summer-camps', $categories)) { // Use category slug
+            $order->update_meta_data('_order_type', 'summercamp');
+        } else {
+            $order->update_meta_data('_order_type', 'normal'); // Default case
+        }
+        $order->save();
     }
 }
+
+
+add_filter('manage_edit-shop_order_columns', 'add_custom_order_column', 20);
+function add_custom_order_column($columns) {
+    $new_columns = array();
+    
+    foreach ($columns as $column_name => $column_info) {
+        $new_columns[$column_name] = $column_info;
+        
+        // Add new column after order status
+        if ($column_name === 'order_status') {
+            $new_columns['order_type_custom'] = __('Order Type', 'textdomain');
+        }
+    }
+    
+    return $new_columns;
+}
+
+add_filter('woocommerce_admin_order_number', 'append_custom_text_to_order_number', 10, 2);
+function append_custom_text_to_order_number($order_number, $order) {
+        $order_number .= ' <span style="color: gray; font-size: 12px;">hello</span>';
+
+
+    return $order_number;
+}
+
+
 
 add_action('init', 'capture_referral_code');
 function capture_referral_code() {
@@ -677,10 +731,28 @@ function capture_referral_code() {
 
 add_action('woocommerce_admin_order_data_after_order_details', 'display_referral_code_in_admin');
 function display_referral_code_in_admin($order) {
-    $referral_code = get_post_meta($order->get_id(), 'referral_id', true);
+    $referral_code = $order->get_meta( '_referral_id' );
     if ($referral_code) {
-        echo '<p><strong>Referral Code:</strong> ' . esc_html($referral_code) . '</p>';
+        $user = get_userdata($referral_code);
+        $html_user = "Deleted User";
+        if ($user) {
+           $user_name = $user->display_name;
+           $edit_link = admin_url('user-edit.php?user_id=' . $user_id);  
+           $html_user = "<a href='".$edit_link."'>".$user_name."</a>";
+        }
+        echo '<p class="form-field form-field-wide"><strong>Referral Code:</strong> ' . $html_user . '</p>';
     }
+}
+
+add_filter('woocommerce_admin_order_buyer_name', 'modify_customer_name_display', 20, 2);
+function modify_customer_name_display($buyer, $order) {
+    if ($order) {
+        $order_type = $order->get_meta('_order_type');
+        if (!empty($order_type)) {
+            return $buyer . ' - ('. strtoupper($order_type).')';
+        }
+    }
+    return $buyer;
 }
 
 

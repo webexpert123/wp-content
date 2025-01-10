@@ -83,6 +83,7 @@ if (!empty($post)) {
                                    $event_end_date = date("d/m/Y h:i A", strtotime($event_end));
                                    $event_location = get_post_meta($post_id, "_event_location", true);
                                    $event_price = get_post_meta($post_id, "_event_price", true);
+                                   $product_id = get_post_meta($post_id, "_product_id", true);
 							       ?>
 							    </div>
 
@@ -121,7 +122,7 @@ if (!empty($post)) {
                                             <th>$<?php echo $event_price; ?></th>
                                         </tr>
                                         <tr>
-                                            <th colspan="2" class="text-center"><button type="button" class="btn btn-block btn-warning btn-lg">BOOK NOW</button></th>
+                                            <th colspan="2" class="text-center"><button type="button" class="btn btn-block btn-warning btn-lg add_to_cart_btn" data-id="<?php echo $product_id; ?>" >BOOK NOW <div class="spinner-border" id="spinner" style="display:none;"></div> </button></th>
                                         </tr>
                                     </table>
                     <!--End single sidebar-->
@@ -155,3 +156,31 @@ if (!empty($post)) {
 <?php
 require locate_template('layouts/footer.php') ;
 ?>
+
+<script>
+    jQuery('.add_to_cart_btn').on('click', function() {
+        <?php
+        $user = wp_get_current_user();
+        if (!in_array('athlete', $user->roles) || !is_user_logged_in()) {
+            echo 'Swal.fire({
+                title: "Only athletes can book summer camps!",
+                text: "",
+                icon: "error"
+            }); return false;';
+        }
+        ?>
+        var pid = $(this).data('id');
+        jQuery("#spinner").show();
+        jQuery('.add_to_cart_btn').attr("disabled", true);
+        jQuery.ajax({
+            url: "/wp-admin/admin-ajax.php",
+            type: 'POST',
+            data: {action:"ajax_add_to_cart", productid:pid}, 
+            success: function(response) {
+                if (response.data.alert_type === 'success') { window.location.href = "<?php echo wc_get_checkout_url(); ?>"; }
+                Swal.fire({ title: response.data.message, text: '', icon: response.data.alert_type});
+                jQuery("#spinner").show();
+            }
+        });
+    }); 
+</script>

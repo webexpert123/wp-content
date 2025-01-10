@@ -4,9 +4,9 @@ Theme URI: http://ptp.local/
 Description: Child theme for the website
 Author: WebExpert
 Author URI: http://ptp.local/
-Template: twentytwentyfour
+Template: astra
 Version: 1.0
 */
 
 /* Import parent theme styles */
-@import url("../twentytwentyfour/style.css");
+@import url("../astra/style.css");
