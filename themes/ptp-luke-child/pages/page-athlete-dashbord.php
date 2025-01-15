@@ -1,5 +1,5 @@
 <?php
-/* Template Name: Coach My Account */
+/* Template Name: Athlete My Account */
 ?>
 <!doctype html>
 <html lang="en">
@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PTP Coach-Dashboard</title>
+    <title>PTP Athlete-Dashboard</title>
     <link rel="icon" type="image/png" href="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo.png">
     <link href="<?php echo get_stylesheet_directory_uri(); ?>/assets/css/Module/module.css" rel="stylesheet" />
     <link href="<?php echo get_stylesheet_directory_uri(); ?>/assets/css/Module/box-icon.css" rel="stylesheet" />
@@ -34,17 +34,17 @@
     <!-- container open -->
     <div id="inner-template">
         <div class="container-fluid">
-            <?php require locate_template('layouts/coach-panel/header.php') ; ?>
+            <?php require locate_template('layouts/athlete-panel/header.php') ; ?>
         </div>
         <div class="inner-layout">
             <!-- sidebar start -->
-            <?php require locate_template('layouts/coach-panel/sidebar.php') ; ?>
+            <?php require locate_template('layouts/athlete-panel/sidebar.php') ; ?>
             <!-- sidebar End -->
             <!-- content col start -->
             <div class="content-wrapper">
                <?php 
                $template_name = $page.".php";
-               $template_path = locate_template('layouts/coach-panel/' . $template_name);
+               $template_path = locate_template('layouts/athlete-panel/' . $template_name);
                if ($template_path) {
                 require $template_path;
                } else {
