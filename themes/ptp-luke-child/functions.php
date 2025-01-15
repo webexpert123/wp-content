@@ -667,10 +667,6 @@ function test_new_order_hook($order_id) {
     $categories = [];
 
     if ($order) {
-        if (WC()->session->get('referral_id')) {
-            $referral_code = WC()->session->get('referral_id');
-            $order->update_meta_data('_referral_id', $referral_code);
-        }
         // Check product categories in the order
         foreach ($order->get_items() as $item) {
             $product_id = $item->get_product_id();
@@ -685,9 +681,15 @@ function test_new_order_hook($order_id) {
         // Set order type based on categories
         if (in_array('subscriptions', $categories)) { // Use category slug
             $order->update_meta_data('_order_type', 'subscription');
-        } elseif (in_array('summer-camps', $categories)) { // Use category slug
+        } 
+        elseif (in_array('summer-camps', $categories)) { // Use category slug
             $order->update_meta_data('_order_type', 'summercamp');
-        } else {
+            if (WC()->session->get('referral_id')) {
+                $referral_code = WC()->session->get('referral_id');
+                $order->update_meta_data('_referral_id', $referral_code);
+            }
+        } 
+        else {
             $order->update_meta_data('_order_type', 'normal'); // Default case
         }
         $order->save();

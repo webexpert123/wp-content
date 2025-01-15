@@ -22,7 +22,7 @@
                         <a class="nav-link <?php if($section=="sessions"){echo "active";} ?>" href="?section=sessions"><i class="bx bx-diamond"></i>Session Rate</a>
                     </li>
                     <li class="nav-item has-sub">
-                        <a class="nav-link <?php if($section=="summercamp"){echo "active";} ?>" data-toggle="collapse" href="#sub3" aria-expanded="false" aria-controls="sub3">
+                        <a class="nav-link <?php if($section=="summercamp" OR $section=="registered_students"){echo "active";} ?>" data-toggle="collapse" href="#sub3" aria-expanded="false" aria-controls="sub3">
                             <i class="fa-solid fa-person-hiking"></i>
                             Summer Camps
                         </a>
@@ -31,7 +31,7 @@
                                 <a class="nav-link" href="?section=summercamp">All Summer Camps</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="javascript:;">Registered Student</a>
+                                <a class="nav-link" href="?section=registered_students">Registered Student</a>
                             </li>
                         </ul>
                     </li>

@@ -775,6 +775,7 @@ require locate_template('layouts/header.php') ;
                                         ];
                                         $query = new WP_Query($args);
                                         if ($query->have_posts()) {
+                                            $i = 0;
                                             while ($query->have_posts()) {
                                                 $query->the_post();
                                                 $post_id = get_the_ID();
@@ -796,8 +797,11 @@ require locate_template('layouts/header.php') ;
                                                    $thumbnail_url = get_stylesheet_directory_uri()."/assets/images/default-post.png";
                                                 }
 
+                                                $current_date = date("Y-m-d h:i:s");
+
                                                 $assign_coach = get_post_meta($post_id, "assign_coach", true) ?: array();
-                                                if (!in_array($user->ID, $assign_coach)) { continue; } ?>
+                                                if (!in_array($user->ID, $assign_coach) OR $event_start < $current_date){ continue; }
+                                                ++$i; ?>
                                                 <div class="camp-item">
                                                     <div class="loc-top-content">
                                                         <div class="d-flex align-items-center">
@@ -807,7 +811,7 @@ require locate_template('layouts/header.php') ;
                                                             <div class="loc-title">
                                                                 <h4><?php echo get_the_title(); ?></h4>
                                                                 <p><span><i class="bx bx-pin"></i>&nbsp; <?php echo $event_location; ?>&nbsp;</span></p>
-                                                                <p><span><i class="bx bx-calendar"></i>&nbsp; <?php echo $event_start_date; ?> to <?php echo $event_end_date; ?>&nbsp;</span></p>
+                                                                <p><span><i class="bx bx-calendar"></i>&nbsp; <?php echo $event_start_date; ?> To <?php echo $event_end_date; ?>&nbsp;</span></p>
                                                                 <div class="loc-btm-content">
                                                                     <span class="badge badge-pill badge-warning">$<?php echo $event_price; ?> FEE</span>
                                                                 </div>
@@ -819,12 +823,11 @@ require locate_template('layouts/header.php') ;
                                                     </div>
                                                 </div>
                                         <?php }
-                                        } else {
-                                            echo 'No summer camps found for you !';
                                         }
                                         wp_reset_postdata(); ?>  
 
                                 </div>
+                                <?php if($i==0){echo 'No summer camps found for you !';} ?>
                             </div>
                         </div>
                     </div>
