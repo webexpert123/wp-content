@@ -57,7 +57,7 @@
                                                                         'fields' => 'ids', 
                                                                         'numberposts' => 1,
                                                                     ];
-                                                                    $post_id = get_posts($args);
+                                                                    $post_ids = get_posts($args);
                                                                     $post_id = $post_ids[0];
                                                                     $event_start = get_post_meta($post_id, "_event_from_date", true);
                                                                     $event_start_date = date("d/m/Y h:i A", strtotime($event_start));

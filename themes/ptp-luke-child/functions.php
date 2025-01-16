@@ -684,7 +684,9 @@ function test_new_order_hook($order_id) {
         } 
         elseif (in_array('summer-camps', $categories)) { // Use category slug
             $order->update_meta_data('_order_type', 'summercamp');
+            $order->update_meta_data('_summercamp_userid', $current_user_id);
             if (WC()->session->get('referral_id')) {
+                $current_user_id = get_current_user_id();
                 $referral_code = WC()->session->get('referral_id');
                 $order->update_meta_data('_referral_id', $referral_code);
             }
