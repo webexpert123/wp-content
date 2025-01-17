@@ -4,7 +4,6 @@
 require locate_template('layouts/header.php') ;
 
 ?>
-
 <div id="frontend-main">
     <?php
     global $wpdb;
@@ -75,7 +74,7 @@ require locate_template('layouts/header.php') ;
                                                         </ul>
                                                     </div>
                                                     <div class="custom-button mt-3">
-                                                        <button type="button" class="btn btn-round btn-fill">Book Now
+                                                        <button type="button" class="btn btn-round btn-fill" data-toggle="modal" data-target="#session_book_modal">Book Now
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
                                                                 <line x1="5" y1="12" x2="19" y2="12" />
                                                                 <polyline points="12 5 19 12 12 19" />
@@ -1089,7 +1088,93 @@ require locate_template('layouts/header.php') ;
 require locate_template('layouts/footer.php') ;
 ?>
 
+<!-- The Session Modal -->
+  <div class="modal" id="session_book_modal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">BOOK A SESSION</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Select Date & Time</label>
+                        <input type="text" class="form-control" id="datetimepicker" readonly />
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-warning btn-block" id="session_book_btn" onclick="book_session();">BOOK NOW <div class="spinner-border" style="display: none;" id="spinner1"></div></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+<!-- The Session Modal -->
+
+<style>
+    .gj-icon{
+        position: static !important;
+    }
+</style>
+
+<link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+<script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+
 <script>
+function book_session(){
+    var datetime = $("#datetimepicker").val();
+    if(datetime==""){
+        Swal.fire({ title: "Please select date and time !", text: '', icon: "error"});
+        return false;
+    }
+    else{
+      $("#spinner1").show();
+      $("#session_book_btn").attr("disabled",true);
+      jQuery.ajax({
+         url: "/wp-admin/admin-ajax.php",
+         type: 'POST',
+         data: {action: "book_session_action", datetime: datetime},
+         success: function(response) {
+            Swal.fire({
+                title: 'Please Wait..',
+                text: 'Redirecting you for payment process',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+         }
+      });
+    }
+}
+
+$('#datetimepicker').datetimepicker({
+    uiLibrary: 'bootstrap5',
+    modal: true,
+    footer: true,
+    format: 'mm/dd/yyyy hh:MM TT'
+}).on('change', function (e) {
+    const selectedDate = new Date(e.target.value);
+    const today = new Date();
+
+    if (selectedDate < today) {
+        $(this).val(''); 
+        Swal.fire({ title: "Please select a future date!", text: '', icon: "warning"});
+    }
+});
+
+
     $(document).ready(function() {
         $("#location-slider").owlCarousel({
             items: 5,
@@ -1180,5 +1265,17 @@ require locate_template('layouts/footer.php') ;
                 $('#fixed-booking').addClass('scrolled-top');
             }
         });
-    }); 
+    });
+
+    $(document).ready(function() {
+    var year = new Date().getFullYear() - 18; 
+    var defaultDate = new Date(year, 0, 1);
+    
+    $('#datepicker').datepicker({
+      dateFormat: 'dd-mm-yy',
+      changeYear: true,               
+      yearRange: '1900:' + (new Date().getFullYear() - 18), 
+      defaultDate: defaultDate  
+   });
+}); 
 </script>

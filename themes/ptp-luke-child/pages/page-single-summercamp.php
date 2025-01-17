@@ -177,8 +177,20 @@ require locate_template('layouts/footer.php') ;
             type: 'POST',
             data: {action:"ajax_add_to_cart", productid:pid}, 
             success: function(response) {
-                if (response.data.alert_type === 'success') { window.location.href = "<?php echo wc_get_checkout_url(); ?>"; }
-                Swal.fire({ title: response.data.message, text: '', icon: response.data.alert_type});
+                if (response.data.alert_type === 'success') {
+                    window.location.href = "<?php echo wc_get_checkout_url(); ?>"; 
+                    Swal.fire({
+                        title: response.data.message,
+                        text: '',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading(); 
+                        }
+                    });
+                }else{
+                  Swal.fire({ title: response.data.message, text: '', icon: response.data.alert_type});
+                }
                 jQuery("#spinner").show();
             }
         });

@@ -678,6 +678,9 @@ function test_new_order_hook($order_id) {
                 }
             }
         }
+
+        $current_user_id = get_current_user_id();
+        
         // Set order type based on categories
         if (in_array('subscriptions', $categories)) { // Use category slug
             $order->update_meta_data('_order_type', 'subscription');
@@ -686,7 +689,6 @@ function test_new_order_hook($order_id) {
             $order->update_meta_data('_order_type', 'summercamp');
             $order->update_meta_data('_summercamp_userid', $current_user_id);
             if (WC()->session->get('referral_id')) {
-                $current_user_id = get_current_user_id();
                 $referral_code = WC()->session->get('referral_id');
                 $order->update_meta_data('_referral_id', $referral_code);
             }

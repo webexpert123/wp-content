@@ -62,6 +62,7 @@
                                                                     $event_start_date = date("d/m/Y h:i A", strtotime($event_start));
                                                                     $event_end = get_post_meta($post_id, "_event_to_date", true);
                                                                     $event_end_date = date("d/m/Y h:i A", strtotime($event_end));
+                                                                    $pdf_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=generate_wpo_wcpdf&template_type=invoice&my-account=true&order_ids=' . $oid ), 'generate_wpo_wcpdf' );
                                                                 } ?>
                                                                 <tr>
                                                                     <td>#<?php echo $order->get_id(); ?></td>
@@ -69,7 +70,7 @@
                                                                     <td><?php echo $event_start_date; ?> to <?php echo $event_end_date; ?></td>
                                                                     <td><?php echo ucwords($order_status); ?></td>
                                                                     <td><?php echo $order_date; ?></td>
-                                                                    <th><button type="button" class="button btn-sm btn-success">INVOICE</button></th>
+                                                                    <th><a href="<?php echo $pdf_url; ?>" class="button btn-sm btn-success" target="_blank">INVOICE</a></th>
                                                                 </tr>
                                                             <?php } ?>
                                                         </tbody>
