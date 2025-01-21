@@ -28,7 +28,8 @@ require locate_template('layouts/header.php') ;
             if(isset($_POST['add_review'])) {
                 $table_name = $wpdb->prefix . 'coach_reviews';
                 $current_user_id = get_current_user_id();
-                $query = $wpdb->prepare("INSERT INTO `wp_coach_reviews` (`coach_id`, `athlete_id`, `description`, `rating`) VALUES (%d, %d, %s, %d)", $user->ID, $current_user_id, $_POST['description'], $_POST['rating']);
+                $created_at = date("Y-m-d h:i:s");
+                $query = $wpdb->prepare("INSERT INTO `$table_name` (`coach_id`, `athlete_id`, `description`, `rating`, `created_at`) VALUES (%d, %d, %s, %d, %s)", $user->ID, $current_user_id, $_POST['message'], $_POST['rating'],$created_at);
                 $result = $wpdb->query($query);
 
                 if ($result !== false) {
@@ -38,7 +39,84 @@ require locate_template('layouts/header.php') ;
                 }
             }
 
+            if(isset($_POST['question_submit'])) {
+                $table_name = $wpdb->prefix . 'have_questions_coach';
+                $created_at = date("Y-m-d h:i:s");
+                $query = $wpdb->prepare("INSERT INTO `$table_name` (`fullname`, `email`, `phone`, `message`, `coach_id`, `created_date`) VALUES (%s, %s, %s, %s, %s, %s)", $_POST['full_name'], $_POST['your_email'], $_POST['your_phone'], $_POST['your_message'], $user->ID, $created_at);
+                $result = $wpdb->query($query);
+
+                if ($result !== false) {
+                    echo '<script>Swal.fire({ title: "Your question sent to coach", text: "", icon: "success"});</script>';
+                } else {
+                    echo '<script>Swal.fire({ title: "Something is wrong !", text: "", icon: "error"});</script>';
+                }
+            }
+
         ?>
+<style>
+  .star-rating {
+      display: flex;
+      flex-direction: row-reverse;
+      font-size: 2rem;
+      justify-content: flex-end;
+  }
+  .star-rating input[type="radio"] {
+      display: none;
+  }
+  .star-rating label {
+      color: #ddd;
+      cursor: pointer;
+      transition: color 0.2s;
+  }
+  .star-rating input[type="radio"]:checked ~ label,
+  .star-rating label:hover,
+  .star-rating label:hover ~ label {
+      color: #ffc107;
+  }
+  div#all_review_modal .camp-item {
+  margin-right: 15px;
+  border: 2px solid #161616;
+  border-radius: 15px;
+  padding: 15px;
+  background: #161616;
+  min-height: 131px;
+  margin-bottom: 20px;
+}
+div#all_review_modal .camp-item .loc-top-content .camp-image {
+  max-width: 80px;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 80px;
+}
+div#all_review_modal .camp-item .loc-top-content .camp-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+div#all_review_modal .camp-item .loc-top-content .loc-title h4 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: var(--aceent0-color);
+}
+div#all_review_modal .camp-item .loc-top-content .loc-title p {
+  font-size: 13px;
+  color: var(--secondary-color);
+  margin-bottom: 5px;
+  margin-top: 0;
+  font-weight: 300;
+}
+div#all_review_modal .camp-item .loc-top-content .loc-title .rating-strars {
+  color: var(--aceent0-color);
+}
+div#all_review_modal .camp-item .loc-top-content .d-flex {
+  gap: 20px;
+}
+div#all_review_modal .camp-item p {
+  color: var(--secondary-color);
+  font-weight: 300;
+  margin: 15px 0px;
+}
+</style>
             <!-- Profile page design -->
             <section id="profile-layout" class="section-spacing pt-5 pb-0">
                 <div class="container">
@@ -136,7 +214,7 @@ require locate_template('layouts/header.php') ;
                                                         </ul>
                                                     </div>
                                                     <div class="pd-right custom-button">
-                                                        <button type="button" class="btn btn-round btn-fill">Have any questions?</button>
+                                                        <button type="button" class="btn btn-round btn-fill" data-toggle="modal" data-target="#have_question_modal">Have any questions?</button>
                                                     </div>
                                                 </div>
                                                 <div class="profile-meta">
@@ -205,24 +283,33 @@ require locate_template('layouts/header.php') ;
                                 <div class="section-title mt-4">
                                     <h2>Reviews</h2>
                                 </div>
+                                <?php
+                                $coach_reviews_limit = $wpdb->get_results($wpdb->prepare("SELECT * FROM `{$wpdb->prefix}coach_reviews` WHERE coach_id='$user->ID' ORDER BY id DESC LIMIT 5"));
+
+                                $coach_reviews = $wpdb->get_results($wpdb->prepare("SELECT * FROM `{$wpdb->prefix}coach_reviews` WHERE coach_id='$user->ID' ORDER BY id DESC"));
+
+                                $total_reviews = count($coach_reviews);
+
+                                $average_rating = $wpdb->get_var($wpdb->prepare("SELECT AVG(rating) FROM `{$wpdb->prefix}coach_reviews` WHERE coach_id='$user->ID'"));
+                                ?>
                                 <div class="coach-rating row align-items-center">
                                     <div class="col-md-8 col-lg-7">
                                         <div class="row">
                                             <div class="col-lg-3 rating-box">
                                                 <span>Total reviews</span>
-                                                <span class="large-font">38</span>
+                                                <span class="large-font"><?php echo $total_reviews; ?></span>
                                             </div>
                                             <div class="col-lg-5 rating-box">
                                                 <span>Average Ratings</span>
                                                 <div class="d-flex align-items-end">
-                                                    <span class="large-font">4.87</span>
-                                                    <div class="rating-stars">
+                                                    <span class="large-font"><?php echo number_format($average_rating, 2); ?></span>
+                                                    <!-- <div class="rating-stars">
                                                         <i class="fa-solid fa-star"></i>
                                                         <i class="fa-solid fa-star"></i>
                                                         <i class="fa-solid fa-star"></i>
                                                         <i class="fa-solid fa-star"></i>
                                                         <i class="fa-solid fa-star"></i>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -230,143 +317,51 @@ require locate_template('layouts/header.php') ;
                                     <div class="col-md-4 col-lg-5">
                                         <div class="custom-button d-flex justify-content-end">
                                             <button type="button" class="btn btn-round btn-fill" data-toggle="modal" data-target="#add_review_modal">Add Review</button>&nbsp;&nbsp;
-                                            <button type="button" class="btn btn-round btn-fill">View All Reviews</button>
+                                            <?php if($total_reviews > 5){ ?>
+                                               <button type="button" class="btn btn-round btn-fill" data-toggle="modal" data-target="#all_review_modal">View All Reviews</button>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-12 form-group">
+                                    <?php if(count($coach_reviews_limit)==0){ echo "<p>No review found !</p>";} ?>
+                                </div>
                                 <div class="review-main-carousel owl-carousel">
-                                    <div class="camp-item">
+                                    <?php 
+                                    foreach ($coach_reviews_limit as $review) {
+                                        $review_date = $review->created_at;
+                                        $attachment_id = get_user_meta($review->athlete_id, "_profile_pic_id", true);
+                                        if( $attachment_id ) {
+                                          $review_img_link = wp_get_attachment_image_url($attachment_id, 'thumbnail');
+                                        }else{
+                                          $review_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.png";
+                                        } ?>
+                                      <div class="camp-item">
                                         <div class="loc-top-content">
                                             <div class="d-flex align-items-center">
                                                 <div class="camp-image">
-                                                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/avatars/avatar-1.png" alt="camp image" />
+                                                    <img src="<?php echo $review_img_link; ?>" alt="" />
                                                 </div>
                                                 <div class="loc-title">
-                                                    <h4>Yasmine D'Souza</h4>
-                                                    <p><span><i class="fa-regular fa-map"></i>&nbsp; W 13th St, New York, NY 10011, USA&nbsp;</span></p>
+                                                    <h4><?php echo get_user_meta($review->athlete_id, "fullname", true); ?></h4>
+                                                    <p><span><i class="fa-regular fa-clock"></i>&nbsp; <?php echo timeAgo($review_date); ?>&nbsp;</span></p>
                                                     <div class="rating-strars">
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
+                                                        <?php
+                                                        for ($i = 1; $i <= 5; $i++) {
+                                                            if ($i <= $review->rating) {
+                                                                echo '<i class="fa-solid fa-star" style="color: #FFD700;"></i>';
+                                                            } else {
+                                                                echo '<i class="fa-regular fa-star" style="color: #ccc;"></i>';
+                                                            }
+                                                        }
+                                                        ?>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p>Christian is an excellent teacher. Felt so much more comfortable with the basics of the game in just an hour. He focused on improving our beginning skills. Made up some fun drills to build confidence. Practiced keeping
-                                                score and feel comfortable to go out on the court next time. Highly recommend him.</p>
+                                            <p><?php echo $review->description; ?></p>
                                         </div>
-                                    </div>
-                                    <div class="camp-item">
-                                        <div class="loc-top-content">
-                                            <div class="d-flex align-items-center">
-                                                <div class="camp-image">
-                                                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/avatars/avatar-1.png" alt="camp image" />
-                                                </div>
-                                                <div class="loc-title">
-                                                    <h4>Yasmine D'Souza</h4>
-                                                    <p><span><i class="fa-regular fa-map"></i>&nbsp; W 13th St, New York, NY 10011, USA&nbsp;</span></p>
-                                                    <div class="rating-strars">
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <p>Christian is an excellent teacher. Felt so much more comfortable with the basics of the game in just an hour. He focused on improving our beginning skills. Made up some fun drills to build confidence. Practiced keeping
-                                                score and feel comfortable to go out on the court next time. Highly recommend him.</p>
-                                        </div>
-                                    </div>
-                                    <div class="camp-item">
-                                        <div class="loc-top-content">
-                                            <div class="d-flex align-items-center">
-                                                <div class="camp-image">
-                                                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/avatars/avatar-1.png" alt="camp image" />
-                                                </div>
-                                                <div class="loc-title">
-                                                    <h4>Yasmine D'Souza</h4>
-                                                    <p><span><i class="fa-regular fa-map"></i>&nbsp; W 13th St, New York, NY 10011, USA&nbsp;</span></p>
-                                                    <div class="rating-strars">
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <p>Christian is an excellent teacher. Felt so much more comfortable with the basics of the game in just an hour. He focused on improving our beginning skills. Made up some fun drills to build confidence. Practiced keeping
-                                                score and feel comfortable to go out on the court next time. Highly recommend him.</p>
-                                        </div>
-                                    </div>
-                                    <div class="camp-item">
-                                        <div class="loc-top-content">
-                                            <div class="d-flex align-items-center">
-                                                <div class="camp-image">
-                                                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/avatars/avatar-1.png" alt="camp image" />
-                                                </div>
-                                                <div class="loc-title">
-                                                    <h4>Yasmine D'Souza</h4>
-                                                    <p><span><i class="fa-regular fa-map"></i>&nbsp; W 13th St, New York, NY 10011, USA&nbsp;</span></p>
-                                                    <div class="rating-strars">
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <p>Christian is an excellent teacher. Felt so much more comfortable with the basics of the game in just an hour. He focused on improving our beginning skills. Made up some fun drills to build confidence. Practiced keeping
-                                                score and feel comfortable to go out on the court next time. Highly recommend him.</p>
-                                        </div>
-                                    </div>
-                                    <div class="camp-item">
-                                        <div class="loc-top-content">
-                                            <div class="d-flex align-items-center">
-                                                <div class="camp-image">
-                                                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/avatars/avatar-1.png" alt="camp image" />
-                                                </div>
-                                                <div class="loc-title">
-                                                    <h4>Yasmine D'Souza</h4>
-                                                    <p><span><i class="fa-regular fa-map"></i>&nbsp; W 13th St, New York, NY 10011, USA&nbsp;</span></p>
-                                                    <div class="rating-strars">
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <p>Christian is an excellent teacher. Felt so much more comfortable with the basics of the game in just an hour. He focused on improving our beginning skills. Made up some fun drills to build confidence. Practiced keeping
-                                                score and feel comfortable to go out on the court next time. Highly recommend him.</p>
-                                        </div>
-                                    </div>
-                                    <div class="camp-item">
-                                        <div class="loc-top-content">
-                                            <div class="d-flex align-items-center">
-                                                <div class="camp-image">
-                                                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/avatars/avatar-1.png" alt="camp image" />
-                                                </div>
-                                                <div class="loc-title">
-                                                    <h4>Yasmine D'Souza</h4>
-                                                    <p><span><i class="fa-regular fa-map"></i>&nbsp; W 13th St, New York, NY 10011, USA&nbsp;</span></p>
-                                                    <div class="rating-strars">
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        <i class="fa-solid fa-star"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <p>Christian is an excellent teacher. Felt so much more comfortable with the basics of the game in just an hour. He focused on improving our beginning skills. Made up some fun drills to build confidence. Practiced keeping
-                                                score and feel comfortable to go out on the court next time. Highly recommend him.</p>
-                                        </div>
-                                    </div>
+                                      </div>
+                                    <?php } ?>
                                 </div>
                             </div>
                         </div>
@@ -1079,7 +1074,7 @@ require locate_template('layouts/header.php') ;
                     </div>
                 </div>
                 <div class="custom-button mt-3">
-                    <button type="button" class="btn btn-round btn-outliner">Have any questions?</button>
+                    <button type="button" class="btn btn-round btn-outliner" data-toggle="modal" data-target="#have_question_modal">Have any questions?</button>
                     <button type="button" class="btn btn-round btn-fill" data-toggle="modal" data-target="#session_book_modal">Book Now
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -1176,19 +1171,27 @@ require locate_template('layouts/footer.php') ;
                     else{ ?>
                         <div class="col-md-12 for-group">
                             <label>Rating<b class="text-danger">*</b></label>
-                            <select class="form-control" name="rating" required>
-                                <option value="">Select rating number</option>
-                                <?php
-                                for($i=0; $i<=5; $i++){
-                                    echo '<option value="'.$i.'">'.$i.'</option>';
-                                }
-                                ?>
-                            </select><br>
+                            <div class="star-rating">
+                                <input type="radio" name="rating" id="star5" value="5" required>
+                                <label for="star5"><i class="fa fa-star"></i></label>
+
+                                <input type="radio" name="rating" id="star4" value="4">
+                                <label for="star4"><i class="fa fa-star"></i></label>
+
+                                <input type="radio" name="rating" id="star3" value="3">
+                                <label for="star3"><i class="fa fa-star"></i></label>
+
+                                <input type="radio" name="rating" id="star2" value="2">
+                                <label for="star2"><i class="fa fa-star"></i></label>
+
+                                <input type="radio" name="rating" id="star1" value="1">
+                                <label for="star1"><i class="fa fa-star"></i></label>
+                            </div>
                         </div>
 
                         <div class="col-md-12 for-group">
                             <label>Message<b class="text-danger">*</b></label>
-                            <textarea class="form-control" name="message" required></textarea><br>
+                            <textarea class="form-control" name="message" maxlength="250" required></textarea><br>
                         </div>
 
                         <div class="col-md-12 for-group">
@@ -1204,6 +1207,131 @@ require locate_template('layouts/footer.php') ;
   </div>
 <!-- The add-review Modal -->
 
+<!-- The all-review Modal -->
+  <div class="modal" id="all_review_modal">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">ALL REVIEWS</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+            <?php 
+            foreach ($coach_reviews_limit as $review) {
+                $review_date = $review->created_at;
+                $attachment_id = get_user_meta($review->athlete_id, "_profile_pic_id", true);
+                if( $attachment_id ) {
+                    $review_img_link = wp_get_attachment_image_url($attachment_id, 'thumbnail');
+                }else{
+                    $review_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.png";
+                } ?>
+                <div class="camp-item">
+                    <div class="loc-top-content">
+                        <div class="d-flex align-items-center">
+                            <div class="camp-image">
+                                <img src="<?php echo $review_img_link; ?>" alt="" />
+                            </div>
+                            <div class="loc-title">
+                                <h4><?php echo get_user_meta($review->athlete_id, "fullname", true); ?></h4>
+                                <p><span><i class="fa-regular fa-clock"></i>&nbsp; <?php echo timeAgo($review_date); ?>&nbsp;</span></p>
+                                <div class="rating-strars">
+                                    <?php
+                                    for ($i = 1; $i <= 5; $i++) {
+                                        if ($i <= $review->rating) {
+                                            echo '<i class="fa-solid fa-star" style="color: #FFD700;"></i>';
+                                        } else {
+                                            echo '<i class="fa-regular fa-star" style="color: #ccc;"></i>';
+                                        }
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                        <p><?php echo $review->description; ?></p>
+                    </div>
+                </div>
+            <?php } ?>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+<!-- The all-review Modal -->
+
+
+
+<!-- The Have Questions Modal -->
+  <div class="modal" id="have_question_modal">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Have any question? Ask me!</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+            <form action="" method="POST">
+                <div class="row">
+                    <?php
+                    if(get_current_user_id() == $user->ID){
+                      echo "<div class='col-md-12'><p class'text-danger'>You cant ask question to yourself !</p></div>";
+                    }else{
+                         $uuserid = get_current_user_id() ? get_current_user_id() : 0;
+                         $uname = get_user_meta($uuserid, 'fullname', true) ?: ''; 
+                         $uphone = get_user_meta($uuserid, 'phone', true) ?: '';  
+                         $uuser_info = get_userdata($uuserid);
+                         $uuser_email = ($uuser_info && isset($uuser_info->user_email)) ? $uuser_info->user_email : '';
+                    ?>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Your Full Name<b class="text-danger">*</b></label>
+                                <input type="text" class="form-control" name="full_name" value="<?php echo $uname; ?>" required />
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Email<b class="text-danger">*</b></label>
+                                <input type="text" class="form-control" name="your_email" value="<?php echo $uuser_email; ?>" required />
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Your Phone<b class="text-danger">*</b></label>
+                                <input type="text" class="form-control" name="your_phone" value="<?php echo $uphone; ?>" />
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Your Question ?<b class="text-danger">*</b></label>
+                                <textarea type="text" class="form-control" name="your_message" maxlength="250" required /></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <button type="submit" name="question_submit" class="btn btn-warning">Submit</button>
+                            </div>
+                        </div>
+                   <?php } ?>
+                </div>
+            </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+<!-- The Have Questions Modal -->
+
 <style>
     .gj-icon{
         position: static !important;
@@ -1214,58 +1342,6 @@ require locate_template('layouts/footer.php') ;
 <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
 
 <script>
-function book_session(){
-    var datetime = $("#datetimepicker").val();
-    if(datetime==""){
-        Swal.fire({ title: "Please select date and time !", text: '', icon: "error"});
-        return false;
-    }
-    else{
-      $("#spinner1").show();
-      $("#session_book_btn").attr("disabled",true);
-      jQuery.ajax({
-         url: "/wp-admin/admin-ajax.php",
-         type: 'POST',
-         dataType: "json",
-         data: {action: "book_session_action", datetime: datetime, coach_id: "<?php echo $user->ID; ?>"},
-         success: function(response) {
-            if(response.status===1){
-                window.location.href = "<?php echo wc_get_checkout_url(); ?>"; 
-                Swal.fire({
-                    title: 'Please Wait..',
-                    text: 'Redirecting you for payment process',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-            }else{
-                $("#spinner1").hide();
-                $("#session_book_btn").attr("disabled",false);
-                Swal.fire({title: 'Something is wrong !', text: 'Try again later', icon: 'error' });
-            }
-         }
-      });
-    }
-}
-
-$('#datetimepicker').datetimepicker({
-    uiLibrary: 'bootstrap5',
-    modal: true,
-    footer: true,
-    format: 'mm/dd/yyyy hh:MM TT'
-}).on('change', function (e) {
-    const selectedDate = new Date(e.target.value);
-    const today = new Date();
-
-    if (selectedDate < today) {
-        $(this).val(''); 
-        Swal.fire({ title: "Please select a future date!", text: '', icon: "warning"});
-    }
-});
-
-
     $(document).ready(function() {
         $("#location-slider").owlCarousel({
             items: 5,
@@ -1328,6 +1404,58 @@ $('#datetimepicker').datetimepicker({
             autoPlay: true
         });
     });
+
+
+    function book_session(){
+        var datetime = $("#datetimepicker").val();
+        if(datetime==""){
+            Swal.fire({ title: "Please select date and time !", text: '', icon: "error"});
+            return false;
+        }
+        else{
+          $("#spinner1").show();
+          $("#session_book_btn").attr("disabled",true);
+          jQuery.ajax({
+             url: "/wp-admin/admin-ajax.php",
+             type: 'POST',
+             dataType: "json",
+             data: {action: "book_session_action", datetime: datetime, coach_id: "<?php echo $user->ID; ?>"},
+             success: function(response) {
+                if(response.status===1){
+                    window.location.href = "<?php echo wc_get_checkout_url(); ?>"; 
+                    Swal.fire({
+                        title: 'Please Wait..',
+                        text: 'Redirecting you for payment process',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                }else{
+                    $("#spinner1").hide();
+                    $("#session_book_btn").attr("disabled",false);
+                    Swal.fire({title: 'Something is wrong !', text: 'Try again later', icon: 'error' });
+                }
+             }
+          });
+        }
+    }
+
+    $('#datetimepicker').datetimepicker({
+        uiLibrary: 'bootstrap5',
+        modal: true,
+        footer: true,
+        format: 'mm/dd/yyyy hh:MM TT'
+    }).on('change', function (e) {
+        const selectedDate = new Date(e.target.value);
+        const today = new Date();
+
+        if (selectedDate < today) {
+            $(this).val(''); 
+            Swal.fire({ title: "Please select a future date!", text: '', icon: "warning"});
+        }
+    });
     
     const videos = document.querySelectorAll(".video-intro");
     videos.forEach(video => {
@@ -1359,14 +1487,14 @@ $('#datetimepicker').datetimepicker({
     });
 
     $(document).ready(function() {
-    var year = new Date().getFullYear() - 18; 
-    var defaultDate = new Date(year, 0, 1);
-    
-    $('#datepicker').datepicker({
-      dateFormat: 'dd-mm-yy',
-      changeYear: true,               
-      yearRange: '1900:' + (new Date().getFullYear() - 18), 
-      defaultDate: defaultDate  
-   });
-}); 
+        var year = new Date().getFullYear() - 18; 
+        var defaultDate = new Date(year, 0, 1);
+        
+        $('#datepicker').datepicker({
+          dateFormat: 'dd-mm-yy',
+          changeYear: true,               
+          yearRange: '1900:' + (new Date().getFullYear() - 18), 
+          defaultDate: defaultDate  
+       });
+    }); 
 </script>

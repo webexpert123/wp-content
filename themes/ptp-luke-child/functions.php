@@ -804,3 +804,37 @@ function customize_session_price($cart) {
     }
 }
 add_filter('woocommerce_before_calculate_totals', 'customize_session_price', 10, 1);
+
+function timeAgo($datetime) {
+    $current_time = new DateTime();
+    $given_time = new DateTime($datetime);
+    $interval = $current_time->diff($given_time);
+
+    if ($interval->y > 0) {
+        return $interval->y === 1 ? 'a year ago' : $interval->y . ' years ago';
+    } elseif ($interval->m > 0) {
+        return $interval->m === 1 ? 'a month ago' : $interval->m . ' months ago';
+    } elseif ($interval->d > 1) {
+        return $interval->d . ' days ago';
+    } elseif ($interval->d === 1) {
+        return 'Yesterday';
+    } elseif ($interval->h > 0) {
+        return $interval->h === 1 ? 'an hour ago' : $interval->h . ' hours ago';
+    } elseif ($interval->i > 0) {
+        return $interval->i === 1 ? 'a minute ago' : $interval->i . ' minutes ago';
+    } else {
+        return 'Just now';
+    }
+}
+
+
+function delete_question_func(){
+   global $wpdb;
+   $table_name = $wpdb->prefix . 'have_questions_coach';
+   $qid = $_POST["qid"];
+   if($qid){
+     $deleted = $wpdb->delete( $table_name, [ 'id' => $qid ]  );
+   }
+}
+add_action('wp_ajax_delete_question', 'delete_question_func');
+add_action('wp_ajax_nopriv_delete_question', 'delete_question_func'); 
