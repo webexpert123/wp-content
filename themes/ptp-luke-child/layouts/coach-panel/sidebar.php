@@ -49,7 +49,7 @@
                             Subscription</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0);" onclick="logout_user()"><i class="bx bx-power-off"></i>Logout</a>
+                        <a class="nav-link" href="javascript:void(0);" onclick="logout_user()"><i class="bx bx-power-off"></i>Logout <div class="spinner-border text-dark spinner-logout" style="display:none;"></div></a>
                     </li>
                 </ul>
             </nav>

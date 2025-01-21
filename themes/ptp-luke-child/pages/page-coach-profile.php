@@ -25,6 +25,19 @@ require locate_template('layouts/header.php') ;
             $profile_pic_id = get_user_meta($user->ID, '_profile_pic_id', true);
             $coach_sport = $wpdb->get_var("SELECT sport_name FROM {$wpdb->prefix}sports WHERE sportID = '$coach_sport_id'");
 
+            if(isset($_POST['add_review'])) {
+                $table_name = $wpdb->prefix . 'coach_reviews';
+                $current_user_id = get_current_user_id();
+                $query = $wpdb->prepare("INSERT INTO `wp_coach_reviews` (`coach_id`, `athlete_id`, `description`, `rating`) VALUES (%d, %d, %s, %d)", $user->ID, $current_user_id, $_POST['description'], $_POST['rating']);
+                $result = $wpdb->query($query);
+
+                if ($result !== false) {
+                    echo '<script>Swal.fire({ title: "Review Added Successfully", text: "", icon: "success"});</script>';
+                } else {
+                    echo '<script>Swal.fire({ title: "Something is wrong !", text: "", icon: "error"});</script>';
+                }
+            }
+
         ?>
             <!-- Profile page design -->
             <section id="profile-layout" class="section-spacing pt-5 pb-0">
@@ -216,6 +229,7 @@ require locate_template('layouts/header.php') ;
                                     </div>
                                     <div class="col-md-4 col-lg-5">
                                         <div class="custom-button d-flex justify-content-end">
+                                            <button type="button" class="btn btn-round btn-fill" data-toggle="modal" data-target="#add_review_modal">Add Review</button>&nbsp;&nbsp;
                                             <button type="button" class="btn btn-round btn-fill">View All Reviews</button>
                                         </div>
                                     </div>
@@ -1066,7 +1080,7 @@ require locate_template('layouts/header.php') ;
                 </div>
                 <div class="custom-button mt-3">
                     <button type="button" class="btn btn-round btn-outliner">Have any questions?</button>
-                    <button type="button" class="btn btn-round btn-fill">Book Now
+                    <button type="button" class="btn btn-round btn-fill" data-toggle="modal" data-target="#session_book_modal">Book Now
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                             <polyline points="12 5 19 12 12 19"></polyline>
@@ -1102,6 +1116,17 @@ require locate_template('layouts/footer.php') ;
         <!-- Modal body -->
         <div class="modal-body">
             <div class="row">
+                <?php 
+                $current_user = wp_get_current_user();
+                if (!in_array('athlete', $current_user->roles) || !is_user_logged_in()) {
+                    echo '<div class="col-md-12"><p class="text-danger">Only registered athletes can book a session of coach !</p></div>';
+                }
+                else if(!empty(get_user_meta($user->ID, "_session_quantity", true)) && !empty(get_user_meta($user->ID, "_session_price", true))){ ?>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <b class="text-success">NOTE: <?php echo get_user_meta($user->ID, "_session_quantity", true); ?> peoples can join a session, and the per-session rate is $<?php echo get_user_meta($user->ID, "_session_price", true); ?>.</b>
+                    </div>
+                </div>
                 <div class="col-md-12">
                     <div class="form-group">
                         <label>Select Date & Time</label>
@@ -1113,6 +1138,14 @@ require locate_template('layouts/footer.php') ;
                         <button type="button" class="btn btn-warning btn-block" id="session_book_btn" onclick="book_session();">BOOK NOW <div class="spinner-border" style="display: none;" id="spinner1"></div></button>
                     </div>
                 </div>
+                <?php }
+                else{ ?>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <b class="text-danger text-center">Booking is not available because the coach has not set their per-session rate.</b>
+                    </div>
+                  </div>
+                <?php } ?>
             </div>
         </div>
         
@@ -1120,6 +1153,56 @@ require locate_template('layouts/footer.php') ;
     </div>
   </div>
 <!-- The Session Modal -->
+
+<!-- The add-review Modal -->
+  <div class="modal" id="add_review_modal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">ADD REVIEW</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+            <form action="" method="POST">
+                <div class="row">
+                    <?php 
+                    if (!in_array('athlete', $current_user->roles) || !is_user_logged_in()) {
+                        echo '<div class="col-md-12"><p class="text-danger">Only registered athletes can add review for coach !</p></div>';
+                    }
+                    else{ ?>
+                        <div class="col-md-12 for-group">
+                            <label>Rating<b class="text-danger">*</b></label>
+                            <select class="form-control" name="rating" required>
+                                <option value="">Select rating number</option>
+                                <?php
+                                for($i=0; $i<=5; $i++){
+                                    echo '<option value="'.$i.'">'.$i.'</option>';
+                                }
+                                ?>
+                            </select><br>
+                        </div>
+
+                        <div class="col-md-12 for-group">
+                            <label>Message<b class="text-danger">*</b></label>
+                            <textarea class="form-control" name="message" required></textarea><br>
+                        </div>
+
+                        <div class="col-md-12 for-group">
+                            <button type="submit" class="btn btn-warning" name="add_review">Submit</button>
+                        </div>
+                    <?php } ?>
+                </div>
+            </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+<!-- The add-review Modal -->
 
 <style>
     .gj-icon{
@@ -1143,17 +1226,25 @@ function book_session(){
       jQuery.ajax({
          url: "/wp-admin/admin-ajax.php",
          type: 'POST',
-         data: {action: "book_session_action", datetime: datetime},
+         dataType: "json",
+         data: {action: "book_session_action", datetime: datetime, coach_id: "<?php echo $user->ID; ?>"},
          success: function(response) {
-            Swal.fire({
-                title: 'Please Wait..',
-                text: 'Redirecting you for payment process',
-                allowOutsideClick: false,
-                showConfirmButton: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
+            if(response.status===1){
+                window.location.href = "<?php echo wc_get_checkout_url(); ?>"; 
+                Swal.fire({
+                    title: 'Please Wait..',
+                    text: 'Redirecting you for payment process',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            }else{
+                $("#spinner1").hide();
+                $("#session_book_btn").attr("disabled",false);
+                Swal.fire({title: 'Something is wrong !', text: 'Try again later', icon: 'error' });
+            }
          }
       });
     }

@@ -127,8 +127,21 @@
             type: 'POST',
             data: formData, 
             success: function(response) {
-                if (response.data.alert_type === 'success') { window.location.href = response.data.redirectURL; }
-                Swal.fire({ title: response.data.message, text: '', icon: response.data.alert_type});
+                if (response.data.alert_type === 'success') { 
+                  window.location.href = response.data.redirectURL;
+                  Swal.fire({
+                    title: 'Please Wait..',
+                    text: 'Redirecting you to dashbord',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                  });
+                }
+                else{
+                  Swal.fire({ title: response.data.message, text: '', icon: response.data.alert_type});
+                }
                 jQuery('#spinner').hide();
                 jQuery("#loginSubmit").attr("disabled",false);
             }

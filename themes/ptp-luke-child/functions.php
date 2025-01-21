@@ -682,49 +682,30 @@ function test_new_order_hook($order_id) {
         $current_user_id = get_current_user_id();
         
         // Set order type based on categories
-        if (in_array('subscriptions', $categories)) { // Use category slug
+        if (in_array('subscriptions', $categories)) {
             $order->update_meta_data('_order_type', 'subscription');
         } 
-        elseif (in_array('summer-camps', $categories)) { // Use category slug
+        elseif (in_array('summer-camps', $categories)) {
             $order->update_meta_data('_order_type', 'summercamp');
             $order->update_meta_data('_summercamp_userid', $current_user_id);
+
             if (WC()->session->get('referral_id')) {
                 $referral_code = WC()->session->get('referral_id');
                 $order->update_meta_data('_referral_id', $referral_code);
             }
         } 
+        elseif (in_array('session-booking', $categories)) {
+            $order->update_meta_data('_order_type', 'session_booking');
+            $order->update_meta_data('session_coach_id', WC()->session->get('coach_id'));
+            $order->update_meta_data('session_date', WC()->session->get('session_date'));
+            $order->update_meta_data('_session_booked_by', $current_user_id);
+        } 
         else {
-            $order->update_meta_data('_order_type', 'normal'); // Default case
+            $order->update_meta_data('_order_type', 'normal'); 
         }
         $order->save();
     }
 }
-
-
-add_filter('manage_edit-shop_order_columns', 'add_custom_order_column', 20);
-function add_custom_order_column($columns) {
-    $new_columns = array();
-    
-    foreach ($columns as $column_name => $column_info) {
-        $new_columns[$column_name] = $column_info;
-        
-        // Add new column after order status
-        if ($column_name === 'order_status') {
-            $new_columns['order_type_custom'] = __('Order Type', 'textdomain');
-        }
-    }
-    
-    return $new_columns;
-}
-
-add_filter('woocommerce_admin_order_number', 'append_custom_text_to_order_number', 10, 2);
-function append_custom_text_to_order_number($order_number, $order) {
-        $order_number .= ' <span style="color: gray; font-size: 12px;">hello</span>';
-
-
-    return $order_number;
-}
-
 
 
 add_action('init', 'capture_referral_code');
@@ -762,3 +743,64 @@ function modify_customer_name_display($buyer, $order) {
 }
 
 
+function book_session_func() {
+    $datetime = isset($_POST['datetime']) ? date("Y-m-d h:i A", strtotime($_POST['datetime'])) : "";
+    $coach_id = isset($_POST['coach_id']) ? $_POST['coach_id'] : "";
+    
+    if($datetime != "" && $coach_id != "") {
+        $productID = 418;
+        $cart = WC()->cart;
+        $cart->empty_cart();
+
+        $cart_item_data = array(
+            'coach_id' => sanitize_text_field($coach_id),
+            'session_date' => sanitize_text_field($datetime)
+        );
+        $cart->add_to_cart($productID, 1, 0, array(), $cart_item_data);
+        if ( ! WC()->session ) {
+            WC()->initialize_session_handler();
+            WC()->session->init();
+        }
+        WC()->session->set('coach_id',$coach_id);
+        WC()->session->set('session_date',$datetime);
+        echo json_encode(array('status' => 1));
+    } else {
+        echo json_encode(array('status' => 0));
+    }
+    exit();
+}
+add_action('wp_ajax_nopriv_book_session_action', 'book_session_func');
+add_action('wp_ajax_book_session_action', 'book_session_func');
+
+function display_session_meta($item_data, $cart_item) {
+    if (!empty($cart_item['coach_id'])) {
+        $coach_name = get_user_meta($cart_item['coach_id'], 'fullname', true);
+        $item_data[] = array(
+            'name' => 'Coach',
+            'value' => $coach_name
+        );
+    }
+    if (!empty($cart_item['session_date'])) {
+        $item_data[] = array(
+            'name' => 'Session Date',
+            'value' => $cart_item['session_date']
+        );
+    }
+    return $item_data;
+}
+add_filter('woocommerce_get_item_data', 'display_session_meta', 10, 2);
+
+function customize_session_price($cart) {
+    if (is_admin() && !defined('DOING_AJAX')) {
+        return;
+    }
+    foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
+        if (isset($cart_item['coach_id'])) {
+            $coach_price = get_user_meta($cart_item['coach_id'], '_session_price', true);
+            if ($coach_price) {
+                $cart_item['data']->set_price((float)$coach_price);
+            }
+        }
+    }
+}
+add_filter('woocommerce_before_calculate_totals', 'customize_session_price', 10, 1);

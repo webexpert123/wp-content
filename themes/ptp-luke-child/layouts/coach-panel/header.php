@@ -204,7 +204,7 @@ $page = isset($_REQUEST["section"]) ? $_REQUEST["section"] : "dashboard";
                                 <!-- <li><span><a href="javascript:void(0);"><img
                                                 src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/dashboard/search.svg" alt=""></a></span></li> -->
                                 <li><a href="my-account.html">My Account</a></li>
-                                <li><a href="javascript:void(0);" onclick="logout_user()">Sign Out</a></li>
+                                <li><a href="javascript:void(0);" onclick="logout_user()">Sign Out <div class="spinner-border text-dark spinner-logout" style="display:none;"></div></a></li>
                             </ul>
                         </div>
                     </div>

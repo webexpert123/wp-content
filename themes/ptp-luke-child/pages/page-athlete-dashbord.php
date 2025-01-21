@@ -101,11 +101,13 @@ $('#Edit_datetimepicker2').datetimepicker({
           confirmButtonText: "Confirm"
         }).then((result) => {
           if (result.isConfirmed) {
+            $(".spinner-logout").show();
             jQuery.ajax({
                 url: "/wp-admin/admin-ajax.php",
                 type: 'POST',
                 data: {action:"logout_user"}, 
                 success: function(response) {
+                    $(".spinner-logout").hide();
                     if (response.data.ajax_status == 'success') {
                       window.location.href = response.data.redirect_url;
                     }else{
