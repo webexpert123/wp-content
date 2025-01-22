@@ -145,7 +145,7 @@ div#all_review_modal .camp-item p {
                                                   $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.jpg";
                                                 }
                                                 ?>
-                                                <img src="<?php echo $profile_img_link; ?>" >
+                                                <img class="img-fluid" src="<?php echo $profile_img_link; ?>" >
                                             </div>
                                             <div class="card-body">
                                                 <div class="coach-content">

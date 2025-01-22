@@ -195,6 +195,10 @@ function get_user_subscription_history($user_id) {
                                     <button class="nav-link" id="order-tab" data-toggle="tab" data-target="#order" type="button" role="tab" aria-controls="order" aria-selected="false">Order History
                                     </button>
                                 </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="gallery-tab" data-toggle="tab" data-target="#gallery" type="button" role="tab" aria-controls="gallery" aria-selected="false">Gallery
+                                    </button>
+                                </li>
                             </ul>
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
@@ -428,8 +432,6 @@ function get_user_subscription_history($user_id) {
                                     </div>
                                 </div>
 
-                                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-
 
                                 <div class="tab-pane fade" id="auth" role="tabpanel" aria-labelledby="auth-tab">
                                     <div class="tabs-inner row p-4">
@@ -503,6 +505,20 @@ function get_user_subscription_history($user_id) {
                                                         </tfoot>
                                                     </table>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="tab-pane fade" id="gallery" role="tabpanel" aria-labelledby="gallery-tab">
+                                    <div class="tabs-inner p-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="card-title mb-4">
+                                                    <h5 class="">Manage Gallery</h5>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>

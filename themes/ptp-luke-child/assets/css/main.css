@@ -155,7 +155,7 @@
   --button-primary-bg: #f9cc0b;
   --button-secondary-bg: #0c1d36;
   --f1-font-size: 3.5rem;
-  --f2-font-size: 2rem;
+  --f2-font-size: 2.5rem;
   --f3-font-size: 1.75rem;
   --light-border: #f4f4f4;
   --d-dark-bg: #14171F;
@@ -9157,7 +9157,7 @@ p {
   padding-bottom: 100px;
   position: relative;
   z-index: 1;
-  background: url(../images/blog-image/blog_header.jpg) no-repeat center center;
+  background: url(../assets/images/blog-image/blog_header.jpg) no-repeat center center;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   background-size: cover;
@@ -9309,6 +9309,17 @@ body header section.header-main .header-blocks {
 body header section.header-main .header-blocks ul li {
   display: inline-block;
   list-style: none;
+}
+body header section.header-main .header-blocks ul li .dropdown .dropdown-menu {
+  min-width: 195px;
+}
+body header section.header-main .header-blocks ul li .dropdown .dropdown-menu a {
+  color: var(--primary-color);
+  font-weight: 500;
+  padding: 5px 15px;
+}
+body header section.header-main .header-blocks ul li .dropdown .dropdown-menu a:hover {
+  background-color: var(--aceent0-color);
 }
 body header section.header-main .header-blocks ul li a {
   padding: 0 10px;
@@ -9621,7 +9632,7 @@ footer .copyright-area p {
 }
 .bloc-video .video-overlay:after {
   position: absolute;
-  content: '';
+  content: "";
   width: 100%;
   height: 100%;
   background: linear-gradient(359deg, rgba(0, 0, 0, 0.7) -6%, transparent, rgba(0, 0, 0, 0.7));
@@ -9682,7 +9693,7 @@ footer .copyright-area p {
   border-radius: 0px;
   border: none;
   font-size: 18px;
-  color: #AFAFAF;
+  color: #afafaf;
   padding: 10px 15px;
 }
 .bloc-video .content-video .hero-filter .filter-form .input-group button {
@@ -9709,11 +9720,11 @@ footer .copyright-area p {
   gap: 20px;
 }
 /*--------------------------------------------------------------
-# Hero Section End
---------------------------------------------------------------*/
+  # Hero Section End
+  --------------------------------------------------------------*/
 /*--------------------------------------------------------------
-# Client Logo Section Start
---------------------------------------------------------------*/
+  # Client Logo Section Start
+  --------------------------------------------------------------*/
 #client-logos {
   background-color: var(--secondary-color);
   padding: 2rem 0rem;
@@ -9725,8 +9736,8 @@ footer .copyright-area p {
   width: 100px;
 }
 /*--------------------------------------------------------------
-# Start of the month Section Start
---------------------------------------------------------------*/
+  # Start of the month Section Start
+  --------------------------------------------------------------*/
 #about-block {
   padding: 4rem 0rem;
 }
@@ -9815,7 +9826,7 @@ footer .copyright-area p {
   position: relative;
 }
 #about-block .container .row .about-content .about-inner ul li p:before {
-  content: '';
+  content: "";
   position: absolute;
   width: 30px;
   height: 30px;
@@ -9824,8 +9835,8 @@ footer .copyright-area p {
   left: -48px;
 }
 /*--------------------------------------------------------------
-# Why PTP Section Start
---------------------------------------------------------------*/
+  # Why PTP Section Start
+  --------------------------------------------------------------*/
 #why-section .container .section-title h2 {
   font-weight: 800;
 }
@@ -9840,7 +9851,7 @@ footer .copyright-area p {
   -webkit-backdrop-filter: blur(5px);
   padding: 30px;
   border-radius: 15px;
-  border: 1px solid #858FA133;
+  border: 1px solid #858fa133;
 }
 #why-section .container .row .why-block-grid .box-item .box-header {
   display: flex;
@@ -9885,7 +9896,7 @@ footer .copyright-area p {
   margin-bottom: 0;
 }
 #why-section .container .row .why-block-grid .box-item ul li p:before {
-  content: '';
+  content: "";
   position: absolute;
   width: 22px;
   height: 22px;
@@ -9902,8 +9913,8 @@ footer .copyright-area p {
   stroke: var(--primary-color);
 }
 /*--------------------------------------------------------------
-# Feature Coaches Section Start
---------------------------------------------------------------*/
+  # Feature Coaches Section Start
+  --------------------------------------------------------------*/
 section#team-coaches {
   background-color: var(--primary-color);
 }
@@ -9917,7 +9928,8 @@ section#team-coaches.why_ptp_area .coaches-image {
   position: relative;
 }
 section#team-coaches.why_ptp_area .coaches-image img {
-  animation: none;
+  animation: LeftRight 4s linear infinite !important;
+  position: relative;
 }
 section#team-coaches.why_ptp_area .coaches-image span {
   position: absolute;
@@ -9958,9 +9970,20 @@ section#team-coaches button img {
     bottom: 0;
   }
 }
+@keyframes LeftRight {
+  0% {
+    left: 0;
+  }
+  50% {
+    left: 0.5em;
+  }
+  100% {
+    left: 0;
+  }
+}
 /*--------------------------------------------------------------
-# Brand Ambassedor Section Start
---------------------------------------------------------------*/
+  # Brand Ambassedor Section Start
+  --------------------------------------------------------------*/
 #brand-icon .brand-ic-main .brand-item {
   position: relative;
   transition: 0.5s ease;
@@ -10023,8 +10046,8 @@ section#team-coaches button img {
   font-size: 14px;
 }
 /*--------------------------------------------------------------
-# Offer area Section Start
---------------------------------------------------------------*/
+  # Offer area Section Start
+  --------------------------------------------------------------*/
 section#offer-area .sub-heading {
   text-transform: uppercase;
   font-weight: 600;
@@ -10048,7 +10071,7 @@ section#offer-area .multi-video .story-videos {
   width: 48%;
 }
 section#offer-area .multi-video .story-videos:after {
-  content: '';
+  content: "";
   position: absolute;
   width: 100%;
   height: 100%;
@@ -10065,7 +10088,7 @@ section#offer-area .multi-video .story-videos a {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: #FFC107;
+  background: #ffc107;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10103,34 +10126,44 @@ section#offer-area .multi-video .story-videos.full-video {
   }
 }
 /*--------------------------------------------------------------
-# Feed Section Start
---------------------------------------------------------------*/
+  # Feed Section Start
+  --------------------------------------------------------------*/
 .collarge .grid-column img {
   height: 100%;
   object-fit: cover;
 }
 .collarge .grid-column:nth-of-type(1) {
-  grid-area: 1 / 1 / span 6 / span 6;
-  height: 215px;
+  grid-area: 7 / 1 / span 1 / span 0;
 }
 .collarge .grid-column:nth-of-type(2) {
-  grid-area: 7 / 1 / span 1 / span 2;
+  grid-area: 2 / 0 / span 1 / span 1;
 }
 .collarge .grid-column:nth-of-type(3) {
-  grid-area: 7 / 3 / span 1 / span 2;
+  grid-area: 2 / 3 / span 1 / span 2;
 }
 .collarge .grid-column:nth-of-type(4) {
-  grid-area: 8 / 1 / span 2 / span 4;
-  height: 215px;
+  grid-area: 2 / 1 / span 1 / span 1;
 }
 .collarge .grid-column:nth-of-type(5) {
-  grid-area: 7 / 5 / span 3 / span 2;
+  grid-area: 7 / 5 / span 3 / span 0;
+}
+.collarge .grid-column:nth-of-type(6) {
+  grid-area: 1 / 5 / span 2 / span 1;
+}
+.collarge .grid-column:nth-of-type(7) {
+  grid-area: 1 / 6 / span 0 / span 2;
+}
+.collarge .grid-column:nth-of-type(8) {
+  grid-area: 1 / 1 / span 1 / span 2;
 }
 section#feed_block {
   background: var(--primary-color);
 }
 section#feed_block .row {
   margin: 0;
+}
+section#feed_block .section-title {
+  padding: 0 15px;
 }
 section#feed_block .section-title .sub-heading {
   color: var(--primary-color);
@@ -10143,9 +10176,11 @@ section#feed_block .section-title .sub-heading {
 }
 section#feed_block .section-title h2 {
   color: var(--secondary-color);
+  font-size: 50px;
 }
 section#feed_block .section-title p {
   color: var(--secondary-color);
+  font-size: 24px;
 }
 section#feed_block .section-title button:hover {
   background: var(--secondary-color);
@@ -10164,7 +10199,7 @@ section#feed_block .collarge .grid-column {
   overflow: hidden;
 }
 section#feed_block .collarge .grid-column:after {
-  content: '';
+  content: "";
   position: absolute;
   width: 100%;
   height: 100%;
@@ -10298,7 +10333,7 @@ section#feed_block .social-feeds #social-slider .owl-controls .owl-pagination .o
   border-radius: 50%;
   background: url(../assets/images/light_arrow.png) no-repeat;
   background-position: center center;
-  background-color: #D9D9D9;
+  background-color: #d9d9d9;
 }
 section#feed_block .social-feeds #social-slider .owl-controls .owl-pagination .owl-page.active {
   background-color: var(--aceent0-color);
@@ -10310,8 +10345,8 @@ section#feed_block .social-feeds #social-slider .owl-controls .owl-pagination .o
   transform: rotate(-180deg);
 }
 /*--------------------------------------------------------------
-# Case Study Section Start
---------------------------------------------------------------*/
+  # Case Study Section Start
+  --------------------------------------------------------------*/
 section#case_studies .custom-blockquote-style-1 {
   height: 337px;
   overflow: auto;
@@ -10338,8 +10373,8 @@ section#case_studies .case-study-item {
   border-radius: 10px;
 }
 section#case_studies .case-study-item .detail-review-person {
-  box-shadow: 0px 24px 20px 0px #212E4405;
-  border: 1px solid #858FA133;
+  box-shadow: 0px 24px 20px 0px #212e4405;
+  border: 1px solid #858fa133;
   border-radius: 16px;
   padding: 28px 30px;
   width: 100%;
@@ -10374,7 +10409,7 @@ section#case_studies .case-study-item .detail-review-person .author-review .revi
   line-height: 30px;
   letter-spacing: 0em;
   text-align: left;
-  color: #212E44;
+  color: #212e44;
 }
 section#case_studies .case-study-item .detail-review-person .author-review .review-position {
   display: block;
@@ -10383,7 +10418,7 @@ section#case_studies .case-study-item .detail-review-person .author-review .revi
   line-height: 24px;
   letter-spacing: 0em;
   text-align: left;
-  color: #212E44;
+  color: #212e44;
 }
 section#case_studies .case-study-item .detail-review-person .detail-review-item p {
   font-size: 16px;
@@ -10391,7 +10426,7 @@ section#case_studies .case-study-item .detail-review-person .detail-review-item 
   line-height: 24px;
   letter-spacing: 0em;
   text-align: center;
-  color: #5D6A82;
+  color: #5d6a82;
   margin-bottom: 0;
 }
 section#case_studies .case-study-item h2 {
@@ -10415,11 +10450,11 @@ section#case_studies .case-study-item .case-bottom p {
   margin: 0;
 }
 /*--------------------------------------------------------------
-# Risk Free Session Section Start
---------------------------------------------------------------*/
+  # Risk Free Session Section Start
+  --------------------------------------------------------------*/
 /*--------------------------------------------------------------
-# Reward Section Start
---------------------------------------------------------------*/
+  # Reward Section Start
+  --------------------------------------------------------------*/
 section#reward-block {
   padding: 4rem 0rem;
   position: relative;
@@ -10462,8 +10497,8 @@ section#reward-block .reward-main .reward-inner .reward-step .reward-box h3 {
   margin-bottom: 0;
 }
 /*--------------------------------------------------------------
-# Our Coach find Section Start
---------------------------------------------------------------*/
+  # Our Coach find Section Start
+  --------------------------------------------------------------*/
 section#coach-find-area {
   background-color: #fff;
 }
@@ -10501,8 +10536,8 @@ section#coach-find-area .coach-find-main .coach-find-content .coach-find-box .co
   justify-content: space-between;
 }
 /*--------------------------------------------------------------
-# Secure Section Start
---------------------------------------------------------------*/
+  # Secure Section Start
+  --------------------------------------------------------------*/
 #steps-area .steps-main .steps-content .steps-content-inner {
   padding: 40px;
   border-radius: 25px;
@@ -10551,8 +10586,8 @@ section#coach-find-area .coach-find-main .coach-find-content .coach-find-box .co
   border-radius: 20px;
 }
 /*--------------------------------------------------------------
-# Blog Section Start
---------------------------------------------------------------*/
+  # Blog Section Start
+  --------------------------------------------------------------*/
 section#blog-block .blog-main .blog-widget .blog-card {
   border-radius: 20px;
   overflow: hidden;
@@ -10585,8 +10620,8 @@ section#blog-block .blog-main .blog-widget .blog-card .blog-card-content p {
   color: var(--light-font-color);
 }
 /*--------------------------------------------------------------
-# testimonial Section Start
---------------------------------------------------------------*/
+  # testimonial Section Start
+  --------------------------------------------------------------*/
 section#testimonial-block {
   background: rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -10620,7 +10655,7 @@ section#testimonial-block div#testimonial-slider .testimonial-item .testimonial-
 }
 section#testimonial-block div#testimonial-slider .testimonial-item .testimonial-content .testimonial-quote p:before {
   position: absolute;
-  content: '';
+  content: "";
   width: 50px;
   height: 50px;
   background: url(../assets/images/quote_about.png) no-repeat center center;
@@ -10629,7 +10664,7 @@ section#testimonial-block div#testimonial-slider .testimonial-item .testimonial-
 }
 section#testimonial-block div#testimonial-slider .testimonial-item .testimonial-content .testimonial-quote p:after {
   position: absolute;
-  content: '';
+  content: "";
   width: 50px;
   height: 50px;
   background: url(../assets/images/quote_about.png) no-repeat center center;
@@ -10644,8 +10679,8 @@ section#testimonial-block div#testimonial-slider .testimonial-item .testimonial-
   color: var(--light-font-color);
 }
 /*--------------------------------------------------------------
-# Risk Free Section Start
---------------------------------------------------------------*/
+  # Risk Free Section Start
+  --------------------------------------------------------------*/
 section#risk-block .risk-main .risk-image {
   height: 100%;
   overflow: hidden;
@@ -10686,7 +10721,7 @@ section#risk-block .risk-main .risk-columns .risk-item:after {
   height: 45px;
   border-radius: 50%;
   background: var(--aceent0-color);
-  content: '';
+  content: "";
   position: absolute;
   left: 10px;
   top: 12px;
@@ -10723,10 +10758,10 @@ section#risk-block .risk-main .risk-columns .risk-item p {
   color: var(--primary-color);
 }
 /*** 
-=============================================
-    Profile page Design
-=============================================
-***/
+  =============================================
+      Profile page Design
+  =============================================
+  ***/
 section#profile-layout .profile-top {
   border-radius: 25px;
 }
@@ -10759,7 +10794,7 @@ section#profile-layout .profile-top .profile-sidebar .coach-card .card .card-hea
   height: 368px;
   overflow: hidden;
 }
-section#profile-layout .profile-top .profile-sidebar .coach-card .card .card-header video, .coach-card .card .card-header img {
+section#profile-layout .profile-top .profile-sidebar .coach-card .card .card-header video {
   width: 100%;
 }
 section#profile-layout .profile-top .profile-sidebar .coach-card .card .card-body {
@@ -11180,10 +11215,103 @@ section#profile-layout .profile-bottom .profile-tab-start .tabs-main #policy .ta
   color: var(--primary-color);
 }
 /*** 
-=============================================
-    Listing page Design
-=============================================
-***/
+  =============================================
+      Summer Camp details page Design
+  =============================================
+  ***/
+#profile-layout.camp-main .profile-top .profile-sidebar {
+  margin-top: 0 !important ;
+  height: 100%;
+}
+#profile-layout.camp-main .profile-top .profile-sidebar .coach-card {
+  height: 100%;
+}
+#profile-layout.camp-main .profile-top .profile-sidebar .coach-card .card {
+  background: transparent;
+  height: 100%;
+}
+#profile-layout.camp-main .profile-top .profile-sidebar .coach-card .card .card-header {
+  height: 420px;
+}
+#profile-layout.camp-main .profile-top .profile-sidebar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+}
+#profile-layout.camp-main .profile-top .profile-top-content .about-profiler {
+  background: #fff;
+  margin-top: 20px;
+}
+#profile-layout.camp-main .profile-top .profile-top-content .about-profiler .profile-meta span.price {
+  color: var(--aceent0-color);
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 27px;
+  text-align: center;
+}
+#profile-layout.camp-main .profile-top .profile-top-content .about-profiler .profile-meta span.price span {
+  color: var(--primary-color);
+}
+#profile-layout.camp-main .profile-top .summer-content ul li {
+  list-style: square;
+  padding-bottom: 5px;
+}
+#profile-layout.camp-main .profile-top .map-area {
+  border-radius: 20px;
+  overflow: hidden;
+}
+#profile-layout.camp-main .profile-top .gallery-block .card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 270px;
+}
+#profile-layout.camp-main .profile-top .gallery-block .card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+#profile-layout.camp-main .profile-top .gallery-block .owl-controls .owl-buttons {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  left: 50%;
+}
+#profile-layout.camp-main .profile-top .gallery-block .owl-controls .owl-buttons .owl-prev {
+  left: -10px;
+  position: relative;
+}
+#profile-layout.camp-main .profile-top .gallery-block .owl-controls .owl-buttons .owl-next {
+  right: -10px;
+  position: relative;
+}
+#profile-layout.camp-main .profile-top .gallery-block .owl-controls .owl-buttons div {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  opacity: 1;
+}
+#profile-layout.camp-main .profile-top .gallery-block .owl-controls .owl-buttons div:hover {
+  background: var(--aceent0-color);
+}
+#profile-layout.camp-main .profile-top .gallery-block .owl-controls .owl-buttons div svg {
+  position: relative;
+  top: 5px;
+}
+#profile-layout.camp-main .profile-top .gallery-block .owl-controls .owl-buttons div.owl-prev svg {
+  right: 2px;
+}
+/*** 
+  =============================================
+      Listing page Design
+  =============================================
+  ***/
 .listing-page .hero-inner-wrapper #hero-inner .bloc-inner-video {
   height: 50vh;
   width: 100%;
@@ -11192,7 +11320,7 @@ section#profile-layout .profile-bottom .profile-tab-start .tabs-main #policy .ta
 }
 .listing-page .hero-inner-wrapper #hero-inner .bloc-inner-video .video-overlay:after {
   position: absolute;
-  content: '';
+  content: "";
   width: 100%;
   height: 100%;
   background: linear-gradient(359deg, rgba(0, 0, 0, 0.7) -6%, transparent, rgba(0, 0, 0, 0.7));
@@ -11543,10 +11671,10 @@ section#profile-layout .profile-bottom .profile-tab-start .tabs-main #policy .ta
   width: 100%;
 }
 /*** 
-=============================================
-    Blog Default Area style
-=============================================
-***/
+  =============================================
+      Blog Default Area style
+  =============================================
+  ***/
 .blog-default-area {
   padding-top: 50px;
   padding-bottom: 50px;
@@ -11586,7 +11714,7 @@ section#profile-layout .profile-bottom .profile-tab-start .tabs-main #policy .ta
   color: var(--primary-color);
   font-size: 14px;
   font-weight: 700;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   text-transform: uppercase;
   display: block;
 }
@@ -11687,7 +11815,7 @@ section#profile-layout .profile-bottom .profile-tab-start .tabs-main #policy .ta
   color: var(--primary-color);
   font-size: 18px;
   font-weight: 600;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   text-transform: uppercase;
 }
 .blog-default-area .sidebar-wrapper .single-sidebar form.search-form {
@@ -11751,7 +11879,7 @@ section#profile-layout .profile-bottom .profile-tab-start .tabs-main #policy .ta
   transition: all 500ms ease;
   font-size: 14px;
   font-weight: 400;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   position: relative;
 }
 .blog-default-area .sidebar-wrapper .single-sidebar .categories li a span {
@@ -11819,7 +11947,7 @@ section#profile-layout .profile-bottom .profile-tab-start .tabs-main #policy .ta
   position: relative;
   font-weight: 400;
   margin: 0 0 7px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   transition: all 500ms ease;
 }
 .blog-default-area .sidebar-wrapper .single-sidebar .popular-post li .title-holder a .post-title:hover {
@@ -11831,13 +11959,13 @@ section#profile-layout .profile-bottom .profile-tab-start .tabs-main #policy .ta
   transition: all 500ms ease;
   font-weight: 400;
   font-size: 14px;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 /*** 
-=============================================
-    Booking page CSS
-=============================================
-***/
+  =============================================
+      Booking page CSS
+  =============================================
+  ***/
 body.dark-theme .booking-page .booking-wizard .booking-form-inner #msform {
   position: relative;
   margin-top: 50px;
@@ -11880,7 +12008,7 @@ body.dark-theme .booking-page .booking-wizard .booking-form-inner #msform #progr
   margin-bottom: 10px;
 }
 body.dark-theme .booking-page .booking-wizard .booking-form-inner #msform #progressbar li:after {
-  content: '';
+  content: "";
   width: 100%;
   height: 2px;
   background: #ebebeb;
@@ -12475,7 +12603,7 @@ body.dark-theme .booking-page .risk-widget .profile-risk p {
   width: 100%;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
-  color: #2C3E50;
+  color: #2c3e50;
   font-size: 13px;
 }
 #msform input:focus,
@@ -12816,7 +12944,7 @@ body.dark-theme .booking-page .risk-widget .profile-risk p {
   border-radius: 0px;
   border: none;
   font-size: 18px;
-  color: #AFAFAF;
+  color: #afafaf;
   padding: 10px 15px;
 }
 #frontend-main .breadcrumb-area .breadcrumbs .filter-form .input-group button {
@@ -12860,7 +12988,7 @@ body.home-new #frontend-main .hero-wrapper {
   position: relative;
 }
 body.home-new #frontend-main .hero-wrapper::before {
-  content: '';
+  content: "";
   width: 100%;
   height: 138px;
   position: absolute;
@@ -12868,7 +12996,7 @@ body.home-new #frontend-main .hero-wrapper::before {
   background: linear-gradient(180deg, #000000, #ffff0000);
 }
 body.home-new #frontend-main .hero-wrapper::after {
-  content: '';
+  content: "";
   width: 100%;
   height: 138px;
   position: absolute;
@@ -12880,7 +13008,7 @@ body.home-new #frontend-main .hero-wrapper .bloc-video {
   height: 77vh;
 }
 body.home-new #frontend-main .hero-wrapper .bloc-video:before {
-  content: '';
+  content: "";
   width: 403px;
   height: 100vh;
   background: #f9cc0b;
@@ -12892,7 +13020,7 @@ body.home-new #frontend-main .hero-wrapper .bloc-video:before {
   top: -7rem;
 }
 body.home-new #frontend-main .hero-wrapper .bloc-video:after {
-  content: '';
+  content: "";
   width: 450px;
   height: 100vh;
   background: #000;
