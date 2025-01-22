@@ -838,3 +838,19 @@ function delete_question_func(){
 }
 add_action('wp_ajax_delete_question', 'delete_question_func');
 add_action('wp_ajax_nopriv_delete_question', 'delete_question_func'); 
+
+function delete_gallery_img_func(){
+   global $wpdb;
+   $user_id = $_POST['user_id'];
+   $attachment_id = $_POST['attachment_id'];
+   if (wp_delete_attachment($attachment_id, true)) {
+        $imgArray = json_decode(get_user_meta($user_id, '_gallery_images_ids', true), true);
+        if (($key = array_search($attachment_id, $imgArray)) !== false) {
+            unset($imgArray[$key]);
+        }
+        update_user_meta($user_id, '_gallery_images_ids', json_encode($imgArray));
+        echo "Attachment deleted successfully and removed from user meta.";
+    }
+}
+add_action('wp_ajax_delete_gallery_img', 'delete_gallery_img_func');
+add_action('wp_ajax_nopriv_delete_gallery_img', 'delete_gallery_img_func'); 

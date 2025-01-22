@@ -390,33 +390,21 @@ div#all_review_modal .camp-item p {
                                 <div class="tab-pane fade show active" id="gallery" role="tabpanel" aria-labelledby="gallery-tab">
                                     <div class="tab-inside">
                                         <div class="gallery-block">
+                                            <?php
+                                            $galleryArray = get_user_meta($user->ID, '_gallery_images_ids', true);
+                                            $galleryArray = $galleryArray ? json_decode($galleryArray, true) : array();
+                                            if(empty($galleryArray)){
+                                                echo "<p class='text-danger'>No gallery item found !</p>";
+                                            }
+                                            ?>
                                             <div id="profile-gallery" class="card-column owl-carousel">
-                                                <div class="card">
-                                                    <img class="card-img-top" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/about/about-two.jpg" alt="Card image cap">
-                                                </div>
-                                                <div class="card">
-                                                    <img class="card-img-top" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/about/about-one.jpg" alt="Card image cap">
-                                                </div>
-                                                <div class="card">
-                                                    <img class="card-img-top" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/gallery/03.JPG" alt="Card image cap">
-                                                </div>
-                                                <div class="card">
-                                                    <img class="card-img-top" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/gallery/04.jpg" alt="Card image cap">
-                                                </div>
-                                                <div class="card">
-                                                    <img class="card-img-top" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/gallery/05.jpg" alt="Card image cap">
-                                                </div>
-                                                <div class="card">
-                                                    <img class="card-img-top" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/gallery/01.jpg" alt="Card image cap">
-                                                </div>
-                                                <div class="card">
-                                                    <video autoplay muted loop>
-                                                        <source src="https://ewvfbezbkbxmtghxhiij.supabase.co/storage/v1/object/public/media/568f8ae4-1a91-42ba-a408-63cec16eaa8c--2023-09-05T19:36:51.537Z.mp4" type="video/mp4">
-                                                    </video>
-                                                </div>
-                                                <div class="card">
-                                                    <img class="card-img-top" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/gallery/07.JPG" alt="Card image cap">
-                                                </div>
+                                                <?php  foreach($galleryArray as $gallery_img_id){
+                                                $gallery_img_link = wp_get_attachment_image_url($gallery_img_id, 'thumbnail');
+                                                if(!$gallery_img_link){continue;} ?>
+                                                  <div class="card">
+                                                    <img class="card-img-top" src="<?php echo $gallery_img_link; ?>" alt="Card image cap">
+                                                  </div>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     </div>
@@ -604,141 +592,54 @@ div#all_review_modal .camp-item p {
                                                 <h2>Frequently Asked Questions</h2>
                                             </div>
                                             <div class="row">
+                                                <?php
+                                                $table_faq = $wpdb->prefix . 'coach_faq';
+                                                $faqs = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table_faq WHERE coach_id = %d", $user->ID) );
+                                                $total_faqs = count($faqs);
+                                                $half = ceil($total_faqs / 2);
+                                                $faqs_section_1 = array_slice($faqs, 0, $half);
+                                                $faqs_section_2 = array_slice($faqs, $half);   ?>
                                                 <div class="col-md-12 col-lg-6">
                                                     <div class="faq-block">
                                                         <div class="accordion" id="accordionExample">
+                                                        <?php foreach ($faqs_section_1 as $faq) { ?>
                                                             <div class="card">
                                                                 <div class="card-header" id="headingOne">
                                                                     <h2 class="mb-0">
-                                                                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                                            What if I don't love my first lesson?
+                                                                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse<?php echo $faq->id; ?>" aria-expanded="false" aria-controls="collapseOne">
+                                                                            <?php echo esc_html(wp_unslash($faq->questions)); ?>
                                                                           </button>
                                                                         </h2>
                                                                 </div>
-                                                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                                                <div id="collapse<?php echo $faq->id; ?>" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                                                                     <div class="card-body">
-                                                                        Our risk free guarantee has you covered. If it's not a good fit or you just don't love your first lesson, we'll help find you another coach and give you an extra lesson for free. If things just don't work out, we'll provide a full refund.
+                                                                        <?php echo esc_html(wp_unslash($faq->answer)); ?>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="card">
-                                                                <div class="card-header" id="headingTwo">
-                                                                    <h2 class="mb-0">
-                                                                          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                                            Can I have a trial lesson?
-                                                                          </button>
-                                                                        </h2>
-                                                                </div>
-                                                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                                                                    <div class="card-body">
-                                                                        While we do not offer a free trial lesson, every TeachMe.To purchase comes with a quality guarantee. If you don't love your experience for any reason, just let us know after your first lesson and we'll help you find a different coach or provide a full
-                                                                        refund. Your choice.
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="card">
-                                                                <div class="card-header" id="headingThree">
-                                                                    <h2 class="mb-0">
-                                                                          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                                                            How do I book and what does it cost?
-                                                                          </button>
-                                                                        </h2>
-                                                                </div>
-                                                                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                                                                    <div class="card-body">
-                                                                        Booking a pickleball lesson is simple and convenient. You can choose one of the following methods: Online Simply tap the blue “Schedule now” button on the lower righthand side of the screen to begin the booking process online. We offer fast and convenient
-                                                                        instant booking, backed by our 100% risk-free guarantee. Phone Text us at 650-900-3835 to speak directly with our staff, who can help you schedule your lesson and answer any questions you
-                                                                        may have. Lesson Costs We offer competitive pricing for our lessons, with options to fit different budgets and needs. View pricing breakdown Group Lessons Pricing varies based on the number
-                                                                        of participants. Each additional participant costs just 50% of the base lesson cost, creating group purchasing savings. Payment Options We accept various payment methods, including credit/debit
-                                                                        cards, and online payment platforms. Payment can be made at the time of booking or before the start of the lesson. By offering flexible booking options and transparent pricing, we aim to
-                                                                        make it as easy as possible for you to start or continue your pickleball journey with us.
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="card">
-                                                                <div class="card-header" id="headingFour">
-                                                                    <h2 class="mb-0">
-                                                                            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                                                                What happens after I book?
-                                                                            </button>
-                                                                          </h2>
-                                                                </div>
-                                                                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
-                                                                    <div class="card-body">
-                                                                        After you book you will gain access to the TeachMe.To App where you will immediately be connected with your coach as well as our world class support team. This is where you can chat with your coach, schedule and reschedule lessons, and keep track of your
-                                                                        progress.
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                        <?php } ?>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 col-lg-6">
                                                     <div class="faq-block">
                                                         <div class="accordion" id="accordionExample2">
+                                                        <?php foreach ($faqs_section_2 as $faq) { ?>
                                                             <div class="card">
                                                                 <div class="card-header" id="headingfive">
                                                                     <h2 class="mb-0">
-                                                                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapsefive" aria-expanded="false" aria-controls="collapsefive">
-                                                                            What if I don't love my first lesson?
+                                                                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse<?php echo $faq->id; ?>" aria-expanded="false" aria-controls="collapsefive">
+                                                                            <?php echo esc_html(wp_unslash($faq->questions)); ?>
                                                                           </button>
                                                                         </h2>
                                                                 </div>
-                                                                <div id="collapsefive" class="collapse" aria-labelledby="headingfive" data-parent="#accordionExample">
+                                                                <div id="collapse<?php echo $faq->id; ?>" class="collapse" aria-labelledby="headingfive" data-parent="#accordionExample">
                                                                     <div class="card-body">
-                                                                        Our risk free guarantee has you covered. If it's not a good fit or you just don't love your first lesson, we'll help find you another coach and give you an extra lesson for free. If things just don't work out, we'll provide a full refund.
+                                                                        <?php echo esc_html(wp_unslash($faq->answer)); ?>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="card">
-                                                                <div class="card-header" id="headingSix">
-                                                                    <h2 class="mb-0">
-                                                                          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapsesix" aria-expanded="false" aria-controls="collapsesix">
-                                                                            Can I have a trial lesson?
-                                                                          </button>
-                                                                        </h2>
-                                                                </div>
-                                                                <div id="collapsesix" class="collapse" aria-labelledby="headingSix" data-parent="#accordionExample">
-                                                                    <div class="card-body">
-                                                                        While we do not offer a free trial lesson, every TeachMe.To purchase comes with a quality guarantee. If you don't love your experience for any reason, just let us know after your first lesson and we'll help you find a different coach or provide a full
-                                                                        refund. Your choice.
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="card">
-                                                                <div class="card-header" id="headingseven">
-                                                                    <h2 class="mb-0">
-                                                                          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
-                                                                            How do I book and what does it cost?
-                                                                          </button>
-                                                                        </h2>
-                                                                </div>
-                                                                <div id="collapseSeven" class="collapse" aria-labelledby="headingseven" data-parent="#accordionExample">
-                                                                    <div class="card-body">
-                                                                        Booking a pickleball lesson is simple and convenient. You can choose one of the following methods: Online Simply tap the blue “Schedule now” button on the lower righthand side of the screen to begin the booking process online. We offer fast and convenient
-                                                                        instant booking, backed by our 100% risk-free guarantee. Phone Text us at 650-900-3835 to speak directly with our staff, who can help you schedule your lesson and answer any questions you
-                                                                        may have. Lesson Costs We offer competitive pricing for our lessons, with options to fit different budgets and needs. View pricing breakdown Group Lessons Pricing varies based on the number
-                                                                        of participants. Each additional participant costs just 50% of the base lesson cost, creating group purchasing savings. Payment Options We accept various payment methods, including credit/debit
-                                                                        cards, and online payment platforms. Payment can be made at the time of booking or before the start of the lesson. By offering flexible booking options and transparent pricing, we aim to
-                                                                        make it as easy as possible for you to start or continue your pickleball journey with us.
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="card">
-                                                                <div class="card-header" id="headingEight">
-                                                                    <h2 class="mb-0">
-                                                                            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
-                                                                                What happens after I book?
-                                                                            </button>
-                                                                          </h2>
-                                                                </div>
-                                                                <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordionExample">
-                                                                    <div class="card-body">
-                                                                        After you book you will gain access to the TeachMe.To App where you will immediately be connected with your coach as well as our world class support team. This is where you can chat with your coach, schedule and reschedule lessons, and keep track of your
-                                                                        progress.
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                        <?php } ?>
                                                         </div>
                                                     </div>
                                                 </div>

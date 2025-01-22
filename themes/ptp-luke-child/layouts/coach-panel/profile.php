@@ -1,4 +1,5 @@
 <?php
+$redirect = home_url( add_query_arg( null, null ) ) ;
 if(isset($_POST['save_profile_details'])){
     update_user_meta($user_id, 'fullname', $_POST['fullname']);
     update_user_meta($user_id, 'first_name', $_POST['fullname']);
@@ -20,7 +21,6 @@ if(isset($_POST['save_profile_details'])){
         $emailError = 'Error updating email: ' . $update_result->get_error_message();
     } 
     echo "<script>Swal.fire({ title: 'Updated Successfully! '".$emailError.", text: '', icon: 'success' });</script>";
-    $redirect = home_url( add_query_arg( null, null ) ) ;
     echo "<script>window.location.href='".$redirect."';</script>";
 }
 
@@ -30,7 +30,6 @@ if(isset($_FILES['file_name'])){
     if (!is_wp_error($thumbnail_id)) {
         update_user_meta( $user_id, '_profile_pic_id', $thumbnail_id);
         echo "<script>Swal.fire({ title: 'Profile Image Updated! ', text: '', icon: 'success' });</script>";
-        $redirect = home_url( add_query_arg( null, null ) ) ;
         echo "<script>window.location.href='".$redirect."';</script>";
     }else{
         echo "<script>Swal.fire({ title: 'Image not updated !', text: 'Try again later', icon: 'error' });</script>";
@@ -42,7 +41,6 @@ if(isset($_POST['save_country'])){
     update_user_meta( $user_id, '_my_country', $country[1]);
     update_user_meta( $user_id, '_my_country_code', $country[0]);
     echo "<script>Swal.fire({ title: 'Country Updated Successfully! ', text: '', icon: 'success' });</script>";
-    $redirect = home_url( add_query_arg( null, null ) ) ;
     echo "<script>window.location.href='".$redirect."';</script>";
 }
 
@@ -56,19 +54,74 @@ if(isset($_POST['save_cards'])){
     $serialized_card = serialize($card);
     update_user_meta( $user_id, '_card_details', $serialized_card);
     echo "<script>Swal.fire({ title: 'Card Details Updated Successfully! ', text: '', icon: 'success' });</script>";
-    $redirect = home_url( add_query_arg( null, null ) ) ;
     echo "<script>window.location.href='".$redirect."';</script>";
 }
 
 if(isset($_POST["update_password"])){
     if($_POST["new_password"]==$_POST["confirm_password"]){
         wp_set_password($_POST["new_password"], $user_id);
-       echo "<script>Swal.fire({ title: 'Password Updated!', text: '', icon: 'success' });</script>";
+        echo "<script>Swal.fire({ title: 'Password Updated!', text: '', icon: 'success' });</script>";
     }else{
-       echo "<script>Swal.fire({ title: 'Both passwords are not same !', text: '', icon: 'error' });</script>";
+        echo "<script>Swal.fire({ title: 'Both passwords are not same !', text: '', icon: 'error' });</script>";
     }
-    $redirect = home_url( add_query_arg( null, null ) ) ;
     echo "<script>window.location.href='".$redirect."';</script>";
+}
+
+
+if (isset($_POST['submit_gallery_images'])) {
+    if (isset($_FILES['images']) && is_array($_FILES['images']['name'])) {
+        $imag_message = "";
+        $imgArray = get_user_meta($user_id, '_gallery_images_ids', true);
+        $imgArray = $imgArray ? json_decode($imgArray, true) : array();
+        foreach ($_FILES['images']['name'] as $key => $name) {
+            // Create a temporary file array for each file.
+            $file = array(
+                'name'     => $_FILES['images']['name'][$key],
+                'type'     => $_FILES['images']['type'][$key],
+                'tmp_name' => $_FILES['images']['tmp_name'][$key],
+                'error'    => $_FILES['images']['error'][$key],
+                'size'     => $_FILES['images']['size'][$key],
+            );
+
+            $_FILES['single_image'] = $file;
+
+            $result = custom_upload_and_get_thumbnail_id('single_image');
+
+            if (is_wp_error($result)) {
+                $imag_message .= "Error: " . $result->get_error_message() . "<br>";
+            } else {
+                $imgArray[] = $result;
+                $imag_message .= "Uploaded successfully. Attachment ID: " . $result . "<br>";
+            }
+        }
+        update_user_meta($user_id, '_gallery_images_ids', json_encode($imgArray));
+        unset($_FILES['single_image']);
+    } else {
+        $imag_message .= "No images were uploaded.";
+    }
+    echo "<script>Swal.fire({ title: '".$imag_message."', text: '', icon: '' });</script>";
+    echo "<script>window.location.href='".$redirect."';</script>";
+}
+
+
+if(isset($_POST['save_faq'])){
+  $table_name = $wpdb->prefix . 'coach_faq';
+  $questions = $_POST['questions'];
+  $answers = $_POST['answers'];
+
+  $deleted = $wpdb->delete( $table_name, array('coach_id' => $user_id), array('%d') );
+
+  foreach ($questions as $index => $question) {
+    $data = array(
+        'coach_id'  => $user_id,
+        'questions' => sanitize_text_field($question),
+        'answer'    => sanitize_text_field($answers[$index]),
+    );
+    $format = array('%d', '%s', '%s');
+    $inserted = $wpdb->insert($table_name, $data, $format);
+  }
+  echo "<script>Swal.fire({ title: 'FAQs saved successfully.', text: '', icon: 'success' });</script>";
+  echo "<script>window.location.href='".$redirect."';</script>";
 }
 
 $session_price = get_user_meta($user_id, "_session_price", true);
@@ -87,6 +140,7 @@ $my_country = get_user_meta($user_id, '_my_country_code', true);
 $facebook = get_user_meta($user_id, '_facebook', true);
 $instagram = get_user_meta($user_id, '_instagram', true);
 $tiktok = get_user_meta($user_id, '_tiktok', true);
+
 $card_details = get_user_meta($user_id, '_card_details', true);
 $card_number = "";
 $expiry_date = "";
@@ -97,6 +151,10 @@ if($card_details){
   $expiry_date = $unserialized_card["expiry_date"];
   $cvv_number = $unserialized_card["cvv_number"];
 }
+
+
+$galleryArray = get_user_meta($user_id, '_gallery_images_ids', true);
+$galleryArray = $galleryArray ? json_decode($galleryArray, true) : array();
 
 
 function get_user_subscription_history($user_id) {
@@ -199,6 +257,10 @@ function get_user_subscription_history($user_id) {
                                     <button class="nav-link" id="gallery-tab" data-toggle="tab" data-target="#gallery" type="button" role="tab" aria-controls="gallery" aria-selected="false">Gallery
                                     </button>
                                 </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="faq-tab" data-toggle="tab" data-target="#faq" type="button" role="tab" aria-controls="faq" aria-selected="false">Manage FAQ's
+                                    </button>
+                                </li>
                             </ul>
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
@@ -291,7 +353,7 @@ function get_user_subscription_history($user_id) {
                                                     <div class="col-lg-4 card profile-block">
                                                         <div class="card-body">
                                                             <div class="d-flex flex-xl-row flex-lg-column flex-md-column align-items-xl-start text-center">
-                                                                <img src="<?php echo $profile_img_link; ?>" alt="Admin" class="avatar_img rounded-circle p-1" width="110">
+                                                                <img src="<?php echo $profile_img_link; ?>" alt="Coach" class="avatar_img rounded-circle p-1" width="110">
                                                                 <div class="text-xl-left mx-3">
                                                                     <h5 class="m-0"><?php echo $name; ?></h5>
                                                                     <small class="mb-0 d-inline-block w-100"><?php echo $my_sport; ?> <?php echo $role; ?></small>
@@ -516,7 +578,95 @@ function get_user_subscription_history($user_id) {
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="card-title mb-4">
-                                                    <h5 class="">Manage Gallery</h5>
+                                                    <h5 class="">Add New Images to Gallery</h5><br>
+                                                    <form method="POST" action="" enctype="multipart/form-data">
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                              <div class="form-group">
+                                                                <input type="file" class="form-control" name="images[]" multiple required />
+                                                              </div>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                              <div class="form-group">
+                                                                <button type="submit" name="submit_gallery_images" class="btn btn-warning"/>Add</button>
+                                                              </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>S.No.</th>
+                                                                    <th>IMAGE</th>
+                                                                    <th>DELETE</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php 
+                                                                $i=0;
+                                                                foreach($galleryArray as $gallery_img_id){
+                                                                $gallery_img_link = wp_get_attachment_image_url($gallery_img_id, 'thumbnail');
+                                                                if(!$gallery_img_link){continue;} ?>
+                                                                <tr>
+                                                                    <td><?php echo ++$i; ?>.</td>
+                                                                    <td><img src="<?php echo $gallery_img_link; ?>" width="80" height="80"></td>
+                                                                    <td><button type="button" class="btn btn-danger" onclick="delete_gallery_img(<?php echo $gallery_img_id; ?>)">DELETE</button></td>
+                                                                </tr>
+                                                                <?php } ?>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="tab-pane fade" id="faq" role="tabpanel" aria-labelledby="faq-tab">
+                                    <div class="tabs-inner p-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="card-title mb-4">
+                                                    <h5 class="">Manage Frequently Asked Questions</h5><br>
+                                                    <form method="POST" action="" enctype="multipart/form-data">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-bordered" id="faqTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>S.No.</th>
+                                                                        <th>QUESTIONS</th>
+                                                                        <th>ANSWERS</th>
+                                                                        <th>DELETE</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <?php
+                                                                    $table_faq = $wpdb->prefix . 'coach_faq';
+                                                                    $faqs = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table_faq WHERE coach_id = %d", $user_id) );
+                                                                    $i=0;
+                                                                    foreach ($faqs as $row) { ?>
+                                                                      <tr>
+                                                                        <td><?php echo ++$i; ?></td>
+                                                                        <td><input type="text" name="questions[]" class="form-control" placeholder="Enter question" value="<?php echo esc_html(wp_unslash($row->questions)); ?>" required></td>
+                                                                        <td><textarea type="text" name="answers[]" class="form-control" placeholder="Enter answer" required><?php echo esc_html(wp_unslash($row->answer)); ?></textarea></td>
+                                                                        <td><button type="button" class="btn btn-danger btn-sm removeRow">X</button></td>
+                                                                      </tr>
+                                                                    <?php } ?>
+                                                                </tbody>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th colspan="4"><button id="addRow" type="button" class="btn btn-success">Add Row +</button> &nbsp;&nbsp; 
+                                                                        <button type="submit" name="save_faq" class="btn btn-warning">Save Changes</button></th>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                    </form>
+
                                                 </div>
 
                                             </div>
@@ -602,4 +752,62 @@ function get_user_subscription_history($user_id) {
         handleTagInput('teaches-tag-input', 'teaches-tag-div', 'teaches-tags-string');
         handleTagRemoval('teaches-tag-div', 'teaches-tags-string');
 
+        function delete_gallery_img(qid){
+            Swal.fire({
+              title: "Are you sure?",
+              text: "You won't be able to revert this!",
+              icon: "question",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+              if (result.isConfirmed) {
+                jQuery.ajax({
+                    url: "<?php echo admin_url('admin-ajax.php'); ?>",
+                    data: { action:"delete_gallery_img", attachment_id:qid , user_id:'<?php echo $user_id; ?>' },
+                    method: "POST",
+                    datatype:"text",
+                    success: function (html) {
+                        Swal.fire({
+                            title: "Successfully Deleted",
+                            text: "",
+                            icon: "success",
+                            allowOutsideClick: false, 
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    }
+                });
+              }
+            });
+        }
+
+        // Add a new row
+        $('#addRow').click(function () {
+            let rowCount = $('#faqTable tbody tr').length + 1; 
+            let newRow = `
+                <tr>
+                    <td>${rowCount}</td>
+                    <td><input type="text" name="questions[]" class="form-control" placeholder="Enter question" required></td>
+                    <td><textarea type="text" name="answers[]" class="form-control" placeholder="Enter answer" required></textarea></td>
+                    <td><button type="button" class="btn btn-danger btn-sm removeRow">X</button></td>
+                </tr>`;
+            $('#faqTable tbody').append(newRow);
+        });
+
+        // Remove a row
+        $('#faqTable').on('click', '.removeRow', function () {
+            $(this).closest('tr').remove(); 
+            updateRowNumbers(); 
+        });
+
+        // Function to update S.No. column
+        function updateRowNumbers() {
+            $('#faqTable tbody tr').each(function (index) {
+                $(this).find('td:first').text(index + 1); // Update row number
+            });
+        }
     </script>
