@@ -92,12 +92,7 @@
                                 <div class="card-body">
                                     <div class="mb-3">
                                         <h5 class="mb-4">Calendar</h5>
-                                        <div class="calendar">
-                                            <iframe
-                                                src="https://calendar.google.com/calendar/embed?src=webexpert987%40gmail.com&ctz=Asia%2FKolkata"
-                                                style="border: 0" width="100%" height="600" frameborder="0"
-                                                scrolling="no"></iframe>
-                                        </div>
+                                        <div class="calendar" id='calendar'></div>
                                     </div>
 
                                 </div>
@@ -278,3 +273,32 @@
                         </div>
                     </div>
                 </div>
+
+                
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>   
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.css' rel='stylesheet' />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.js'></script>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: [
+                <?php 
+                $my_sessions = $wpdb->get_results($wpdb->prepare("SELECT order_id FROM {$wpdb->prefix}wc_orders_meta WHERE meta_key = 'session_coach_id' AND meta_value='$user_id' "));
+                foreach($my_sessions as $sess){
+                  $order = wc_get_order($sess->order_id);
+                  $session_date = $order->get_meta( 'session_date' ); ?>
+                  { title: 'Booked for <?php echo date("h:i A", strtotime($session_date)); ?>', date: '<?php echo date("Y-m-d", strtotime($session_date)); ?>', },
+                <?php } ?>
+            ]
+        });
+        calendar.render();
+    });
+</script>

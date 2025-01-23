@@ -54,6 +54,9 @@ require locate_template('layouts/header.php') ;
 
         ?>
 <style>
+   #calendar{
+       background: #c6c6c6;
+   }
   .star-rating {
       display: flex;
       flex-direction: row-reverse;
@@ -370,14 +373,14 @@ div#all_review_modal .camp-item p {
                     <div class="profile-bottom section-spacing pt-4 pb-5" data-aos="fade-left" data-aos-duration="1500">
                         <div class="profile-tab-start">
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item " role="presentation">
+                                    <button class="nav-link active" id="available-tab" data-toggle="tab" data-target="#available" type="button" role="tab" aria-controls="available" aria-selected="false">Availability</button>
+                                </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="gallery-tab" data-toggle="tab" data-target="#gallery" type="button" role="tab" aria-controls="gallery" aria-selected="true">Gallery</button>
+                                    <button class="nav-link " id="gallery-tab" data-toggle="tab" data-target="#gallery" type="button" role="tab" aria-controls="gallery" aria-selected="true">Gallery</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link" id="location-tab" data-toggle="tab" data-target="#location" type="button" role="tab" aria-controls="location" aria-selected="false">Where I Teach</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="available-tab" data-toggle="tab" data-target="#available" type="button" role="tab" aria-controls="available" aria-selected="false">Availability</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link" id="faq-tab" data-toggle="tab" data-target="#faq" type="button" role="tab" aria-controls="faq" aria-selected="false">FAQ'S</button>
@@ -387,7 +390,7 @@ div#all_review_modal .camp-item p {
                                 </li>
                             </ul>
                             <div class="tab-content tabs-main" id="myTabContent">
-                                <div class="tab-pane fade show active" id="gallery" role="tabpanel" aria-labelledby="gallery-tab">
+                                <div class="tab-pane fade" id="gallery" role="tabpanel" aria-labelledby="gallery-tab">
                                     <div class="tab-inside">
                                         <div class="gallery-block">
                                             <?php
@@ -575,14 +578,12 @@ div#all_review_modal .camp-item p {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="available" role="tabpanel" aria-labelledby="available-tab">
+                                <div class="tab-pane fade show active" id="available" role="tabpanel" aria-labelledby="available-tab">
                                     <div class="tab-inside">
                                         <div class="section-title mb-5">
                                             <h2>When I'm usually available</h2>
                                         </div>
-                                        <div class="calendar">
-                                            <iframe src="https://calendar.google.com/calendar/embed?src=webexpert987%40gmail.com&ctz=Asia%2FKolkata" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
-                                        </div>
+                                        <div class="calendar" id='calendar'></div>
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="faq" role="tabpanel" aria-labelledby="faq-tab">
@@ -653,12 +654,7 @@ div#all_review_modal .camp-item p {
                                             <h2>Cancellation Policy</h2>
                                         </div>
                                         <div class="policy-main">
-                                            <p>We totally understand that life can be unpredictable and plans might change. That's why we've got your back with our flexible cancellation policy, designed to give you peace of mind when booking private sports lessons
-                                                with our awesome local instructors!</p>
-                                            <p>If you need to cancel your lesson, no worries! You can get a full refund if you cancel within 24 hours of making your booking. We want to make the process as hassle-free as possible for you.</p>
-                                            <p>And if you simply want to reschedule your lesson, change the date and time, or adjust the number of students joining, we've got you covered there too. You can easily make these changes within 24 hours of booking, and
-                                                up to 72 hours before your lesson starts.</p>
-                                            <p>Our goal is to make your experience smooth, enjoyable, and worry-free. So go ahead and book with confidence, knowing that we're here to accommodate your needs every step of the way!</p>
+                                            <p><?php echo nl2br(esc_html(wp_unslash(get_option("_coach_profile_policy", true)))); ?></p>
                                         </div>
                                     </div>
                                 </div>
@@ -792,72 +788,28 @@ div#all_review_modal .camp-item p {
                         <div class="coach-find-content">
                             <div class="coach-find-box">
                                 <div class="row">
-                                    <div class="col-md-3 col-lg-2">
+                                    <?php 
+                                    $sports = $wpdb->get_results($wpdb->prepare("SELECT * FROM `{$wpdb->prefix}sports` ORDER BY RAND() LIMIT 6;"));
+                                    foreach($sports as $sport){
+                                       $imageid = $sport->image;
+                                       if( $imageid ) {
+                                         $img_link = wp_get_attachment_image_url($imageid, 'thumbnail');
+                                       }else{
+                                         $img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.png";
+                                       }
+                                       $coach_count = $wpdb->get_var($wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->usermeta} WHERE meta_key = %s AND meta_value = %s", "_sport", $sport->sportID ) ); ?>
+                                      <div class="col-md-3 col-lg-2" onclick="window.location.href='<?php echo site_url("coach-list/?sport=".$sport->sportID); ?>';">
                                         <div class="coach-find-image">
-                                            <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/find_01.jpg" alt=" Find Image" />
+                                            <img src="<?php echo $img_link; ?>" alt="" />
                                         </div>
                                         <div class="coach-find-item">
-                                            <h5>Baseball</h5>
+                                            <h5><?php echo $sport->sport_name; ?></h5>
                                             <div class="d-flex">
-                                                <span>17 Coaches</span>
+                                                <span><?php echo $coach_count; ?> Coaches</span>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-3 col-lg-2">
-                                        <div class="coach-find-image">
-                                            <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/find_02.jpg" alt=" Find Image" />
-                                        </div>
-                                        <div class="coach-find-item">
-                                            <h5>Basketball</h5>
-                                            <div class="d-flex">
-                                                <span>17 Coaches</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-lg-2">
-                                        <div class="coach-find-image">
-                                            <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/find_03.png" alt=" Find Image" />
-                                        </div>
-                                        <div class="coach-find-item">
-                                            <h5>Football</h5>
-                                            <div class="d-flex">
-                                                <span>17 Coaches</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-lg-2">
-                                        <div class="coach-find-image">
-                                            <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/find_04.png" alt=" Find Image" />
-                                        </div>
-                                        <div class="coach-find-item">
-                                            <h5>Hockey</h5>
-                                            <div class="d-flex">
-                                                <span>05 Coaches</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-lg-2">
-                                        <div class="coach-find-image">
-                                            <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/find_05.png" alt=" Find Image" />
-                                        </div>
-                                        <div class="coach-find-item">
-                                            <h5>Leesburg, VA</h5>
-                                            <div class="d-flex">
-                                                <span>17 Coaches</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-lg-2">
-                                        <div class="coach-find-image">
-                                            <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/find_06.png" alt=" Find Image" />
-                                        </div>
-                                        <div class="coach-find-item">
-                                            <h5>Ice Hockey</h5>
-                                            <div class="d-flex">
-                                                <span>17 Coaches</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                      </div>
+                                    <?php } ?>
                                 </div>
 
                             </div>
@@ -1239,10 +1191,35 @@ require locate_template('layouts/footer.php') ;
     }
 </style>
 
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>   
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.css' rel='stylesheet' />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.js'></script>
 <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
 <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: [
+            <?php 
+            $my_sessions = $wpdb->get_results($wpdb->prepare("SELECT order_id FROM {$wpdb->prefix}wc_orders_meta WHERE meta_key = 'session_coach_id' AND meta_value='$user->ID' "));
+            foreach($my_sessions as $sess){
+              $order = wc_get_order($sess->order_id);
+              $session_date = $order->get_meta( 'session_date' ); ?>
+              { title: 'Booked for <?php echo date("h:i A", strtotime($session_date)); ?>', date: '<?php echo date("Y-m-d", strtotime($session_date)); ?>', },
+            <?php } ?>
+        ]
+    });
+    calendar.render();
+});
+
     $(document).ready(function() {
         $("#location-slider").owlCarousel({
             items: 5,

@@ -854,3 +854,21 @@ function delete_gallery_img_func(){
 }
 add_action('wp_ajax_delete_gallery_img', 'delete_gallery_img_func');
 add_action('wp_ajax_nopriv_delete_gallery_img', 'delete_gallery_img_func'); 
+
+
+function custom_admin_menu() {
+    add_menu_page(
+        'PTP Settings',    
+        'PTP Settings',          
+        'manage_options',       
+        'ptp-settings',    
+        'ptp_settings_callback', 
+        'dashicons-admin-generic', 
+        6                     
+    );
+}
+add_action('admin_menu', 'custom_admin_menu');
+
+function ptp_settings_callback() {
+    include( get_stylesheet_directory() . '/admin_modules/ptp_settings.php');
+}
