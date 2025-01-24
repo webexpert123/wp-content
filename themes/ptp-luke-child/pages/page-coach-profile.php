@@ -145,7 +145,7 @@ div#all_review_modal .camp-item p {
                                                        $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.png";
                                                     }
                                                 }else{
-                                                  $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.jpg";
+                                                  $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.png";
                                                 }
                                                 ?>
                                                 <img class="img-fluid" src="<?php echo $profile_img_link; ?>" >
@@ -723,7 +723,7 @@ div#all_review_modal .camp-item p {
                                                             </div>
                                                         </div>
                                                         <div class="custom-button">
-                                                            <button type="button" class="btn-outliner" onclick="window.location.href='<?php echo site_url('summercamp/'.$post_slug.'/?referral_id='.$user->ID); ?>'">Join Now!</button>
+                                                            <button type="button" class="btn-outliner" onclick="window.location.href='<?php echo site_url('summercamp/'.$post_slug.'/?referral_id='.$user->ID); ?>'">Join Now <i class="fa-solid fa-angles-right"></i></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -782,7 +782,7 @@ div#all_review_modal .camp-item p {
                         <div class="section-title mb-3 d-flex align-items-center justify-content-between">
                             <h2>Coach Near You</h2>
                             <div class="custom-button view-more">
-                                <button type="button" class="btn btn-round btn-fill">View More</button>
+                                <button type="button" class="btn btn-round btn-fill" onclick="window.location.href='<?php echo site_url("all-sports"); ?>'">View More</button>
                             </div>
                         </div>
                         <div class="coach-find-content">

@@ -36,8 +36,8 @@
                                 </span></li> -->
                             <li><a href="javascript:void(0);">About Us</a></li>
                             <li><a href="javascript:void(0);">Parents & Athlete</a></li>
-                            <li><a href="javascript:void(0);">Apply to Coach</a></li>
-                            <li><a href="javascript:void(0);">Summer Camp</a></li>
+                            <li><a href="<?php echo site_url(); ?>/all-sports">Apply to Coach</a></li>
+                            <li><a href="<?php echo site_url(); ?>/summer-camp-list">Summer Camps</a></li>
                             <li><a href="<?php echo site_url(); ?>/blogs">Our Blog</a></li>
                             <li><a href="javascript:void(0);">Contact Us</a></li>
                         </ul>
@@ -64,6 +64,7 @@
                                 }
                                 ?>
                                 <button type="button" class="btn btn-round btn-fill" onclick="window.location.href='<?php echo $redirectURL; ?>'">My Account</button>
+                                <button type="button" class="btn outliner btn-round" onclick="logout_user()">Log Out</button>
                             <?php } ?>
                         </div>
                     </div>
@@ -73,3 +74,34 @@
     </header>
     <!-- Header End -->
     <main>
+
+<script>
+    function logout_user(){
+        Swal.fire({
+          title: "Logout Confirmation !",
+          text: "Are you sure you want to do logout ?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#ffca10",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Confirm"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $(".spinner-logout").show();
+            jQuery.ajax({
+                url: "/wp-admin/admin-ajax.php",
+                type: 'POST',
+                data: {action:"logout_user"}, 
+                success: function(response) {
+                    $(".spinner-logout").hide();
+                    if (response.data.ajax_status == 'success') {
+                      window.location.href = response.data.redirect_url;
+                    }else{
+                      Swal.fire({ title: response.data.message, text: '', icon: "error"});
+                    }
+                }
+            });
+          }
+        });
+    }
+</script>

@@ -3,7 +3,12 @@
 
 require locate_template('layouts/header.php') ;
 ?>
-
+<style>
+.post-pagination{
+    margin-top: 20px;
+    width: 100%;
+}    
+</style>
 <div id="frontend-main" class="listing-page">
             <div class="hero-inner-wrapper">
                 <section id="hero-inner" class="inner section light-background">
@@ -26,6 +31,7 @@ require locate_template('layouts/header.php') ;
                     <div class="col-md-12 col-lg-12">
                         <div class="listing-filter">
                             <div class="filter-left">
+                                <form action="" method="GET">
                                 <div class="row align-items-end">
                                     <!-- filter-item -->
                                     <div class="filter-item col-md-9">
@@ -42,7 +48,7 @@ require locate_template('layouts/header.php') ;
                                                     </div>
                                                 </div> -->
                                                 <div class="dropdown">
-                                                    <select class="form-control" name="sports">
+                                                    <select class="form-control" name="sport">
                                                         <option value="">Select Sport</option>
                                                         <?php
                                                         $results = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}sports ORDER BY sport_name ASC");
@@ -134,12 +140,13 @@ require locate_template('layouts/header.php') ;
                                     <!-- filter-item -->
                                     <div class="filter-item col-md-3 mt-3">
                                         <div class="custom-button w-100 d-flex align-items-center gap-2">
-                                            <button type="button" class="btn btn-round btn-fill">Apply</button>
-                                            <button type="button" class="btn btn-round btn-fill">Reset</button>
+                                            <button type="submit" class="btn btn-round btn-fill">Apply</button>
+                                            <button type="button" class="btn btn-round btn-fill" onclick="window.location.href='<?php echo site_url("coach-list"); ?>';">Reset</button>
                                         </div>
                                     </div>
                                     <!-- filter-item -->
                                 </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -148,16 +155,33 @@ require locate_template('layouts/header.php') ;
                             <div class="listing-inner">
                                 <div class="row">
                                     <?php
+                                    $users_per_page = 12;
+                                    $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1; 
                                     $args = array(
                                         'role'    => 'coach',  
                                         'orderby' => 'user_login', 
-                                        'order'   => 'DESC',    
+                                        'order'   => 'DESC',  
+                                        'number'  => $users_per_page,
+                                        'paged'   => $paged,  
                                     );
                                     if (isset($_REQUEST['sport'])) {
                                         $args['meta_key']   = '_sport'; 
                                         $args['meta_value'] = $_REQUEST['sport'];
                                     }
                                     $coaches = get_users( $args );
+
+                                    $query = new WP_User_Query($args);
+                                    $total_coaches = $query->get_total(); 
+                                    $total_pages = ceil($total_coaches / $users_per_page);
+                                    $base_url = add_query_arg('paged', '%#%'); 
+                                    $pagination_args = array(
+                                        'total'        => $total_pages,
+                                        'current'      => $paged, 
+                                        'prev_text'    => '&laquo;', 
+                                        'next_text'    => '&raquo;', 
+                                        'type'         => 'array', 
+                                    );
+                                    $pagination_links = paginate_links($pagination_args);
 
                                     if ( ! empty( $coaches ) ) {
                                         foreach ( $coaches as $coach ) {
@@ -171,8 +195,8 @@ require locate_template('layouts/header.php') ;
                                           $max_length = 150; 
                                           $limited_description = (strlen($description) > $max_length) ? substr($description, 0, $max_length) . '...' : $description;
 
-
                                           $session_price = get_user_meta($cochID, "_session_price", true);
+                                          $session_price =  !empty($session_price) ? $session_price : '0';;
 
                                           $sportID = get_user_meta($cochID, "_sport", true);
 
@@ -246,14 +270,26 @@ require locate_template('layouts/header.php') ;
                                                                 <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>&nbsp;Verified</a></li>
                                                             </ul>
                                                         </div>
-                                                        <div class="custom-button d-flex align-items-center gap-2 justify-content-end">
-                                                            <a href="<?php echo $link; ?>">View Profile&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+                                                        <div class="custom-button d-flex align-items-center gap-2 justify-content-center">
+                                                            <a href="<?php echo $link; ?>">View Profile <i class="fa-solid fa-angles-right"></i></a>
                                                         </div>
                                                     </div>
                                                 </div>
                                                </div>
                                             </div>
                                        <?php }
+
+                                       echo '<ul class="post-pagination text-center">';
+                                       if (!empty($pagination_links)) {
+                                          foreach ($pagination_links as $link) {
+                                            $active = "";
+                                            if (strpos($link, "page/{$paged}/") !== false) {
+                                                $active = "active";
+                                            }
+                                            echo '<li class="' . $active . '">' . $link . '</li>';
+                                          }
+                                        }
+                                        echo '</ul>';
                                     } else {
                                         echo '<p class="text-danger text-center">No coaches found !</p>';
                                     }
@@ -331,7 +367,6 @@ require locate_template('layouts/header.php') ;
                                         <?php }
                                         }
                                         wp_reset_postdata(); ?>  
-
                                 </div>
                                 <?php if($i==0){echo 'No summer camps found for you !';} ?>
                                 </div>

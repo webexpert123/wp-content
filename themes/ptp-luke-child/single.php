@@ -5,6 +5,20 @@ require locate_template('layouts/header.php') ;
 $current_page_id = get_queried_object_id();
 
 ?>
+<style>
+.breadcrumb-area {
+  background: url('<?php echo get_stylesheet_directory_uri(); ?>/assets/images/coach_listing_banner.jpg') no-repeat center center;
+  background-position: center center;
+  background-repeat: no-repeat;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  background-size: cover;
+}
+</style>
 <div id="frontend-main">
             <!--Start breadcrumb area-->     
 <section class="breadcrumb-area">
