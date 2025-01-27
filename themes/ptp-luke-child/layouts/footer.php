@@ -155,6 +155,15 @@
         autoPlay:true
     });
 });
+
+    function set_login_url(){
+        var currentUrl = window.location.href;
+        var date = new Date();
+        date.setDate(date.getDate() + 1);
+        var expires = "expires=" + date.toUTCString();
+        document.cookie = "custom_login_url=" + currentUrl + "; path=/; " + expires;
+        window.location.href = "<?php echo site_url('user-login'); ?>";
+    }
   </script>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>

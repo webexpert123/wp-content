@@ -14,6 +14,20 @@ $student_stories = get_field('student_stories');
 $insta_feeds = get_field('insta_feeds');
 $case_study_section = get_field('case_study_section');
 ?>
+<style>
+.social_media_liks {
+    margin-bottom: 50px;
+}
+.social_media_liks a {
+    border-radius: 100px;
+    padding: 15px;
+    min-width: 55px;
+    margin-right: 5px;
+}
+.brand-item {
+    height: 490px;
+}
+</style>
         <div id="frontend-main">
             <!-- /Hero Section start-->
             <div class="hero-wrapper">
@@ -519,62 +533,49 @@ $case_study_section = get_field('case_study_section');
                             <p>Our brand ambassador plays a key role in connecting with our target audience.</p>
                         </div>
                         <div class="brand-ic-main owl-carousel">
-                            <div class="brand-item">
-                                <img class="img-fluid" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/01.jpg">
-                                <div class="brand-contents">
-                                    <h3>Janalia D'Souza</h3>
-                                    <p>Runner</p>
+                            <?php
+                            $args = array(
+                                'post_type'      => 'ptp-ambassador', 
+                                'posts_per_page' => -1,              
+                                'post_status'    => 'publish',       
+                            );
+                            $query = new WP_Query($args);
+                            if ($query->have_posts()) {
+                              while ($query->have_posts()) {
+                                  $query->the_post();
+                                  $post_id = get_the_ID();
+                                  $title = get_the_title(); 
+                                  $featured_image = get_the_post_thumbnail_url($post_id, 'full'); 
+                                  $social_media_links = get_field('social_media_links', $post_id);
+                            ?>
+                                <div class="brand-item">
+                                    <img class="img-fluid" src="<?php echo $featured_image; ?>">
+                                    <div class="brand-contents">
+                                        <h3><?php echo $title; ?></h3>
+                                        <p><?php echo get_post_meta($post_id, "ambassador_designation", true); ?></p>
+                                        <div class="social_media_liks">
+                                            <?php
+                                            if($social_media_links["_facebook_link"]){
+                                                echo '<a href="'.$social_media_links["_facebook_link"].'" class="btn btn-sm btn-light" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>';
+                                            }
+                                            if($social_media_links["_insta_link"]){
+                                                echo '<a href="'.$social_media_links["_insta_link"].'" class="btn btn-sm btn-light" target="_blank"><i class="fa-brands fa-instagram"></i></a>';
+                                            }
+                                            if($social_media_links["_tiktok_link"]){
+                                                echo '<a href="'.$social_media_links["_tiktok_link"].'" class="btn btn-sm btn-light" target="_blank"><i class="fa-brands fa-tiktok"></i></a>';
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="brand-item">
-                                <img class="img-fluid" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/02.jpg">
-                                <div class="brand-contents">
-                                    <h3>Cody Harman</h3>
-                                    <p>Football Player</p>
-                                </div>
-                            </div>
-                            <div class="brand-item">
-                                <img class="img-fluid" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/03.jpg">
-                                <div class="brand-contents">
-                                    <h3>Alexandra Bruin</h3>
-                                    <p>Yoga Specialist</p>
-                                </div>
-                            </div>
-                            <div class="brand-item">
-                                <img class="img-fluid" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/04.jpg">
-                                <div class="brand-contents">
-                                    <h3>Lexie Ward</h3>
-                                    <p>Weight Lifter</p>
-                                </div>
-                            </div>
-                            <div class="brand-item">
-                                <img class="img-fluid" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/01.jpg">
-                                <div class="brand-contents">
-                                    <h3>Janalia D'Souza</h3>
-                                    <p>Runner</p>
-                                </div>
-                            </div>
-                            <div class="brand-item">
-                                <img class="img-fluid" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/02.jpg">
-                                <div class="brand-contents">
-                                    <h3>Michelle Riley</h3>
-                                    <p>Football Player</p>
-                                </div>
-                            </div>
-                            <div class="brand-item">
-                                <img class="img-fluid" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/03.jpg">
-                                <div class="brand-contents">
-                                    <h3>Alexandra Bruin</h3>
-                                    <p>Yoga Specialist</p>
-                                </div>
-                            </div>
-                            <div class="brand-item">
-                                <img class="img-fluid" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/04.jpg">
-                                <div class="brand-contents">
-                                    <h3>Lexie Ward</h3>
-                                    <p>Weight Lifter</p>
-                                </div>
-                            </div>
+                            <?php
+                                }
+                            } else {
+                                echo '<p class="text-danger">No PTP Ambassador Found !</p>';
+                            }
+
+                            wp_reset_postdata();
+                            ?>
                         </div>
                </section>
              

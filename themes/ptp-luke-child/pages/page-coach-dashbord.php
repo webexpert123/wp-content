@@ -110,6 +110,15 @@ $('#Edit_datetimepicker2').datetimepicker({
                     $(".spinner-logout").hide();
                     if (response.data.ajax_status == 'success') {
                       window.location.href = response.data.redirect_url;
+                      Swal.fire({
+                        title: "Logging Out..",
+                        text: '',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading(); 
+                        }
+                      });
                     }else{
                       Swal.fire({ title: response.data.message, text: '', icon: "error"});
                     }

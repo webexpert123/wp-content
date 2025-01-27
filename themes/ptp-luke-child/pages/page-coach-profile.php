@@ -217,7 +217,7 @@ div#all_review_modal .camp-item p {
                                                         </ul>
                                                     </div>
                                                     <div class="pd-right custom-button">
-                                                        <button type="button" class="btn btn-round btn-fill" data-toggle="modal" data-target="#have_question_modal">Have any questions?</button>
+                                                        <button type="button" class="btn btn-round btn-fill" data-toggle="modal" data-target="#have_question_modal">Any Questions?</button>
                                                     </div>
                                                 </div>
                                                 <div class="profile-meta">
@@ -967,7 +967,11 @@ require locate_template('layouts/footer.php') ;
                 <?php 
                 $current_user = wp_get_current_user();
                 if (!in_array('athlete', $current_user->roles) || !is_user_logged_in()) {
-                    echo '<div class="col-md-12"><p class="text-danger">Only registered athletes can book a session of coach !</p></div>';
+                    echo '<div class="col-md-12"><p class="text-danger text-center">Only registered athletes can book a session of coach !</p>';
+                    if(!is_user_logged_in()){
+                        echo '<div class="text-center"><a href="javascript:void(0);" class="text-warning text-center" onclick="set_login_url()">Click here to login or register as athlete</a></div>';
+                    }
+                    echo '</div>';
                 }
                 else if(!empty(get_user_meta($user->ID, "_session_quantity", true)) && !empty(get_user_meta($user->ID, "_session_price", true))){ ?>
                 <div class="col-md-12">
@@ -1019,7 +1023,11 @@ require locate_template('layouts/footer.php') ;
                 <div class="row">
                     <?php 
                     if (!in_array('athlete', $current_user->roles) || !is_user_logged_in()) {
-                        echo '<div class="col-md-12"><p class="text-danger">Only registered athletes can add review for coach !</p></div>';
+                        echo '<div class="col-md-12 text-center"><p class="text-danger">Only registered athletes can add review for coach !</p>';
+                        if(!is_user_logged_in()){
+                           echo '<div class="text-center"><a href="javascript:void(0);" class="text-warning text-center" onclick="set_login_url()">Click here to login or register as athlete</a></div>';
+                        }
+                        echo '</div>';
                     }
                     else{ ?>
                         <div class="col-md-12 for-group">

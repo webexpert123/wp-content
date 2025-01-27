@@ -19,6 +19,15 @@ add_filter('show_admin_bar', function ($show) {
 });
 
 
+add_action('template_redirect', 'redirect_shop_cart_to_home');
+function redirect_shop_cart_to_home() {
+    if (is_shop() || is_cart()) {
+        wp_redirect(home_url());
+        exit;
+    }
+}
+
+
 
 // Add Author column to custom post type
 function add_author_column_to_custom_post_type($columns) {
@@ -247,7 +256,13 @@ function login_submit_user(){
          $redirectURL = site_url()."/my-account-coach"; 
        }
        elseif($primary_role=="athlete"){
-         $redirectURL = site_url()."/my-account-athlete"; 
+          if (isset($_COOKIE['custom_login_url'])) {
+            $redirectURL = $_COOKIE['custom_login_url'];
+            setcookie('custom_login_url', '', time() - 3600, '/');
+            unset($_COOKIE['custom_login_url']);
+          }else{
+            $redirectURL = site_url()."/my-account-athlete"; 
+          }
        }
        else{
         $redirectURL = home_url();

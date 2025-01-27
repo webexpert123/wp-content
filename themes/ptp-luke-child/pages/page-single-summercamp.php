@@ -103,7 +103,7 @@ if (!empty($post)) {
                                                 </ul>
                                             </div>
                                             <div class="meta-about">
-                                                <p><?php echo $short_desc; ?></p>
+                                                <p><?php echo nl2br(esc_html(wp_unslash($short_desc))); ?></p>
                                             </div>
                                             <div class="pd-right custom-button">
                                                 <button type="button" class="btn btn-round btn-fill add_to_cart_btn" data-id="<?php echo $product_id; ?>">BOOK NOW <div class="spinner-border" id="spinner" style="display:none;"></div> </button>
@@ -117,7 +117,7 @@ if (!empty($post)) {
                     <div class="col-md-12">
                         <div class="summer-content mt-5 mb-5">
                             <h2 class="mb-3">About the event</h2>
-                            <p><?php echo $post_content; ?></p>
+                            <p><?php echo nl2br(esc_html(wp_unslash($post_content))); ?></p>
                         </div>
                         <div class="map-area mt-4 mb-5">
                             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d214592.19404833476!2d-96.89690307815748!3d32.818684635908625!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x864c19f77b45974b%3A0xb9ec9ba4f647678f!2sDallas%2C%20TX%2C%20USA!5e0!3m2!1sen!2sin!4v1737524631232!5m2!1sen!2sin"
@@ -153,9 +153,13 @@ require locate_template('layouts/footer.php') ;
         <?php
         $user = wp_get_current_user();
         if (!in_array('athlete', $user->roles) || !is_user_logged_in()) {
+            $htmlLink = '';
+            if(!is_user_logged_in()){
+                $htmlLink = '<a href=javascript:void(0);" class="text-warning text-center" onclick="set_login_url()">Click here to login or register as athlete</a>';
+            }
             echo 'Swal.fire({
                 title: "Only athletes can book summer camps!",
-                text: "",
+                html: `'.$htmlLink.'`,
                 icon: "error"
             }); return false;';
         }
