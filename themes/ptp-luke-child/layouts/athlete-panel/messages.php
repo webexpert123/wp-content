@@ -1,3 +1,15 @@
+<style>
+    #emoji-picker {
+        position: absolute;
+        z-index: 999;
+        bottom: 60px;
+        right: 40px;
+    }
+    #emoji-trigger{
+        background: #1c2229 !important;
+        border: none !important;
+    }
+</style>
 <div class="dashboard-main">
                     <div class="row">
                         <div class="col page-title">
@@ -110,6 +122,7 @@
                                                     <div class="list-inline d-flex customers-contacts dropleft ms-auto dropdown"></div>
                                                 </div>
                                             </div>
+                                            <div id="emoji-picker"></div>
                                             <div id="load_messages" class="chat-body">
                                             </div>
                                             <div class="chat-footer">
@@ -117,6 +130,7 @@
                                                     <input type="hidden" id="receiverid" value="<?php echo $receiver_id; ?>">
                                                     <input id="message_txt" class="form-control my-0 py-1 red-border" type="text" placeholder="Write a message...">
                                                     <div class="input-group-append send_btn">
+                                                        <button type="button" class="btn" id="emoji-trigger">😀</button>
                                                         <button type="button" class="btn input-group-text  lighten-3" id="basic-text1" onclick="send_message();">
                                                             <i class="fadeIn animated bx bx-send"></i>
                                                         </button>
@@ -138,7 +152,47 @@
 
                 </div>
 
+
+<script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js"></script>
 <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const picker = new EmojiMart.Picker({
+                onEmojiSelect: (emoji) => {
+                    const input = document.getElementById('message_txt');
+                    const cursorPos = input.selectionStart;
+                    const textBefore = input.value.substring(0, cursorPos);
+                    const textAfter = input.value.substring(cursorPos);
+                    
+                    input.value = textBefore + emoji.native + textAfter;
+                    input.focus();
+                    input.selectionStart = cursorPos + emoji.native.length;
+                    input.selectionEnd = cursorPos + emoji.native.length;
+                },
+                set: 'native', 
+                theme: 'light',
+                showPreview: false,
+                showSkinTones: true,
+                emojiSize: 20
+            });
+
+            const triggerButton = document.getElementById('emoji-trigger');
+            const pickerDiv = document.getElementById('emoji-picker');
+            
+            pickerDiv.appendChild(picker);
+            pickerDiv.style.display = 'none';
+
+            triggerButton.addEventListener('click', () => {
+                pickerDiv.style.display = pickerDiv.style.display === 'none' ? 'block' : 'none';
+            });
+
+            // Close picker when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!pickerDiv.contains(e.target) && e.target !== triggerButton) {
+                    pickerDiv.style.display = 'none';
+                }
+            });
+        });
+
     function send_message(){
        var message = jQuery("#message_txt").val();
        var receiverid = jQuery("#receiverid").val();
