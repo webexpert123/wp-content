@@ -51,7 +51,7 @@
                                                                 $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.png";
                                                               }
 
-                                                              $latest_chat_id = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(chatID) as chatID FROM {$wpdb->prefix}chat_messages WHERE (sender_id = %d AND receiver_id = %d)  OR (sender_id = %d AND receiver_id = %d) ORDER BY chatID ASC", $coachID, $user_id, $user_id, $coachID ) );
+                                                              $latest_chat_id = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(chatID) as chatID FROM {$wpdb->prefix}chat_messages WHERE (sender_id = %d AND receiver_id = %d)  OR (sender_id = %d AND receiver_id = %d) ORDER BY chatID ASC", $athleteID, $user_id, $user_id, $athleteID ) );
                                                               $latest_chat_id = $latest_chat_id ? $latest_chat_id : 0; ?>
                                                                 <a href="<?php echo $chat_link; ?>" data-latest_chat_id="<?php echo $latest_chat_id; ?>">
                                                                     <div class="customers-list-item d-flex align-items-center p-2 py-3 cursor-pointer">
