@@ -49,8 +49,12 @@
                                                                 $profile_img_link = wp_get_attachment_image_url($attachment_id, 'thumbnail');
                                                               }else{
                                                                 $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.png";
-                                                              } ?>
-                                                                <a href="<?php echo $chat_link; ?>"><div class="customers-list-item d-flex align-items-center p-2 py-3 cursor-pointer">
+                                                              }
+
+                                                              $latest_chat_id = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(chatID) as chatID FROM {$wpdb->prefix}chat_messages WHERE (sender_id = %d AND receiver_id = %d)  OR (sender_id = %d AND receiver_id = %d) ORDER BY chatID ASC", $coachID, $user_id, $user_id, $coachID ) );
+                                                              $latest_chat_id = $latest_chat_id ? $latest_chat_id : 0; ?>
+                                                                <a href="<?php echo $chat_link; ?>" data-latest_chat_id="<?php echo $latest_chat_id; ?>">
+                                                                    <div class="customers-list-item d-flex align-items-center p-2 py-3 cursor-pointer">
                                                                     <div class="student-thumb">
                                                                         <img src="<?php echo $profile_img_link; ?>" class="rounded-circle" width="46" height="46" alt="">
                                                                         <!-- <span class="user-online"></span> -->
