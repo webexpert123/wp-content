@@ -888,3 +888,117 @@ function ptp_settings_callback() {
     include( get_stylesheet_directory() . '/admin_modules/ptp_settings.php');
 }
 
+function send_chat_message_func(){
+    global $wpdb;
+    $message = isset($_POST['message']) ? sanitize_text_field($_POST['message']) : '';
+    $sender_id = intval($_POST['senderid']);
+    $receiver_id = intval($_POST['receiverid']);
+    $wpdb->insert(
+        $wpdb->prefix . 'chat_messages',
+        array(
+            'sender_id' => $sender_id,
+            'receiver_id' => $receiver_id,
+            'message' => $message,
+            'created_at' => date("Y-m-d H:i:s")
+        )
+    );
+    exit;
+}
+add_action( 'wp_ajax_nopriv_send_chat_message', 'send_chat_message_func' );
+add_action( 'wp_ajax_send_chat_message', 'send_chat_message_func' );
+
+
+function get_chat_messages_func(){
+    global $wpdb;
+    $sender_id = intval($_POST['senderid']);
+    $receivers_id = intval($_POST['receiverid']);
+    $messages = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE (sender_id = %d AND receiver_id = %d)  OR (sender_id = %d AND receiver_id = %d) ORDER BY chatID ASC", $sender_id, $receivers_id, $receivers_id, $sender_id ) );
+    foreach($messages as $msg){
+        if($sender_id == $msg->sender_id){
+            $sender_name = get_user_meta($sender_id, "fullname", true);
+            $sender_info = get_userdata($sender_id);
+            $sender_email = $sender_info->user_email;
+            $sender_attachment_id = get_user_meta($sender_id, "_profile_pic_id", true);
+            if( $sender_attachment_id ) {
+                $sender_profile_img_link = wp_get_attachment_image_url($sender_attachment_id, 'thumbnail');
+            }else{
+                $sender_profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.png";
+            } ?>
+            <div class="message-content sender">
+                <div class="customers-list-item d-flex align-items-start py-2 cursor-pointer">
+                    <div class="student-thumb text-center">
+                        <img src="<?php echo $sender_profile_img_link; ?>" class="rounded-circle" width="40" height="40" alt="">
+                        <!-- <span class="user-online"></span> -->
+                        <div class="list-inline customers-contacts">
+                            <span class="chat-time"><?php echo timeAgo($msg->created_at); ?></span>
+                        </div>
+                    </div>
+                    <div class="ms-2">
+                        <h6 class="mb-1 font-14">You</h6>
+                        <p class="mb-0 font-13 text-light-2"><?php echo $sender_email; ?></p>
+                    </div>
+                </div>
+                <div class="msg-block">
+                    <p><?php echo $msg->message; ?></p>
+                </div>
+            </div>
+        <?php }
+        else{
+            $receivers_name = get_user_meta($receivers_id, "fullname", true);
+            $receivers_info = get_userdata($receivers_id);
+            $receivers_email = $receivers_info->user_email;
+            $receivers_attachment_id = get_user_meta($receivers_id, "_profile_pic_id", true);
+            if( $receivers_attachment_id ) {
+                $receivers_profile_img_link = wp_get_attachment_image_url($receivers_attachment_id, 'thumbnail');
+            }else{
+                $receivers_profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.png";
+            } ?>
+            <div class="message-content receiver">
+                <div class="customers-list-item d-flex align-items-start py-2 cursor-pointer">
+                    <div class="student-thumb text-center">
+                        <img src="<?php echo $receivers_profile_img_link; ?>" class="rounded-circle" width="40" height="40" alt="">
+                        <!-- <span class="user-online"></span> -->
+                        <div class="list-inline customers-contacts">
+                            <span class="chat-time"><?php echo timeAgo($msg->created_at); ?></span>
+                        </div>
+                    </div>
+                    <div class="ms-2">
+                        <h6 class="mb-1 font-14"><?php echo $receivers_name; ?></h6>
+                        <p class="mb-0 font-13 text-light-2"><?php echo $receivers_email; ?></p>
+                    </div>
+                </div>
+                <div class="msg-block">
+                    <p><?php echo $msg->message; ?></p>
+                </div>
+            </div>
+    <?php
+        }
+        $update_query = $wpdb->prepare( "UPDATE {$wpdb->prefix}chat_messages SET read_status = '1'  WHERE receiver_id = '$sender_id' AND sender_id = '$receivers_id' ");
+        $update_result = $wpdb->query($update_query);
+    }
+    if(empty($messages)){ echo "<p class='text-danger text-center mt-5'>No messages found !</p>"; }
+    exit;
+}
+add_action( 'wp_ajax_nopriv_get_chat_messages', 'get_chat_messages_func' );
+add_action( 'wp_ajax_get_chat_messages', 'get_chat_messages_func' );
+
+function get_unread_message_count_func(){
+    global $wpdb;
+    $sender = intval($_POST['sender']);
+    $receiver = intval($_POST['receiver']);
+    $count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}chat_messages WHERE receiver_id = %d  AND sender_id = %d AND read_status = 0", $sender, $receiver));
+    if (isset($_POST['ajax']) && $_POST['ajax'] == 1) {
+        echo $count;
+        exit;
+    } else {
+      return $count;
+    }
+}
+add_action( 'wp_ajax_nopriv_get_unread_message_count', 'get_unread_message_count_func' );
+add_action( 'wp_ajax_get_unread_message_count', 'get_unread_message_count_func' );
+
+function get_unread_message_count_func2($sender, $receiver){
+    global $wpdb;
+    $count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}chat_messages WHERE receiver_id = %d  AND sender_id = %d AND read_status = 0", $sender, $receiver));
+    return $count;
+}

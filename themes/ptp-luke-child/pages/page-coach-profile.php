@@ -28,7 +28,7 @@ require locate_template('layouts/header.php') ;
             if(isset($_POST['add_review'])) {
                 $table_name = $wpdb->prefix . 'coach_reviews';
                 $current_user_id = get_current_user_id();
-                $created_at = date("Y-m-d h:i:s");
+                $created_at = date("Y-m-d H:i:s");
                 $query = $wpdb->prepare("INSERT INTO `$table_name` (`coach_id`, `athlete_id`, `description`, `rating`, `created_at`) VALUES (%d, %d, %s, %d, %s)", $user->ID, $current_user_id, $_POST['message'], $_POST['rating'],$created_at);
                 $result = $wpdb->query($query);
 
@@ -673,11 +673,24 @@ div#all_review_modal .camp-item p {
                                 </div>
                                 <div class="summer-camp-carousel owl-carousel">
                                     <?php
-                                        $args = [
-                                            'post_type' => 'summer-camps', 
-                                            'posts_per_page' => -1, 
-                                            'post_status'    => array('publish')
-                                        ];
+                                        $args = array(
+                                            'post_type'      => 'summer-camps',       
+                                            'posts_per_page' => -1,           
+                                            'paged'          => $paged, 
+                                            'post_status'    => array('publish'),
+                                            'orderby'        => 'meta_value',
+                                            'order'          => 'ASC',
+                                            'meta_key'       => '_event_from_date',
+                                            'meta_type'      => 'DATE',   
+                                            'meta_query'     => array(
+                                                array(
+                                                    'key'     => '_event_from_date',  
+                                                    'value'   => current_time('Y-m-d'), 
+                                                    'compare' => '>=',              
+                                                    'type'    => 'DATE',            
+                                                ),
+                                            ),
+                                        );
                                         $query = new WP_Query($args);
                                         if ($query->have_posts()) {
                                             $i = 0;

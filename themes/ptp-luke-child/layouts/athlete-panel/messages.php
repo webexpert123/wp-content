@@ -27,190 +27,108 @@
                                                         <div class="card-body">
                                                           <div class="mb-3">
                                                             <div class="card-title mb-4 d-flex align-items-center justify-content-between">
-                                                                <h5 class="">New Students</h5>
-                                                                <a href="#">View All</a>
+                                                                <h5 class="">All Coaches</h5>
+                                                                <!-- <a href="#">View All</a> -->
                                                             </div>
                                                             <div class="student-list">
-                                                                <div class="customers-list-item d-flex align-items-center p-2 py-3 cursor-pointer">
+                                                            <?php
+                                                            global $wpdb;
+                                                            $i=0;
+                                                            $args_custom = array(
+                                                                'role'    => 'coach', 
+                                                                'fields'  => 'ID'
+                                                            );
+                                                            $user_query_custom = new WP_User_Query($args_custom);
+                                                            foreach ($user_query_custom->results as $coachID) {
+                                                              $athlete_name = get_user_meta($coachID, "fullname", true);
+                                                              $athlete_info = get_userdata($coachID);
+                                                              $athlete_email = $athlete_info->user_email;
+                                                              $chat_link = site_url('my-account-athlete/?section=messages&rid='.md5($coachID));
+                                                              $attachment_id = get_user_meta($coachID, "_profile_pic_id", true);
+                                                              if( $attachment_id ) {
+                                                                $profile_img_link = wp_get_attachment_image_url($attachment_id, 'thumbnail');
+                                                              }else{
+                                                                $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.png";
+                                                              } 
+
+                                                              $latest_chat_id = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(chatID) as chatID FROM {$wpdb->prefix}chat_messages WHERE (sender_id = %d AND receiver_id = %d)  OR (sender_id = %d AND receiver_id = %d) ORDER BY chatID ASC", $coachID, $user_id, $user_id, $coachID ) );
+                                                              $latest_chat_id = $latest_chat_id ? $latest_chat_id : 0; ?>
+                                                                <a href="<?php echo $chat_link; ?>" data-latest_chat_id="<?php echo $latest_chat_id; ?>">
+                                                                    <div class="customers-list-item d-flex align-items-center p-2 py-3 cursor-pointer">
                                                                     <div class="student-thumb">
-                                                                        <img src="../../assets/images/avatars/avatar-4.png" class="rounded-circle" width="46" height="46" alt="">
-                                                                        <span class="user-online"></span>
+                                                                        <img src="<?php echo $profile_img_link; ?>" class="rounded-circle" width="46" height="46" alt="">
+                                                                        <!-- <span class="user-online"></span> -->
                                                                     </div>
                                                                     <div class="ms-2">
-                                                                        <h6 class="mb-1 font-14">Emy Jackson</h6>
-                                                                        <p class="mb-0 font-13 text-light-2">emy_jac@xyz.com</p>
+                                                                        <h6 class="mb-1 font-14"><?php echo $athlete_name; ?></h6>
+                                                                        <p class="mb-0 font-13 text-light-2"><?php echo $athlete_email; ?></p>
                                                                     </div>
                                                                     <div class="list-inline d-flex customers-contacts ms-auto">
-                        
-                                                                        <a href="javascript:;" class="list-inline-item"><i class="bx bx-dots-vertical-rounded"></i></a>
+                                                                        <?php $unread_count = get_unread_message_count_func2($user_id, $coachID);
+                                                                        if($unread_count != 0){
+                                                                            echo '<span class="badge badge-pill badge-danger">'.$unread_count.'</span>';
+                                                                        } ?>
                                                                     </div>
-                                                                </div>
-                                                                <div class="customers-list-item d-flex align-items-center p-2 py-3 cursor-pointer">
-                                                                    <div class="student-thumb">
-                                                                        <img src="../../assets/images/avatars/avatar-2.png" class="rounded-circle" width="46" height="46" alt="">
-                                                                        <span class="user-online"></span>
-                                                                    </div>
-                                                                    <div class="ms-2">
-                                                                        <h6 class="mb-1 font-14">Emy Jackson</h6>
-                                                                        <p class="mb-0 font-13 text-light-2">emy_jac@xyz.com</p>
-                                                                    </div>
-                                                                    <div class="list-inline d-flex customers-contacts ms-auto">
-                        
-                                                                        <a href="javascript:;" class="list-inline-item"><i class="bx bx-dots-vertical-rounded"></i></a>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="customers-list-item d-flex align-items-center p-2 py-3 cursor-pointer">
-                                                                    <div class="student-thumb">
-                                                                        <img src="../../assets/images/avatars/avatar-11.png" class="rounded-circle" width="46" height="46" alt="">
-                                                                        <span class="user-online"></span>
-                                                                    </div>
-                                                                    <div class="ms-2">
-                                                                        <h6 class="mb-1 font-14">Emy Jackson</h6>
-                                                                        <p class="mb-0 font-13 text-light-2">emy_jac@xyz.com</p>
-                                                                    </div>
-                                                                    <div class="list-inline d-flex customers-contacts ms-auto">
-                        
-                                                                        <a href="javascript:;" class="list-inline-item"><i class="bx bx-dots-vertical-rounded"></i></a>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="customers-list-item d-flex align-items-center p-2 py-3 cursor-pointer">
-                                                                    <div class="student-thumb">
-                                                                        <img src="../../assets/images/avatars/avatar-2.png" class="rounded-circle" width="46" height="46" alt="">
-                                                                        <span class="user-online"></span>
-                                                                    </div>
-                                                                    <div class="ms-2">
-                                                                        <h6 class="mb-1 font-14">Emy Jackson</h6>
-                                                                        <p class="mb-0 font-13 text-light-2">emy_jac@xyz.com</p>
-                                                                    </div>
-                                                                    <div class="list-inline d-flex customers-contacts ms-auto">
-                        
-                                                                        <a href="javascript:;" class="list-inline-item"><i class="bx bx-dots-vertical-rounded"></i></a>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="customers-list-item d-flex align-items-center p-2 py-3 cursor-pointer">
-                                                                    <div class="student-thumb">
-                                                                        <img src="../../assets/images/avatars/avatar-4.png" class="rounded-circle" width="46" height="46" alt="">
-                                                                        <span class="user-online"></span>
-                                                                    </div>
-                                                                    <div class="ms-2">
-                                                                        <h6 class="mb-1 font-14">Emy Jackson</h6>
-                                                                        <p class="mb-0 font-13 text-light-2">emy_jac@xyz.com</p>
-                                                                    </div>
-                                                                    <div class="list-inline d-flex customers-contacts ms-auto">
-                        
-                                                                        <a href="javascript:;" class="list-inline-item"><i class="bx bx-dots-vertical-rounded"></i></a>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="customers-list-item d-flex align-items-center p-2 py-3 cursor-pointer">
-                                                                    <div class="student-thumb">
-                                                                        <img src="../../assets/images/avatars/avatar-2.png" class="rounded-circle" width="46" height="46" alt="">
-                                                                        <span class="user-online"></span>
-                                                                    </div>
-                                                                    <div class="ms-2">
-                                                                        <h6 class="mb-1 font-14">Emy Jackson</h6>
-                                                                        <p class="mb-0 font-13 text-light-2">emy_jac@xyz.com</p>
-                                                                    </div>
-                                                                    <div class="list-inline d-flex customers-contacts ms-auto">
-                        
-                                                                        <a href="javascript:;" class="list-inline-item"><i class="bx bx-dots-vertical-rounded"></i></a>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="customers-list-item d-flex align-items-center p-2 py-3 cursor-pointer">
-                                                                    <div class="student-thumb">
-                                                                        <img src="../../assets/images/avatars/avatar-11.png" class="rounded-circle" width="46" height="46" alt="">
-                                                                        <span class="user-online"></span>
-                                                                    </div>
-                                                                    <div class="ms-2">
-                                                                        <h6 class="mb-1 font-14">Emy Jackson</h6>
-                                                                        <p class="mb-0 font-13 text-light-2">emy_jac@xyz.com</p>
-                                                                    </div>
-                                                                    <div class="list-inline d-flex customers-contacts ms-auto">
-                        
-                                                                        <a href="javascript:;" class="list-inline-item"><i class="bx bx-dots-vertical-rounded"></i></a>
-                                                                    </div>
-                                                                </div>
-                                                                
+                                                                </div></a>
+                                                              <?php } ?>
                                                             </div>
                                                         </div>
                                                       </div>
                                                       </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-9">
-                                                <div class="single-chat-tab">
-                                                    <div class="chat-header">
-                                                      <div class="media">
-                                                        <div class="user-dp position-relative">
-                                                          <img class="" src="../../assets/images/avatars/avatar-4.png" alt="img">
-                                                          <span class="user-online"></span>
-                                                        </div>
-                                                        <div class="media-body">
-                                                          <h5 class="mt-0">Emy Jackson</h5>
-                                                        </div>
-                                                      </div>
+
+                                <div class="col-md-9">
+                                    <?php
+                                    if(!isset($_REQUEST["rid"]) || empty($_REQUEST["rid"])){
+                                        echo "<h2 class='text-center text-light mt-5'>WELCOME TO THE PTP CHAT SYSTEM</h2>";
+                                        echo '<center><img src="'.get_stylesheet_directory_uri().'/assets/images/lesson_coordinator.png" class="mt-5" width="350" height="200"></center>';
+                                    }
+                                    else{ 
+                                        $hash = $_REQUEST["rid"]; 
+                                        $receiver_id = $wpdb->get_var( $wpdb->prepare("SELECT ID FROM {$wpdb->users} WHERE MD5(ID) = %s ", $hash ) );
+                                        if ( $receiver_id ) {
+                                            $receiver_name = get_user_meta($receiver_id, "fullname", true);
+                                            $receiver_info = get_userdata($receiver_id);
+                                            $receiver_email = $athlete_info->user_email;
+                                            $receiver_attachment_id = get_user_meta($receiver_id, "_profile_pic_id", true);
+                                            if( $receiver_attachment_id ) {
+                                                $receiver_profile_img_link = wp_get_attachment_image_url($receiver_attachment_id, 'thumbnail');
+                                            }else{
+                                                $receiver_profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.png";
+                                            } ?>
+                                        <div class="single-chat-tab">
+                                            <div class="chat-header">
+                                                <div class="media">
+                                                    <div class="user-dp position-relative">
+                                                        <img class="" src="<?php echo $receiver_profile_img_link; ?>" alt="img">
                                                     </div>
-                                                    <div class="chat-body">
-                                                      <div class="message-content receiver">
-                                                        <label for="">11:33 PM, Yesterday</label>
-                                                        <div class="msg-block">
-                                                          <p>
-                                                            bibendum egestas augue.Duis sit amet ante feugiat enim viverra sagittis.
-                                                          </p>
-                                                        </div>
-                                                      </div>
-                                                      <div class="message-content sender">
-                                                        <label for="">11:33 PM, Yesterday</label>
-                                                        <div class="msg-block">
-                                                          <p>
-                                                            bibendum egestas augue.Duis sit amet ante feugiat enim viverra sagittis.
-                                                          </p>
-                                                        </div>
-                                                      </div>
-                                                      <div class="message-content sender">
-                                                        <label for="">11:33 PM, Yesterday</label>
-                                                        <div class="msg-block">
-                                                          <p>
-                                                            bibendum egestas augue.Duis sit amet ante feugiat enim viverra sagittis.
-                                                          </p>
-                                                        </div>
-                                                      </div>
-                                                      <div class="message-content sender">
-                                                        <label for="">11:33 PM, Yesterday</label>
-                                                        <div class="msg-block">
-                                                          <p>
-                                                            bibendum egestas augue.Duis sit amet ante feugiat enim viverra sagittis.
-                                                          </p>
-                                                        </div>
-                                                      </div>
-                                                      <div class="message-content receiver">
-                                                        <label for="">11:33 PM, Yesterday</label>
-                                                        <div class="msg-block">
-                                                          <p>
-                                                            bibendum egestas augue.Duis sit amet ante feugiat enim viverra sagittis.
-                                                          </p>
-                                                        </div>
-                                                      </div>
-                                                      <div class="message-content sender">
-                                                        <label for="">11:33 PM, Yesterday</label>
-                                                        <div class="msg-block">
-                                                          <p>
-                                                            bibendum egestas augue.Duis sit amet ante feugiat enim viverra sagittis.
-                                                          </p>
-                                                        </div>
-                                                      </div>
+                                                    <div class="media-body">
+                                                        <h5 class="mt-0"><?php echo $receiver_name; ?></h5>
+                                                        <p class="m-0"><?php echo $receiver_email; ?></p>
                                                     </div>
-                                                    <div class="chat-footer">
-                                                      <div class="input-group md-form form-sm form-2 pl-0">
-                                                        <input class="form-control my-0 py-1 red-border" type="text" placeholder="Write a message...">
-                                                        <div class="input-group-append send_btn">
-                                                          <button class="btn input-group-text red lighten-3" id="basic-text1">
-                                                            <i class="fadeIn animated bx bx-send"></i>
-                                                          </button>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
+                                                    <div class="list-inline d-flex customers-contacts dropleft ms-auto dropdown"></div>
+                                                </div>
                                             </div>
+                                            <div id="load_messages" class="chat-body">
+                                            </div>
+                                            <div class="chat-footer">
+                                                <div class="input-group md-form form-sm form-2 pl-0">
+                                                    <input type="hidden" id="receiverid" value="<?php echo $receiver_id; ?>">
+                                                    <input id="message_txt" class="form-control my-0 py-1 red-border" type="text" placeholder="Write a message...">
+                                                    <div class="input-group-append send_btn">
+                                                        <button type="button" class="btn input-group-text  lighten-3" id="basic-text1" onclick="send_message();">
+                                                            <i class="fadeIn animated bx bx-send"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <p id="sending_txt" class="text-light" style="display:none;">Sending..</p>
+                                            </div>
+                                        </div>
+                                        <?php }else{ echo "<h2 class='text-center text-danger'>Invalid Chat Link !</h2>";}
+                                    }
+                                    ?>
+                                </div>
                                           </div>
                                        </div>
                                 </div>
@@ -219,3 +137,85 @@
                     </div>
 
                 </div>
+
+<script>
+    function send_message(){
+       var message = jQuery("#message_txt").val();
+       var receiverid = jQuery("#receiverid").val();
+       if(message==""){
+          Swal.fire({ title: "Please enter message !", text: '', icon: "warning"});
+          return false;
+       }
+       jQuery("#basic-text1").attr("disabled" , true);
+       jQuery.ajax({
+          url: "/wp-admin/admin-ajax.php",
+          type: 'POST',
+          dataType: "html",
+          data: {action: "send_chat_message", message: message, senderid: "<?php echo $user_id; ?>", receiverid: receiverid},
+          success: function(html) {
+            jQuery("#message_txt").val('');
+            jQuery("#basic-text1").attr("disabled" , false);
+            get_messages(0);
+          }
+       });
+    }
+
+
+    function get_messages(spinner = 1){
+       var receiverid = jQuery("#receiverid").val();
+       if(receiverid==""){ return false; }
+       if ( spinner == 1) {
+         jQuery("#load_messages").html('<center><div class="spinner-border text-light mt-5"></div></center>');
+       }
+       else if ( spinner == 0){
+        jQuery("#sending_txt").show();
+       }
+
+       jQuery.ajax({
+          url: "/wp-admin/admin-ajax.php",
+          type: 'POST',
+          dataType: "html",
+          data: {action: "get_chat_messages", senderid: "<?php echo $user_id; ?>", receiverid: receiverid},
+          success: function(html) {
+            jQuery("#sending_txt").hide();
+            jQuery("#load_messages").html(html);
+            jQuery('#load_messages').scrollTop(jQuery('#load_messages')[0].scrollHeight);
+          }
+       });
+    }
+
+    $(document).ready(function() {
+        get_messages();
+        $('#message_txt').on('keydown', function(e) {
+           if (e.keyCode === 13) {
+             e.preventDefault(); 
+             send_message(); 
+           }
+        });
+
+        //arrange chat list by last chat
+        var $anchors = $('.student-list a');
+        $anchors.sort(function(a, b) {
+            var aValue = $(a).data('latest_chat_id');
+            var bValue = $(b).data('latest_chat_id');
+            return bValue - aValue;
+        });
+        $('.student-list').html($anchors);
+    });
+
+    function get_unread_message_count(){
+       var receiverid = jQuery("#receiverid").val();
+       jQuery.ajax({
+          url: "/wp-admin/admin-ajax.php",
+          type: 'POST',
+          dataType: "html",
+          data: {action: "get_unread_message_count", sender: "<?php echo $user_id; ?>", receiver: receiverid, ajax:1},
+          success: function(html) {
+            if(Number(html.trim()) > 0){
+             get_messages(2); 
+            }
+          }
+       });
+    }
+    setInterval(get_unread_message_count, 5000);
+</script>

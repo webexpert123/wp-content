@@ -39,7 +39,13 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link <?php if($section=="messages"){echo "active";} ?>" href="?section=messages"><i class="bx bx-chat"></i>Messages</a>
+                        <a class="nav-link <?php if($section=="messages"){echo "active";} ?>" href="?section=messages"><i class="bx bx-chat"></i>Messages
+                            <?php 
+                            $unread_msg = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}chat_messages WHERE receiver_id = %d AND read_status = 0", $user_id));
+                            if($unread_msg != 0){
+                                echo '&nbsp;<span class="badge badge-pill badge-danger">'.$unread_msg.'</span>';
+                            } ?>
+                        </a>
                     </li>
 
                     <li class="nav-item">

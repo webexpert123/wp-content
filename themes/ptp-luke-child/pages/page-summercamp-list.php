@@ -107,9 +107,12 @@ require locate_template('layouts/header.php') ;
                                     $args = array(
                                         'post_type'      => 'summer-camps',       
                                         'posts_per_page' => 12,           
-                                        'paged'          => $paged,       
-                                        'orderby'        => 'ID',         
-                                        'order'          => 'DESC', 
+                                        'paged'          => $paged, 
+                                        'post_status'    => array('publish'),  
+                                        'orderby'        => 'meta_value',
+                                        'order'          => 'ASC',
+                                        'meta_key'       => '_event_from_date',
+                                        'meta_type'      => 'DATE',   
                                         'meta_query'     => array(
                                             array(
                                                 'key'     => '_event_from_date',  
