@@ -15,7 +15,7 @@ if(get_user_meta($user_id, "_profile_pic_id", true)){
        $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.png";
     }
 }else{
-  $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.jpg";
+  $profile_img_link = get_stylesheet_directory_uri()."/assets/images/profile_img.png";
 }
 
 $role = "Athlete";
