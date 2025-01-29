@@ -213,6 +213,8 @@
           success: function(html) {
             if(Number(html.trim()) > 0){
              get_messages(2); 
+             var audio = new Audio('<?php echo get_stylesheet_directory_uri(); ?>/assets/media/notification.mp3');
+             audio.play();
             }
           }
        });
