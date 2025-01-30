@@ -258,24 +258,11 @@ div#all_review_modal .camp-item p {
                                             </svg>
                                             <p>Try <?php echo $coach_name; ?> risk free. If you don't love your first lesson with <?php echo $coach_name; ?>, we'll switch you to another coach or give you a full refund. <a href="#"><strong>Learn more</strong></a></p>
                                         </div>
+                                <h5 class="mt-5">For any queries, please contact our Lesson Coordinator <u>+1 415 555 1234</u></h5>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="lesson-coordinator mt-5 mb-5">
-                                    <div class="lesson-inner">
-                                        <div class="lesson-img">
-                                            <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/lesson_coordinator.png" alt="lesson coordinator">
-                                        </div>
-                                        <div class="lesson-content">
-                                            <h3>For any queries, please contact our Lesson Coordinator</h3>
-                                            <p>If you have any questions or need assistance with lesson scheduling, course details, or any other educational inquiries, our Lesson Coordinator is here to help!</p>
-                                            <div class="custom-button mt-3">
-                                                <button type="button" class="btn btn-round btn-fill">Contact Now!</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 

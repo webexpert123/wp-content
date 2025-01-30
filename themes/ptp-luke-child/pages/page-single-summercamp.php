@@ -38,6 +38,7 @@ if (!empty($post)) {
                                            if($featured_image_url){
                                                echo "<img src='".$featured_image_url."' class='img-fluid'>";
                                            }
+                                           $current_date = date("Y-m-d H:i:s");
                                            $author_id = get_post_field('post_author', $post_id);
                                            $event_start = get_post_meta($post_id, "_event_from_date", true);
                                            $event_start_date = date("d/m/Y h:i A", strtotime($event_start));
@@ -106,7 +107,13 @@ if (!empty($post)) {
                                                 <p><?php echo nl2br(esc_html(wp_unslash($short_desc))); ?></p>
                                             </div>
                                             <div class="pd-right custom-button">
-                                                <button type="button" class="btn btn-round btn-fill add_to_cart_btn" data-id="<?php echo $product_id; ?>">BOOK NOW <div class="spinner-border" id="spinner" style="display:none;"></div> </button>
+                                                <?php
+                                                if($current_date < $event_start){ ?>
+                                                    <button type="button" class="btn btn-round btn-fill add_to_cart_btn" data-id="<?php echo $product_id; ?>">BOOK NOW <div class="spinner-border" id="spinner" style="display:none;"></div> </button>
+                                                <?php }else{
+                                                    echo "<b class='text-danger'>Booking Closed !</b>";
+                                                }
+                                                ?>
                                             </div>
                                         </div>
                                     </div>

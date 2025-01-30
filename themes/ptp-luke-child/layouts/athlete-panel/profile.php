@@ -4,6 +4,10 @@ if(isset($_POST['save_profile_details'])){
     update_user_meta($user_id, 'first_name', $_POST['fullname']);
     update_user_meta($user_id, 'phone', $_POST['phone']);
     update_user_meta($user_id, '_zipcode', $_POST['zipcode']);
+    update_user_meta($user_id, '_city', $_POST['city']);
+    update_user_meta($user_id, '_strength', $_POST['strength']);
+    update_user_meta($user_id, '_weakness', $_POST['weakness']);
+    update_user_meta($user_id, '_intrests', $_POST['intrests']);
     $user = get_userdata($user_id);
     $user->user_email = $_POST['email_addr'];
     $emailError = "";
@@ -70,6 +74,10 @@ $phone = get_user_meta($user_id, 'phone', true);
 $zipcode = get_user_meta($user_id, '_zipcode', true);
 $my_country = get_user_meta($user_id, '_my_country_code', true);
 $card_details = get_user_meta($user_id, '_card_details', true);
+$city = get_user_meta($user_id, '_city', true);
+$strength = get_user_meta($user_id, '_strength', true);
+$weakness = get_user_meta($user_id, '_weakness', true);
+$intrests = get_user_meta($user_id, '_intrests', true);
 $card_number = "";
 $expiry_date = "";
 $cvv_number = "";
@@ -254,8 +262,32 @@ if($card_details){
                                                                         </div>
                                                                         <div class="col-md-6 mb-2">
                                                                             <div class="form-group">
+                                                                                <label for="">City<b class="text-danger">*</b></label>
+                                                                                <input type="text" class="form-control" name="city" value="<?php echo $city; ?>" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6 mb-2">
+                                                                            <div class="form-group">
                                                                                 <label for="">Zip Code<b class="text-danger">*</b></label>
                                                                                 <input type="number" class="form-control" name="zipcode" value="<?php echo $zipcode; ?>" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 mb-2">
+                                                                            <div class="form-group">
+                                                                                <label for="">Strength<b class="text-danger">*</b></label>
+                                                                                <input type="text" class="form-control" name="strength" value="<?php echo $strength; ?>" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 mb-2">
+                                                                            <div class="form-group">
+                                                                                <label for="">Weakness<b class="text-danger">*</b></label>
+                                                                                <input type="text" class="form-control" name="weakness" value="<?php echo $weakness; ?>" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 mb-2">
+                                                                            <div class="form-group">
+                                                                                <label for="">Intrests<b class="text-danger">*</b></label>
+                                                                                <input type="text" class="form-control" name="intrests" value="<?php echo $intrests; ?>" required>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-12 mb-2">

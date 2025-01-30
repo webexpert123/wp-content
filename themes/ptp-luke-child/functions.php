@@ -1,4 +1,8 @@
 <?php
+// Include send_sms.php to make send_message() available
+include( get_stylesheet_directory() . '/send_sms.php');
+
+
 function my_theme_enqueue_styles() {
     $parent_style = 'parent-style'; // This is 'twentytwentyone-style' for the Twenty Twenty-One theme.
 
@@ -175,6 +179,7 @@ function register_user_ajax(){
     }
 
     new_user_email_send($fullname, $user_role, $email, $phone, $referral_code);
+    send_message($phone, 'Dear '.$fullname.', You are registered successfully as '.$user_role. ' in our PTP family.');
     wp_send_json_success(['alert_type' => 'success', 'message' => 'You are successfully registered as '.$user_role.'.']);
     exit;
 }
@@ -699,10 +704,12 @@ function test_new_order_hook($order_id) {
         // Set order type based on categories
         if (in_array('subscriptions', $categories)) {
             $order->update_meta_data('_order_type', 'subscription');
+            send_message("1234567890", 'Dear PTP user, You have successfully updated your subscription.');
         } 
         elseif (in_array('summer-camps', $categories)) {
             $order->update_meta_data('_order_type', 'summercamp');
             $order->update_meta_data('_summercamp_userid', $current_user_id);
+            send_message("1234567890", 'Dear PTP user, You are successfully enrolled in new summer camp.');
 
             if (WC()->session->get('referral_id')) {
                 $referral_code = WC()->session->get('referral_id');
@@ -714,6 +721,7 @@ function test_new_order_hook($order_id) {
             $order->update_meta_data('session_coach_id', WC()->session->get('coach_id'));
             $order->update_meta_data('session_date', WC()->session->get('session_date'));
             $order->update_meta_data('_session_booked_by', $current_user_id);
+            send_message("1234567890", 'Dear PTP user, Your session booked successfully for DATE & TIME: '.WC()->session->get('session_date'));
         } 
         else {
             $order->update_meta_data('_order_type', 'normal'); 

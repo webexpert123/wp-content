@@ -55,14 +55,56 @@
                                                                
                                                                <td><img src="<?php echo $profile_img_link; ?>" class="img-fluid" width="70" height="70"></td>
 
-                                                               <td><?php echo $athlete_name; ?></td>
+                                                               <td><?php echo $athlete_name; ?><br>  
+
+                                                               <a class="text-success text-underline" href="javascript:void(0);" data-toggle="modal" data-target="#myModal<?php echo $athleteID; ?>">See full details</a>
+
+                                                               <div class="modal" id="myModal<?php echo $athleteID; ?>">
+                                                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                                  <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                      <h4 class="modal-title text-light">FULL DETAILS OF ATHLETE</h4>
+                                                                      <button type="button" class="close text-light" data-dismiss="modal">&times;</button>
+                                                                    </div>
+                                                                    <div class="modal-body text-light">
+                                                                      <table class="table table-bordered bg-dark">
+                                                                          <tr>
+                                                                              <th>ATHLETE NAME</th>
+                                                                              <td><?php echo $athlete_name; ?></td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <th>CITY</th>
+                                                                              <td><?php echo get_user_meta($athleteID, "_city", true); ?></td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <th>ZIPCODE</th>
+                                                                              <td><?php echo get_user_meta($athleteID, "_zipcode", true); ?></td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <th>STRENGTH</th>
+                                                                              <td><?php echo get_user_meta($athleteID, "_strength", true); ?></td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <th>WEAKNESS</th>
+                                                                              <td><?php echo get_user_meta($athleteID, "_weakness", true); ?></td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <th>INTRESTS</th>
+                                                                              <td><?php echo get_user_meta($athleteID, "_intrests", true); ?></td>
+                                                                          </tr>
+                                                                      </table>
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                               </td>
 
                                                                <td><b>Email:</b> <?php echo $athlete_email; ?><br>
                                                                <b>Phone:</b> <?php echo $athlete_phone; ?></td>
 
                                                                <td><?php echo $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) AS booked_session_count FROM {$wpdb->prefix}wc_orders_meta WHERE meta_key = '_session_booked_by' AND meta_value='$athleteID' ")); ?></td>
 
-                                                               <td><a href="javascript:void(0);" class="btn btn-success btn-sm">MESSAGE</a>
+                                                               <td><a href="<?php echo site_url('my-account-coach/?section=messages&rid='.md5($athleteID)); ?>" class="btn btn-success btn-sm">MESSAGE</a>
                                                                 <a href="?section=students-history&student_id=<?php echo $athleteID; ?>" class="btn btn-success btn-sm">HISTORY</a></td>
                                                             </tr>
                                                             <?php } ?>
@@ -87,3 +129,28 @@
                     </div>
 
                 </div>
+
+
+  <div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Modal Heading</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          Modal body..
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>

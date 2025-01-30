@@ -48,7 +48,8 @@ $page = isset($_REQUEST["section"]) ? $_REQUEST["section"] : "dashboard";
 
                         <div class="navbar-action">
                             <ul>
-                                <li><a href="my-account.html">My Account</a></li>
+                                <li><a href="<?php echo site_url(); ?>" target="_blank">Visit Site</a></li>
+                                <li><a href="<?php echo site_url('my-account-athlete/?section=profile'); ?>">My Account</a></li>
                                 <li><a href="javascript:void(0);" onclick="logout_user()">Sign Out <div class="spinner-border text-dark spinner-logout" style="display:none;"></div></a></li>
                             </ul>
                         </div>

@@ -39,14 +39,13 @@ $page = isset($_REQUEST["section"]) ? $_REQUEST["section"] : "dashboard";
                     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                         <ul class="navbar-nav mr-auto nav-pills">
                             <li class="nav-item <?php if($page=="dashboard" OR $page==""){echo "active";} ?>">
-                                <a class="nav-link" href="?section=dashboard">Dashboard<span
-                                        class="sr-only">(current)</span></a>
+                                <a class="nav-link" href="?section=dashboard">Dashboard<span class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item <?php if($page=="bookings"){echo "active";} ?>">
-                                <a class="nav-link" href="?section=bookings">Booking</a>
+                            <li class="nav-item <?php if($page=="students"){echo "active";} ?>">
+                                <a class="nav-link" href="?section=students">Booking</a>
                             </li>
                             <li class="nav-item <?php if($page=="calender"){echo "active";} ?>">
-                                <a class="nav-link" href="?section=calender">Calendar</a>
+                                <a class="nav-link" target="_blank" href="<?php echo site_url("/coach-profile/".$current_user->user_nicename); ?>">Open Profile Page</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="<?php echo site_url(); ?>" target="_blank">Visit Site</a>
@@ -55,7 +54,7 @@ $page = isset($_REQUEST["section"]) ? $_REQUEST["section"] : "dashboard";
 
                         <div class="navbar-action">
                             <ul>
-                                <li class="dropdown">
+                                <li class="dropdown d-none">
                                     <span>
                                         <a class="dropdown-toggle" href="" id="dropdownMenuButton"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img
@@ -201,9 +200,7 @@ $page = isset($_REQUEST["section"]) ? $_REQUEST["section"] : "dashboard";
                                         </div>
                                     </span>
                                 </li>
-                                <!-- <li><span><a href="javascript:void(0);"><img
-                                                src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/dashboard/search.svg" alt=""></a></span></li> -->
-                                <li><a href="my-account.html">My Account</a></li>
+                                <li><a href="<?php echo site_url('my-account-coach/?section=profile'); ?>">My Account</a></li>
                                 <li><a href="javascript:void(0);" onclick="logout_user()">Sign Out <div class="spinner-border text-dark spinner-logout" style="display:none;"></div></a></li>
                             </ul>
                         </div>
