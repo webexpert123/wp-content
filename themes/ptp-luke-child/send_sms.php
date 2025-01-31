@@ -1,5 +1,7 @@
 <?php
 function send_message($receiver,$message){
+      $accountSid = 'AC841e377606feec0aa71eafb7560ab01a';
+      $authToken = '25291f71d61ea518858c03c19005b6fa';
 
       $url = 'https://api.twilio.com/2010-04-01/Accounts/'.$accountSid.'/Messages.json';
 

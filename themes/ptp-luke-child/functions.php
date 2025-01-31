@@ -1,9 +1,5 @@
 <?php
 // Include send_sms.php to make send_message() available
-
-$accountSid = get_option("_twilio_account_sid");  
-$authToken = get_option("_twilio_account_authtoken");
-
 include( get_stylesheet_directory() . '/send_sms.php');
 
 
