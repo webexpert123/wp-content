@@ -1,5 +1,12 @@
 <?php
 // Include send_sms.php to make send_message() available
+
+$accountSid = 'AC841e377606feec0aa71eafb7560ab01a';
+$authToken = '25291f71d61ea518858c03c19005b6fa';
+
+$accountSid = get_option("_twilio_account_sid");  
+$authToken = get_option("_twilio_account_authtoken");
+
 include( get_stylesheet_directory() . '/send_sms.php');
 
 
