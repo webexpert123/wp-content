@@ -38,9 +38,11 @@
                                                     <div class="card radius-10 overflow-hidden w-100">
                                                         <div class="card-body">
                                                           <div class="mb-3">
+                                                            <h5 class="">All Athletes</h5><hr>
                                                             <div class="card-title mb-4 d-flex align-items-center justify-content-between">
-                                                                <h5 class="">All Athletes</h5>
-                                                                <!-- <a href="#">View All</a> -->
+                                                                <div class="form-group mb-0">
+                                                                    <input type="text" class="form-control" id="searchStudentName" placeholder="Search athlete name...">
+                                                                </div>
                                                             </div>
                                                             <div class="student-list">
                                                             <?php
@@ -65,7 +67,7 @@
 
                                                               $latest_chat_id = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(chatID) as chatID FROM {$wpdb->prefix}chat_messages WHERE (sender_id = %d AND receiver_id = %d)  OR (sender_id = %d AND receiver_id = %d) ORDER BY chatID ASC", $athleteID, $user_id, $user_id, $athleteID ) );
                                                               $latest_chat_id = $latest_chat_id ? $latest_chat_id : 0; ?>
-                                                                <a href="<?php echo $chat_link; ?>" data-latest_chat_id="<?php echo $latest_chat_id; ?>">
+                                                                <a href="<?php echo $chat_link; ?>" data-username="<?php echo $athlete_name; ?>" data-latest_chat_id="<?php echo $latest_chat_id; ?>">
                                                                     <div class="customers-list-item d-flex align-items-center p-2 py-3 cursor-pointer">
                                                                     <div class="student-thumb">
                                                                         <img src="<?php echo $profile_img_link; ?>" class="rounded-circle" width="46" height="46" alt="">
@@ -338,4 +340,16 @@
             });
         }
     }
+
+    $('#searchStudentName').on('input', function() {
+      var searchValue = $(this).val().toLowerCase();
+      $('.student-list a').each(function() {
+        var username = $(this).data('username').toLowerCase();
+        if (username.indexOf(searchValue) !== -1) {
+          $(this).show();
+        } else {
+          $(this).hide();
+        }
+      });
+    });
 </script>
