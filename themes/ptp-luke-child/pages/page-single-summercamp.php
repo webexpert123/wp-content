@@ -123,8 +123,8 @@ if (!empty($post)) {
                     </div>
                     <div class="col-md-12">
                         <div class="summer-content mt-5 mb-5">
-                            <h2 class="mb-3">About the event</h2>
-                            <p><?php echo nl2br(esc_html(wp_unslash($post_content))); ?></p>
+                            <h2 class="mb-3">About the summer camp</h2>
+                            <p><?php echo nl2br($post_content); ?></p>
                         </div>
                         <div class="map-area mt-4 mb-5">
                             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d214592.19404833476!2d-96.89690307815748!3d32.818684635908625!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x864c19f77b45974b%3A0xb9ec9ba4f647678f!2sDallas%2C%20TX%2C%20USA!5e0!3m2!1sen!2sin!4v1737524631232!5m2!1sen!2sin"

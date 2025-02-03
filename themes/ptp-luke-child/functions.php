@@ -25,7 +25,7 @@ add_filter('show_admin_bar', function ($show) {
 
 add_action('template_redirect', 'redirect_shop_cart_to_home');
 function redirect_shop_cart_to_home() {
-    if (is_shop() || is_cart()) {
+    if (is_shop() || is_cart() || is_account_page()) {
         wp_redirect(home_url());
         exit;
     }
@@ -896,24 +896,46 @@ function ptp_settings_callback() {
     include( get_stylesheet_directory() . '/admin_modules/ptp_settings.php');
 }
 
-function send_chat_message_func(){
+function send_chat_message_func() {
     global $wpdb;
     $message = isset($_POST['message']) ? sanitize_text_field($_POST['message']) : '';
     $sender_id = intval($_POST['senderid']);
     $receiver_id = intval($_POST['receiverid']);
+    $file_paths = [];
+
+    if (isset($_FILES['attachments']) && !empty($_FILES['attachments']['name'][0])) {
+        $files = $_FILES['attachments'];
+
+        foreach ($files['name'] as $key => $file_name) {
+            $file_tmp_name = $files['tmp_name'][$key];
+            $file_size = $files['size'][$key];
+
+            $upload_dir =  get_stylesheet_directory() . '/assets/chat_media/';
+            $target_file = $upload_dir . basename($file_name);
+
+            if (move_uploaded_file($file_tmp_name, $target_file)) {
+                $file_paths[] = '/wp-content/themes/ptp-luke-child/assets/chat_media/' . basename($file_name);
+            }
+        }
+    }
+    // Insert the message into the chat_messages table
     $wpdb->insert(
         $wpdb->prefix . 'chat_messages',
         array(
             'sender_id' => $sender_id,
             'receiver_id' => $receiver_id,
             'message' => $message,
-            'created_at' => date("Y-m-d H:i:s")
+            'attachments' => !empty($file_paths) ? json_encode($file_paths) : "",
+            'created_at' => current_time('mysql')
         )
     );
+
+    echo 'Message sent successfully';
     exit;
 }
-add_action( 'wp_ajax_nopriv_send_chat_message', 'send_chat_message_func' );
-add_action( 'wp_ajax_send_chat_message', 'send_chat_message_func' );
+add_action('wp_ajax_nopriv_send_chat_message', 'send_chat_message_func');
+add_action('wp_ajax_send_chat_message', 'send_chat_message_func');
+
 
 
 function get_chat_messages_func(){
@@ -947,7 +969,20 @@ function get_chat_messages_func(){
                     </div>
                 </div>
                 <div class="msg-block">
-                    <p><?php echo $msg->message; ?></p>
+                    <p><?php if($msg->message=="Documents attachments"){
+                        $attachments = json_decode($msg->attachments);
+                        foreach($attachments as $attachment){
+                            $attchname = explode("/", $attachment)[6]; ?>
+                              <div class="card bg-dark shadow-sm">
+                                 <div class="card-body d-flex justify-content-between align-items-center">
+                                    <span class="file-name text-light"><?php echo $attchname; ?></span>
+                                    <a href="<?php echo site_url().$attachment; ?>" class="btn btn-warning btn-sm" download><i class="fa-regular fa-circle-down" style="font-size:20px;"></i></a>
+                                 </div>
+                              </div>
+                            <?php
+                        }
+                    }
+                    else{echo $msg->message;} ?></p>
                 </div>
             </div>
         <?php }
@@ -976,7 +1011,20 @@ function get_chat_messages_func(){
                     </div>
                 </div>
                 <div class="msg-block">
-                    <p><?php echo $msg->message; ?></p>
+                    <p><?php if($msg->message=="Documents attachments"){
+                        $attachments = json_decode($msg->attachments);
+                        foreach($attachments as $attachment){
+                            $attchname = explode("/", $attachment)[6]; ?>
+                              <div class="card bg-dark shadow-sm">
+                                 <div class="card-body d-flex justify-content-between align-items-center">
+                                    <span class="file-name text-light"><?php echo $attchname; ?></span>
+                                    <a href="<?php echo site_url().$attachment; ?>" class="btn btn-warning btn-sm" download><i class="fa-regular fa-circle-down" style="font-size:20px;"></i></a>
+                                 </div>
+                              </div>
+                            <?php
+                        }
+                    }
+                    else{echo $msg->message;} ?></p>
                 </div>
             </div>
     <?php

@@ -127,6 +127,12 @@
                                             </div>
                                             <div class="chat-footer">
                                                 <div class="input-group md-form form-sm form-2 pl-0">
+                                                    <div class="input-group-append add_attachment">
+                                                        <input type="file" id="attachments" multiple="multiple" onchange="validateFiles()" accept=".jpg, .png, .pdf, .docx, .mp4, .webm" />
+                                                        <button class="btn input-group-text lighten-3" id="basic-text1">
+                                                        <i class="bx bx-plus-circle"></i>
+                                                        </button>
+                                                    </div>
                                                     <input type="hidden" id="receiverid" value="<?php echo $receiver_id; ?>">
                                                     <input id="message_txt" class="form-control my-0 py-1 red-border" type="text" placeholder="Write a message...">
                                                     <div class="input-group-append send_btn">
@@ -273,4 +279,63 @@
        });
     }
     setInterval(get_unread_message_count, 5000);
+
+    function validateFiles() {
+        const fileInput = document.getElementById('attachments');
+        const files = fileInput.files;
+        let valid = true;
+        const validExtensions = ['.jpg', '.jpeg', '.png', '.pdf', '.doc', '.docx', '.mp4', '.webm'];
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (file.size > 2 * 1024 * 1024) { 
+                valid = false;
+                break;
+            }
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            if (!validExtensions.includes('.' + fileExtension)) {
+                valid = false;
+                break;
+            }
+        }
+
+        if (!valid) {
+            Swal.fire({ title: "Invalid file. Ensure it's less than 2MB and has a valid extension (e.g.: .jpg, .png, .pdf, .docx, .mp4, .webm)", text: '', icon: "warning"});
+            document.getElementById('attachments').value = ''; 
+        } else {
+           const message = document.getElementById('message_txt').value;
+           const files = document.getElementById('attachments').files;
+           const receiverid = document.getElementById('receiverid').value;
+           const senderid = "<?php echo $user_id; ?>";
+
+           jQuery("#basic-text1").attr("disabled", true);
+           jQuery("#sending_txt").show();
+
+           const formData = new FormData();
+           formData.append('action', 'send_chat_message');
+           formData.append('message', "Documents attachments");
+           formData.append('senderid', senderid);
+           formData.append('receiverid', receiverid);
+
+           for (let i = 0; i < files.length; i++) {
+             formData.append('attachments[]', files[i]);
+             console.log(files[i]);
+           }
+           jQuery.ajax({
+                url: "/wp-admin/admin-ajax.php",
+                type: 'POST',
+                dataType: "html",
+                data: formData,
+                processData: false, 
+                contentType: false, 
+                success: function(response) {
+                    jQuery("#message_txt").val('');
+                    jQuery("#attachments").val('');
+                    jQuery("#sending_txt").hide(); 
+                    jQuery("#basic-text1").attr("disabled", false);
+                    get_messages(0);
+                }
+            });
+        }
+    }
 </script>
