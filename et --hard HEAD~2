@@ -1,0 +1,131 @@
+[33mcommit ecc45d37e5eccf7de0177010a911da3f2a6d8fcb[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Mon Feb 10 12:26:56 2025 +0530
+
+    Less files added
+
+[33mcommit ecd722b00dcc23454167788bafa3021c66317c74[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Mon Feb 10 12:22:41 2025 +0530
+
+    Less files added
+
+[33mcommit 835aae7d5bb05bf0d381846152f391500c7aac88[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Mon Feb 3 19:37:46 2025 +0530
+
+    forum UI
+
+[33mcommit cd9cd622da7ff1ec7c8c7fdea9f1f97439b2f96e[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Mon Feb 3 17:29:35 2025 +0530
+
+    Chat search
+
+[33mcommit f54a3015c8802709ae40d0054fb62091bac03965[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Mon Feb 3 17:26:11 2025 +0530
+
+    Chat search
+
+[33mcommit 7f8848e95ae50bc885c354a7775beda3f35274b9[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Mon Feb 3 11:33:28 2025 +0530
+
+    file attach feature in chat
+
+[33mcommit 1536052668279cbc6e0efdf966f26cf9fa21f08f[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Fri Jan 31 12:44:15 2025 +0530
+
+    SMS and Feedback
+
+[33mcommit 7c9f66630d4806f351932acba7ba2419f15c8fff[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Fri Jan 31 12:22:22 2025 +0530
+
+    SMS and Feedback
+
+[33mcommit be0756d763855d2776f06d3bc6b423170388c8aa[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Fri Jan 31 12:17:32 2025 +0530
+
+    SMS and Feedbacks
+
+[33mcommit 8cac0ce0680c974bb45057e1720cdf2253c09735[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Thu Jan 30 19:39:29 2025 +0530
+
+    New feedback changes and SMS integration
+
+[33mcommit 51da61943657df2bbf43b1aaa1db5954ab90fc00[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Wed Jan 29 19:21:17 2025 +0530
+
+    emogy added !
+
+[33mcommit 6cdb94cc31a92b321e6132bdb9930e4c20a30058[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Wed Jan 29 15:24:06 2025 +0530
+
+    chat changes
+
+[33mcommit 5083f63fa572a84c02bc2982665e522c746eb560[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Wed Jan 29 15:05:47 2025 +0530
+
+    chat changes
+
+[33mcommit ef1371209c8f8e4325e0e161c8b497ef633ed951[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Wed Jan 29 15:04:24 2025 +0530
+
+    chat changes
+
+[33mcommit 991f3d400210488fc73c18899fcef880151ca36d[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Wed Jan 29 14:52:21 2025 +0530
+
+    chat changes
+
+[33mcommit ec81740da86d7f8e28e4873698d9514e30b2607c[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Wed Jan 29 14:39:21 2025 +0530
+
+    Chat System
+
+[33mcommit 3154eaec2345b70ba2ff94c58448a765e7ebe791[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Mon Jan 27 19:36:38 2025 +0530
+
+    gitignore updated
+
+[33mcommit 310176d278eaaef311647602f15033b5cb92ffc1[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Mon Jan 27 19:35:36 2025 +0530
+
+    Track and deploy uploads/ folder
+
+[33mcommit 984131aac8848ea2d888a4eeec49f51cd30425c1[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Mon Jan 27 19:28:49 2025 +0530
+
+    Stop tracking uploads/ directory
+
+[33mcommit b6e05dc751aca2f4570099a8a8834fb2ed4bc4f4[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Mon Jan 27 19:21:58 2025 +0530
+
+    gitignore updated
+
+[33mcommit 0f0b22b3a111ff049626b8ad68af614d2eee407c[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Mon Jan 27 19:14:04 2025 +0530
+
+    Login redirect using cookie & Ambasdor task
+
+[33mcommit fdfaf3b6bfa42869780d5201a1d75b6a21afd682[m
+Author: Cofficebp <cofficebp@gmail.com>
+Date:   Fri Jan 24 19:14:52 2025 +0530
+
+    Search feature functional now
